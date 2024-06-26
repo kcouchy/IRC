@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 13:18:55 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/06/26 17:46:46 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/06/26 17:57:57 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ long	check_inputs(int argc, char **argv)
 	std::string	port_s;
 	long		port_i;
 
-	port_s = argv[1];
 	if (argc != 3)
 		throw InvalidInputException();
+	port_s = argv[1];
 	if (port_s.find_first_not_of("0123456789") != std::string::npos)
 		throw InvalidPortException();
 	std::istringstream(port_s) >> port_i;

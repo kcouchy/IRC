@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 11:42:07 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/06/26 17:51:58 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/06/26 18:09:25 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ Server::Server(int	port, std::string password) :
 	memset(&m_address, 0, sizeof(struct sockaddr_in));
 	m_address.sin_family = AF_INET;
 	m_address.sin_addr.s_addr = htonl(INADDR_ANY);
-	m_address.sin_port = htons(3030);
+	m_address.sin_port = htons(m_port);
 	// m_address.sin_zero = 0;
 	return ;
 }
@@ -39,7 +39,6 @@ void	Server::initialise(void)
 {
 	// Socket creation
 	this->m_socketfd = socket(m_address.sin_family, SOCK_STREAM, 0);
-	m_socketfd = -1;
 	if (m_socketfd == -1)
 		throw SocketException();
 
@@ -68,7 +67,7 @@ void	Server::run(void)
 
 		while (iter != m_clients.end())
 		{
-			pfs[i].fd = iter->value->fd;
+			pfs[i].fd = iter->value->getfd();
 			pfs[i].events = POLLIN | POLLOUT | POLLHUP; // This should change to also handle disconnection events and more
 			pfs[i].revents = 0;
 			iter++;
