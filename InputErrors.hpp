@@ -1,29 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Pair.h                                             :+:      :+:    :+:   */
+/*   InputErrors.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/25 12:01:42 by atu               #+#    #+#             */
-/*   Updated: 2024/06/26 17:29:36 by kcouchma         ###   ########.fr       */
+/*   Created: 2024/06/25 15:37:51 by kcouchma          #+#    #+#             */
+/*   Updated: 2024/06/25 17:43:43 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef INPUT_ERRORS_HPP
+#define INPUT_ERRORS_HPP
 
-template <typename T, typename D>
+# include <iostream>
+# include <exception>
+# include <sstream>
+# include <cstring>
 
-class Pair
+# define PORT_MIN 0
+# define PORT_MAX 65535
+
+class InvalidInputException : public std::exception
 {
-	private:
-		const T key;
-
 	public:
-		D value;
-		Pair(T key, D value);
+		virtual const char *what() const throw();
 };
 
-template <typename T, typename D> Pair<T, D>::Pair(T key, D value) : key(key), value(value)
+class InvalidPortException : public std::exception
 {
-}
+	public:
+		virtual const char *what() const throw();
+};
+
+#endif

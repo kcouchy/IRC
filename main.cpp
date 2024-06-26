@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atu <bnzlvosnb@mozmail.com>                +#+  +:+       +#+        */
+/*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 12:01:42 by atu               #+#    #+#             */
-/*   Updated: 2024/06/25 23:31:43 by atu              ###   ########.fr       */
+/*   Updated: 2024/06/26 14:59:56 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@
 #include <iostream>
 
 #include "Pair.h"
-#include "DummyClient.h"
+#include "Client.h"
 
-int main()
+int main(int argc, char **argv)
 {
 	// class private attributes
 	int bindfd;
@@ -62,20 +62,29 @@ int main()
 
 	// main loop code (a server method ?)
 	{
-		std::list<Pair<int, DummyClient> > clients; // class private attribute too
+		std::list<Pair<int, Client> > clients; // class private attribute too
 
 		while (1)
 		{
 			int i = 1; // 0 is reserved for the socket fd
-			std::list<Pair<int, DummyClient> >::iterator iter = clients.begin();
+			std::list<Pair<int, Client> >::iterator iter = clients.begin();
 
 			// pollfd structure is built from the client list every time we loop
 			// I'm trying some nothrow stuff to make it return NULL instead of throwing a bad_alloc exception
-			struct pollfd *pfs = new(std::nothrow) struct pollfd[clients.size() + 1];
+			struct pollfd *pfs;
+			try
+			{
+				pfs = new struct pollfd[clients.size() + 1];
+			}
+			catch (std::bad_alloc &b_a)
+			{
+				std::cerr << b_a.what() << std::endl;
+				return (1); //TODO make sure we didn't add something that we need to delete first
+			}
 			pfs[0].fd = socketfd;
 			pfs[0].events = POLLIN; // I tried with POLLOUT but nothing happens on disconnection with POLLOUT
 			pfs[0].revents = 0;
-			while (pfs != NULL && iter != clients.end())
+			while (iter != clients.end())
 			{
 				pfs[i].fd = iter->value.fd;
 				pfs[i].events = POLLIN | POLLOUT; // This should change to also handle disconnection events and more
@@ -92,13 +101,13 @@ int main()
 				int client = accept(socketfd, NULL, NULL);
 				if (client == -1)
 				{
-					perror("New client failed to connect");
+					throw("New client failed to connect");
 					break ;
 				}
 				std::cout << "New client : " << client << std::endl;
-				DummyClient c = DummyClient();
+				Client c = Client();
 				c.fd = client;
-				clients.push_back(Pair<int, DummyClient>(client, c));
+				clients.push_back(Pair<int, Client>(client, c));
 				sleep(1);
 			}
 			

@@ -3,17 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aboyreau <aboyreau@student.42.fr>          +#+  +:+       +#+         #
+#    By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/21 21:38:16 by atu               #+#    #+#              #
-#    Updated: 2024/06/25 23:20:04 by atu              ###   ########.fr        #
+#    Updated: 2024/06/26 17:36:37 by kcouchma         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = ircserv
 CXXFLAGS += -Wall -Wextra -Werror -std=c++98
 
-SRC = main
+SRC = mainKiri Server Client InputErrors
 
 SRCS = $(addsuffix .cpp,$(SRC))
 OBJS = $(addsuffix .o,$(SRC))

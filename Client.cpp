@@ -1,29 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Pair.h                                             :+:      :+:    :+:   */
+/*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/25 12:01:42 by atu               #+#    #+#             */
-/*   Updated: 2024/06/26 17:29:36 by kcouchma         ###   ########.fr       */
+/*   Created: 2024/06/26 16:28:03 by kcouchma          #+#    #+#             */
+/*   Updated: 2024/06/26 16:33:11 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#include "Client.h"
 
-template <typename T, typename D>
-
-class Pair
+Client::Client(int	client_fd) : fd(client_fd)
 {
-	private:
-		const T key;
+	return ;
+}
 
-	public:
-		D value;
-		Pair(T key, D value);
-};
-
-template <typename T, typename D> Pair<T, D>::Pair(T key, D value) : key(key), value(value)
+Client::~Client(void)
 {
+	// delete buffer; //only if there's a new somewhere - when we join reads
+	return ;
 }
