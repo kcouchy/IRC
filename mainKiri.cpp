@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 13:18:55 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/06/26 17:57:57 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/06/27 15:03:23 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #include "Client.h"
 #include "Server.hpp"
 #include "InputErrors.hpp"
+
+//TODO ctrlC
 
 long	check_inputs(int argc, char **argv)
 {

@@ -1,33 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.h                                           :+:      :+:    :+:   */
+/*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/25 23:17:50 by atu               #+#    #+#             */
-/*   Updated: 2024/06/27 15:11:18 by kcouchma         ###   ########.fr       */
+/*   Created: 2024/06/27 14:57:02 by kcouchma          #+#    #+#             */
+/*   Updated: 2024/06/27 15:39:46 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <string>
 #include "Messageable.h"
+#include <iostream>
+#include <list>
 
-class Client : public Messageable
+class Channel : public Messageable
 {
 	public:
-		Client (int client_fd);
-		~Client(void);
+		Channel(std::string topic);
+		~Channel(void);
 
-		int			getfd()const;
-		void		read()const;
-		void		parse()const;
+		void join(std::string client_name);
+		void quit(std::string client_name);
+		// void mode(std::string client_name, std::string flag);
+
+		virtual void send(std::string message);
 
 	private:
-		int			m_fd;
-		std::string	m_buffer;
-
-		Client(void);
+		Channel(void);
+		std::string	m_topic;
+		std::list<std::string> m_listenList;
+		// std::list<std::string> m_operatorList;
 };

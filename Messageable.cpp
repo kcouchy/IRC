@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Messageable.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aboyreau <bnzlvosnb@mozmail.com>           +#+  +:+       +#+        */
+/*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:26:45 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/06/27 14:37:41 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/06/27 15:41:58 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,18 @@
 
 Messageable::Messageable() {}
 
-Messageable::Messageable(const Messageable& instance) : name(instance.name)
+Messageable::Messageable(const Messageable& instance) : m_name(instance.m_name)
 {
 	PhoneBook &pb = PhoneBook::get();
 	pb.addRecipient(this);
 }
 
 Messageable& Messageable::operator=(const Messageable&)
-{ return *this; }
+{
+	return (*this);
+}
 
 std::string Messageable::getName()
 {
-	return this->name;
+	return (this->m_name);
 }
