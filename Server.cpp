@@ -6,13 +6,17 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 11:42:07 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/06/27 18:11:45 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/06/27 23:45:20 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <cstdio>
+#include <cstring>
+#include <exception>
+#include <iostream>
+
 #include "Server.hpp"
 #include "PhoneBook.hpp"
-#include <cstdio>
 
 #define LISTEN 5
 
@@ -34,9 +38,10 @@ bool Server::m_run = true;
 
 Server::~Server(void)
 {
-	std::cout << "test" << std::endl;
+	std::cout << "End of the server" << std::endl;
 	for (std::list<Pair<int, Client *> >::iterator it = this->m_clients.begin(); it != m_clients.end(); it++)
 	{
+		std::cout << "Deleting " << (*it).value->getfd() << std::endl;
 		close((*it).value->getfd());
 		delete (*it).value;
 	}
@@ -65,72 +70,103 @@ void	Server::initialise(void)
 	listen(m_socketfd, LISTEN);
 }
 
+struct pollfd	*Server::get_pollfd_array()
+{
+	int i = 1; // 0 is reserved for the socket fd
+	std::list<Pair<int, Client *> >::iterator iter = m_clients.begin();
+	struct pollfd *pollfd_array = new struct pollfd[m_clients.size() + 1];
+
+	pollfd_array[0].fd = m_socketfd;
+	pollfd_array[0].events = POLLIN;
+	pollfd_array[0].revents = 0;
+
+	while (iter != m_clients.end())
+	{
+		pollfd_array[i].fd = iter->value->getfd();
+		pollfd_array[i].events = POLLIN | POLLOUT | POLLHUP;
+		pollfd_array[i].revents = 0;
+		iter++;
+		i++;
+	}
+	return pollfd_array;
+}
+
+void	Server::accept_client(struct pollfd *pfs)
+{
+	int client_fd = -1;
+
+	if (pfs[0].revents & POLLIN) // Checks if there's anything incoming
+	{
+		client_fd = accept(m_socketfd, NULL, NULL);
+		if (client_fd == -1)
+			throw AcceptException();
+		Client *c = new Client(client_fd);
+		this->m_clients.push_back(Pair<int, Client *>(client_fd, c));
+	}
+}
+
+std::string	Server::read_message(int fd)
+{
+	int i = 1;
+	char buf[20];
+	std::string msg = "";
+
+	memset(buf, 0, 20);
+	while ((i = recv(fd, buf, 20, 0)))
+	{
+		if (i == -1)
+			throw std::exception();
+		if (i == 0)
+			throw std::exception();
+		msg += buf;
+		if (i < 20 || buf[19] == '\n')
+			return msg;
+	}
+	return msg;
+}
+
 void	Server::run(void)
 {
+	size_t	pfs_size;
+	struct	pollfd *pfs;
+	std::list<Pair<int, Client *> >::iterator iter;
+
 	while (Server::m_run)
 	{
-		int i = 1; // 0 is reserved for the socket fd
-		std::list<Pair<int, Client *> >::iterator iter = m_clients.begin();
-
-		// pollfd structure is built from the client list every time we loop
-		struct pollfd *pfs = new struct pollfd[m_clients.size() + 1];
-
-		pfs[0].fd = m_socketfd;
-		pfs[0].events = POLLIN; // I tried with POLLOUT but nothing happens on disconnection with POLLOUT
-		pfs[0].revents = 0;
-
-		while (iter != m_clients.end())
-		{
-			pfs[i].fd = iter->value->getfd();
-			pfs[i].events = POLLIN | POLLOUT | POLLHUP; // This should change to also handle disconnection events and more
-			pfs[i].revents = 0;
-			iter++;
-			i++;
-		}
-
-		// If the first file descriptor (socket) received an event, accept new connections (this is partially wrong as there could be disconnections too)
-		std::cout << "Pollin'" << std::endl;
 		usleep(500000);
-		poll(pfs, i, 0); //TODO SECURE POLL
-		if (pfs[0].revents & POLLIN) // Checks if there's anything incoming
+
+		pfs = this->get_pollfd_array();
+		pfs_size = m_clients.size(); // Must be stored here because if we accept a new client we're gonna invalid read in this array later
+
+		std::cout << "Pollin'" << std::endl;
+		if (poll(pfs, m_clients.size() + 1, 0) == -1)
 		{
-			std::cout << "New client : try" << std::endl;
-			int client_fd = accept(m_socketfd, NULL, NULL);
-			if (client_fd == -1)
-				throw AcceptException();
-			std::cout << "New client : " << client_fd << std::endl;
-			Client *c = new Client(client_fd);
-			m_clients.push_back(Pair<int, Client *>(client_fd, c));
-			sleep(1); //TODO - remove at the end
+			delete[] pfs;
+			perror("poll");
+			throw std::exception();
 		}
 
-		// TODO iterate over clients and handle whatever they want to do
-		int	j = 1;
-		// for (int j = 1; j < i; j++)
-		iter = m_clients.begin();
-		while (j < i && iter != m_clients.end())
-		{
+		this->accept_client(pfs);
 
+		iter = m_clients.begin();
+		size_t	j = 1;
+		while (j <= pfs_size && iter != m_clients.end()) // If we accepted, m_clients.size() is now equal to pfs_size + 2 instead of + 1
+		{
+			std::string msg;
 			// read and write 
 			if (pfs[j].revents & POLLIN)
 			{
-				std::string msg = "";
-				char buf[20] = {0};
-				buf[19] = 0;
-				int i = 1;
-				while ((i = recv(pfs[j].fd, buf, 20, 0)))
+				try
 				{
-					if (i == -1)
-						break ;
-					if (i == 0)
-					{
-						delete (*iter).value;
-						iter = m_clients.erase(iter);
-						break ;
-					}
-					msg += buf;
-					if (i < 20 || buf[19] == '\n')
-						break ;
+					msg = this->read_message(pfs[j].fd);
+					(*iter).value->parse(msg);
+				}
+				catch (std::exception& e)
+				{
+					delete[] pfs;
+					delete (*iter).value;
+					iter = m_clients.erase(iter);
+					throw std::exception();
 				}
 				std::cout << msg << std::endl;
 				msg = "";
@@ -138,6 +174,7 @@ void	Server::run(void)
 
 			if (pfs[j].revents & POLLHUP)
 			{
+				delete (*iter).value;
 				iter = m_clients.erase(iter);
 				// Note that when reading from a channel such as a pipe or a
 				// stream socket, this event merely indicates that the peer

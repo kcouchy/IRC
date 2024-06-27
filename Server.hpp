@@ -6,20 +6,18 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 11:37:22 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/06/27 17:49:25 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/06/27 22:58:30 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <iostream>
 #include <exception>
 #include <list>
 #include <netinet/in.h>
 #include <string>
 #include <unistd.h>
 #include <poll.h>
-#include <cstring>
 
 #include "Pair.h"
 #include "Client.h"
@@ -52,6 +50,13 @@ class Server
 
 	private:
 		Server(void);
+
+		// Main server loop functions
+		struct pollfd	*get_pollfd_array();
+		void			accept_client(struct pollfd *pfs);
+		std::string		read_message(int fd);
+
+		// Actual server stuff
 		int					m_port;
 		std::string			m_password;
 		std::list<Pair<int, Client *> >	m_clients;
