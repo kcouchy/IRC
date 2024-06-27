@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/25 23:17:50 by atu               #+#    #+#             */
-/*   Updated: 2024/06/27 17:09:37 by aboyreau         ###   ########.fr       */
+/*   Created: 2024/06/25 23:17:50 by aboyreau               #+#    #+#             */
+/*   Updated: 2024/06/27 23:22:13 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ class Client : public Messageable
 
 		int			getfd() const;
 		void		read()  const;
-		void		parse() const;
+		void		parse(std::string) const;
 		void		send(std::string message);
 
 	private:

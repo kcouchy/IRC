@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:28:03 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/06/27 17:09:07 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/06/27 23:22:59 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,12 @@ int Client::getfd()const
 	return(this->m_fd);
 }
 
+void Client::parse(std::string msg) const
+{
+	std::cout << this->m_fd << ": I'm parsing " << msg << std::endl;
+}
+
 void Client::send(std::string )
 {
-	
 	return ;
 }
