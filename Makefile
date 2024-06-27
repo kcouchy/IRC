@@ -6,14 +6,20 @@
 #    By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/21 21:38:16 by atu               #+#    #+#              #
-#    Updated: 2024/06/26 17:36:37 by kcouchma         ###   ########.fr        #
+#    Updated: 2024/06/27 15:51:17 by kcouchma         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = ircserv
 CXXFLAGS += -Wall -Wextra -Werror -std=c++98
 
-SRC = mainKiri Server Client InputErrors
+SRC =	main		/
+		Server		/
+		Client		/
+		Channel		/
+		PhoneBook	/
+		InputErrors	/
+		Messageable
 
 SRCS = $(addsuffix .cpp,$(SRC))
 OBJS = $(addsuffix .o,$(SRC))
