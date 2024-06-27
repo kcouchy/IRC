@@ -1,19 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mainKiri.cpp                                       :+:      :+:    :+:   */
+/*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 13:18:55 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/06/27 15:03:23 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/06/27 17:54:14 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Pair.h"
-#include "Client.h"
 #include "Server.hpp"
 #include "InputErrors.hpp"
+#include <csignal>
 
 //TODO ctrlC
 
@@ -33,36 +32,28 @@ long	check_inputs(int argc, char **argv)
 	return (port_i);
 }
 
+void stop_server(int)
+{
+	std::cout << "stop" << std::endl;
+	Server::m_run = false;
+}
 
 int	main(int argc, char **argv)
 {
 	int			port;
 	std::string	password;
+	struct sigaction sigint;
 
+	memset(&sigint, 0, sizeof(struct sigaction));
+	sigint.sa_handler = stop_server;
+	sigaction(SIGINT, &sigint, NULL);
+	sigaction(SIGQUIT, &sigint, NULL);
 	try
 	{
 		port = check_inputs(argc, argv);
-	}
-	catch (std::exception &e)
-	{
-		std::cerr << e.what() << std::endl;
-		return (1);
-	}
-	password = argv[2];
-	Server	serv(port, password);
-
-	try
-	{
+		password = argv[2];
+		Server serv(port, password);
 		serv.initialise();
-	}
-	catch (std::exception &e)
-	{
-		std::cerr << e.what() << std::endl;
-		return (1);
-	}
-
-	try
-	{
 		serv.run();
 	}
 	catch (std::bad_alloc &b_a)
@@ -70,12 +61,10 @@ int	main(int argc, char **argv)
 		std::cerr << b_a.what() << std::endl;
 		return (1);
 	}
-	catch(const std::exception& e) //differentiate from above or dump - cleanup?
+	catch (std::exception &e)
 	{
 		std::cerr << e.what() << std::endl;
 		return (1);
 	}
-	
-
 	return (0);
 }

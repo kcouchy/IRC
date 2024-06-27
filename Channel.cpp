@@ -6,19 +6,22 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/06/27 15:46:11 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/06/27 16:03:17 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "Channel.hpp"
+#include "Channel.hpp"
+#include "PhoneBook.hpp"
 
 Channel::Channel(std::string topic) : m_topic(topic)
 {
+	PhoneBook::get().addRecipient(this);
 	return ;
 }
 
 Channel::~Channel(void)
 {
+	PhoneBook::get().removeRecipient(this);
 	return ;
 }
 
@@ -37,3 +40,6 @@ void Channel::quit(std::string client_name)
 			iter = m_listenList.erase(iter);
 	}
 }
+
+void Channel::send(std::string)
+{}

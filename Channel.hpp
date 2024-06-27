@@ -6,14 +6,13 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:57:02 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/06/27 15:39:46 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/06/27 16:00:44 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include "Messageable.h"
-#include <iostream>
 #include <list>
 
 class Channel : public Messageable
@@ -26,7 +25,7 @@ class Channel : public Messageable
 		void quit(std::string client_name);
 		// void mode(std::string client_name, std::string flag);
 
-		virtual void send(std::string message);
+		void send(std::string message);
 
 	private:
 		Channel(void);

@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:26:45 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/06/27 15:41:58 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/06/27 17:38:36 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #include "PhoneBook.hpp"
 
 Messageable::Messageable() {}
+
+Messageable::~Messageable() {}
 
 Messageable::Messageable(const Messageable& instance) : m_name(instance.m_name)
 {
@@ -26,7 +28,7 @@ Messageable& Messageable::operator=(const Messageable&)
 	return (*this);
 }
 
-std::string Messageable::getName()
+std::string Messageable::getName() const
 {
 	return (this->m_name);
 }

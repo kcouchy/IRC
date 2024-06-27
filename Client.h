@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 23:17:50 by atu               #+#    #+#             */
-/*   Updated: 2024/06/27 15:11:18 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/06/27 17:09:37 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,10 @@ class Client : public Messageable
 		Client (int client_fd);
 		~Client(void);
 
-		int			getfd()const;
-		void		read()const;
-		void		parse()const;
+		int			getfd() const;
+		void		read()  const;
+		void		parse() const;
+		void		send(std::string message);
 
 	private:
 		int			m_fd;

@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 11:37:22 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/06/27 13:49:42 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/06/27 17:49:25 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ class Server
 
 		~Server(void);
 		// operator=[]; to get client
+		
+		static bool m_run;
 
 		void	initialise(void);
 		void	run(void);

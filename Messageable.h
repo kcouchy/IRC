@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:12:41 by atu               #+#    #+#             */
-/*   Updated: 2024/06/27 15:38:30 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/06/27 17:10:29 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,14 @@ class Messageable
 {
 	public:
 		Messageable();
+		Messageable(std::string name);
 		Messageable(const Messageable& instance);
 		Messageable& operator=(const Messageable&);
+		virtual ~Messageable();
 		
 		virtual void send(std::string message) = 0;
-		std::string getName();
+		std::string getName() const;
+		void setName(std::string);
 
 	private:
 		std::string m_name;
