@@ -2,3 +2,4 @@
 *.pdf
 *.o
 ircserv
+compile_commands.json
