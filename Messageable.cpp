@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:26:45 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/06/28 14:32:58 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/06/28 16:15:43 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,12 @@
 #include "PhoneBook.hpp"
 
 Messageable::Messageable()
+{
+	PhoneBook::get().addRecipient(this);
+}
+
+Messageable::Messageable(std::string name)
+	: m_name(name)
 {
 	PhoneBook::get().addRecipient(this);
 }

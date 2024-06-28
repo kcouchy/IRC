@@ -3,3 +3,4 @@
 *.o
 ircserv
 compile_commands.json
+.cache

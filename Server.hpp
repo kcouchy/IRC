@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 11:37:22 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/06/27 22:58:30 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/06/28 18:28:50 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,14 @@ class Server
 				virtual const char *what() const throw();
 		};
 		class BindException : public std::exception{
+			public:
+				virtual const char *what() const throw();
+		};
+		class RecvException : public std::exception{
+			public:
+				virtual const char *what() const throw();
+		};
+		class PollException : public std::exception{
 			public:
 				virtual const char *what() const throw();
 		};

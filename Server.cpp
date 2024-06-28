@@ -6,13 +6,12 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 11:42:07 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/06/28 11:49:01 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/06/28 21:14:06 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cstdio>
 #include <cstring>
-#include <exception>
 #include <iostream>
 
 #include "Server.hpp"
@@ -20,7 +19,7 @@
 
 #define LISTEN 5
 
-Server::Server(int	port, std::string password) : 
+Server::Server(int port, std::string password) : 
 	m_port(port), m_password(password), m_socketfd(-1), m_bindfd(-1)
 {
 	std::cout << "Port number: " << m_port << std::endl;
@@ -116,7 +115,7 @@ std::string	Server::read_message(int fd)
 	{
 		i = recv(fd, buf, 20, 0);
 		if (i == -1 || i == 0)
-			throw std::exception();
+			throw RecvException();
 		buf[i] = '\0';
 		msg += std::string(buf);
 		if (i < 20 || buf[19] == '\n')
@@ -143,7 +142,7 @@ void	Server::run(void)
 		{
 			delete[] pfs;
 			perror("poll");
-			throw std::exception();
+			throw PollException();
 		}
 
 		this->accept_client(pfs);
@@ -162,14 +161,14 @@ void	Server::run(void)
 					msg = this->read_message(pfs[j].fd);
 					(*iter).value->parse(msg);
 				}
-				catch (std::exception& e)
+				catch (RecvException& e)
 				{
-					delete[] pfs;
-					delete (*iter).value;
-					iter = m_clients.erase(iter);
-					throw std::exception();
+					// close((*iter).value->getfd());
+					// delete (*iter).value;
+					// iter = m_clients.erase(iter);
+					std::cout << e.what() << std::endl;
 				}
-				std::cout << msg << std::endl;
+				// std::cout << msg << std::endl;
 				msg = "";
 			}
 
@@ -206,4 +205,14 @@ const char *Server::SocketException::what() const throw()
 const char *Server::BindException::what() const throw()
 {
 	return ("Server initialisation: Bind error");
+}
+
+const char *Server::RecvException::what() const throw()
+{
+	return ("Receive: Message reception error");
+}
+
+const char *Server::PollException::what() const throw()
+{
+	return ("Poll: Could not poll correctly");
 }

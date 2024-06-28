@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/06/28 15:54:57 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/06/28 16:14:31 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,5 +72,5 @@ void Channel::setOperator(std::string client_name, bool new_value)
 
 	for (iter = m_listenList.begin(); iter != m_listenList.end(); iter++)
 		if ((*iter).getKey() == client_name)
-			(*iter).value == new_value;
+			(*iter).value = new_value;
 }
