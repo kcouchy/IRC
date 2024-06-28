@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 11:42:07 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/06/27 23:45:20 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/06/28 11:49:01 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,13 +112,13 @@ std::string	Server::read_message(int fd)
 	std::string msg = "";
 
 	memset(buf, 0, 20);
-	while ((i = recv(fd, buf, 20, 0)))
+	while (1)
 	{
-		if (i == -1)
+		i = recv(fd, buf, 20, 0);
+		if (i == -1 || i == 0)
 			throw std::exception();
-		if (i == 0)
-			throw std::exception();
-		msg += buf;
+		buf[i] = '\0';
+		msg += std::string(buf);
 		if (i < 20 || buf[19] == '\n')
 			return msg;
 	}
@@ -148,6 +148,7 @@ void	Server::run(void)
 
 		this->accept_client(pfs);
 
+		// this->handle_clients_messages(); // TODO create this and move the code that triggers client events here
 		iter = m_clients.begin();
 		size_t	j = 1;
 		while (j <= pfs_size && iter != m_clients.end()) // If we accepted, m_clients.size() is now equal to pfs_size + 2 instead of + 1
