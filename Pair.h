@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 12:01:42 by atu               #+#    #+#             */
-/*   Updated: 2024/06/26 17:29:36 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/06/28 15:17:10 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,15 @@ class Pair
 	public:
 		D value;
 		Pair(T key, D value);
+		T getKey();
 };
 
 template <typename T, typename D> Pair<T, D>::Pair(T key, D value) : key(key), value(value)
 {
 }
+
+template <typename T, typename D> T Pair<T, D>::getKey()
+{
+	return (key);
+}
+

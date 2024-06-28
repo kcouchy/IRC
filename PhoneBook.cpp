@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 13:59:21 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/06/27 18:14:01 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/06/28 15:32:48 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,15 @@ void	PhoneBook::removeRecipient(Messageable *killRecipient)
 	for (iter = m_messageableList.begin(); iter != m_messageableList.end(); iter++)
 	{
 		if (*iter == killRecipient)
-		{
 			iter = m_messageableList.erase(iter);
-			break;
-		}
 	}
-	return ;
+}
+Messageable *PhoneBook::getRecipient(std::string name)
+{
+	std::list<Messageable *>::iterator iter;
+
+	for (iter = m_messageableList.begin(); iter != m_messageableList.end(); iter++)
+		if ((*iter)->getName() == name)
+			return (*iter);
+	return (NULL);//TODO this should trigger a destinator not found message to the sender
 }

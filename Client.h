@@ -25,10 +25,13 @@ class Client : public Messageable
 		void		read()  const;
 		void		parse(std::string) const;
 		void		send(std::string message);
+		void		addChannel(std::string channelName);
+		void		removeChannel(std::string channelName);
 
 	private:
 		int			m_fd;
 		std::string	m_buffer;
+		std::list<std::string> m_channelList;
 
 		Client(void);
 };

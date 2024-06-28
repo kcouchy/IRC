@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 13:41:40 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/06/27 18:20:03 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/06/28 11:58:23 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 #include <list>
 #include <string>
+#include "Messageable.h"
 
 class Messageable;
 
