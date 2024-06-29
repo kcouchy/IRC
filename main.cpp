@@ -6,15 +6,13 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 13:18:55 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/06/27 17:54:14 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/06/29 14:00:09 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "InputErrors.hpp"
 #include <csignal>
-
-//TODO ctrlC
 
 long	check_inputs(int argc, char **argv)
 {
