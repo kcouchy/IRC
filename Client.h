@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 23:17:50 by aboyreau               #+#    #+#             */
-/*   Updated: 2024/06/29 13:58:01 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/06/29 14:42:58 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,10 @@ class Client : public Messageable
 		Client (int client_fd);
 		~Client(void);
 
-		int			getfd() const;
-		void		read()  const;
-		void		parse(std::string);
-		void		send(std::string message);
-		void		addChannel(std::string channelName);
-		void		removeChannel(std::string channelName);
+		int		getfd() const;
+		void	read()  const;
+		void	parse(std::string);
+		void	send(std::string message);
 
 	private:
 		int			m_fd;
@@ -38,6 +36,11 @@ class Client : public Messageable
 
 		// Handlers
 		// Find and run a handler according to the command passed as parameter.
-		void		exec(std::string prefix, std::string command, std::string args);
+		void	exec(std::string prefix, std::string command, std::string args);
+		void	auth(std::string prefix, std::string args);
+		void	addChannel(std::string, std::string channels);
+		void	removeChannel(std::string channelName);
+		void	sendMessage(std::string, std::string channels);
+		void	changeNick(std::string, std::string);
 
 };
