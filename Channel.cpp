@@ -6,11 +6,10 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/06/28 16:14:31 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/06/29 14:58:38 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Client.h"
 #include "Channel.hpp"
 #include "Messageable.h"
 #include "PhoneBook.hpp"
