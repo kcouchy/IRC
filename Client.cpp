@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:28:03 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/06/29 14:54:20 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/06/30 15:59:48 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,12 @@ void Client::sendMessage(std::string, std::string params)
 	m->send(msg);
 }
 
+void Client::changeUser(std::string, std::string param)
+{
+	std::cout << param << std::endl;
+	this->send("001 " + this->getName() + ":Welcome");
+}
+
 void Client::exec(std::string prefix, std::string command, std::string args)
 {
 	std::list<Pair<std::string, void (Client::*)(std::string, std::string)> > handlers;
@@ -85,6 +91,7 @@ void Client::exec(std::string prefix, std::string command, std::string args)
 	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("JOIN", &Client::addChannel));
 	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("SEND", &Client::sendMessage));
 	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("NICK", &Client::changeNick));
+	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("USER", &Client::changeUser));
 
 	std::cout << command << std::endl;
 	std::list<Pair<std::string, void (Client::*)(std::string, std::string)> >::iterator iter = handlers.begin();

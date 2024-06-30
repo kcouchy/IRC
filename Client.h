@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 23:17:50 by aboyreau               #+#    #+#             */
-/*   Updated: 2024/06/29 14:42:58 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/06/30 15:56:32 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,5 +42,6 @@ class Client : public Messageable
 		void	removeChannel(std::string channelName);
 		void	sendMessage(std::string, std::string channels);
 		void	changeNick(std::string, std::string);
+		void	changeUser(std::string, std::string params);
 
 };
