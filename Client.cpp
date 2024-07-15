@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.cpp                                         :+:      :+:    :+:   */
+/*   Client.cpp                                                +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:28:03 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/06/30 15:59:48 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/07/05 15:48:51 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <iostream>
 #include <string>
 #include <sys/socket.h>
+#include <list>
 
 Client::Client(int client_fd) :
 	m_fd(client_fd) {}
@@ -32,35 +33,58 @@ int Client::getfd()const
 	return(this->m_fd);
 }
 
+std::list<std::string>	strsplit(std::string str, char delim)
+{
+	std::list<std::string> splitted;
+	size_t start = 0;
+	size_t stop;
+
+	std::cout << "str : " << str << std::endl << "delim : " << delim << std::endl;
+	stop = str.find('\n');
+	while (1)
+	{
+		std::cout << "start : " << start << " stop : " << stop << std::endl;
+		if (stop == std::string::npos)
+		{
+			splitted.push_back(str.substr(start, str.size()));
+			break ;
+		}
+		splitted.push_back(str.substr(start, stop));
+		start = stop + 1;
+		stop = str.find(start, '\n');
+	}
+	return splitted;
+}
+
 void Client::parse(std::string msg)
 {
 	std::string prefix = "", command = "", args = "";
 
-	if (msg.size() == 0 || msg[0] == '\n' || msg.at(msg.size() - 1) != '\n')
-		return ;
-	msg = msg.substr(0, msg.size() - 1);
-	prefix = std::strtok((char *) msg.c_str(), " ");
-	if (prefix[0] != ':')
+	std::list<std::string> actions = strsplit(msg, '\n');
+	for (std::list<std::string>::iterator it = actions.begin(); it != actions.end(); it++)
 	{
-		command = prefix;
-		prefix = "";
+		std::cout << "command : " << *it << std::endl;
+		prefix = std::strtok((char *) (*it).c_str(), " ");
+		if (prefix[0] != ':')
+		{
+			command = prefix;
+			prefix = "";
+		}
+		else
+			command = std::strtok(NULL, " ");
+		args = std::strtok(NULL, "\0");
+		std::cout << "Prefix : " << prefix << ", command : " << command << ", args : " << args << std::endl;
+		// this->exec(prefix, command, args);
 	}
-	else
-		command = std::strtok(NULL, " ");
-	args = std::strtok(NULL, "\0");
-	this->exec(prefix, command, args);
-	std::cout << "Prefix : " << prefix << ", command : " << command << ", args : " << args << std::endl;
+	std::cout << "End of parse" << std::endl;
 }
 
-void Client::auth(std::string prefix, std::string args)
+void Client::auth(std::string , std::string args)
 {
 	if (args == "test")
 		std::cout << "authentication success" << std::endl;
 	else
 		std::cout << "authentication failure" << std::endl;
-
-	(void) prefix;
-	(void) args;
 }
 
 void Client::changeNick(std::string, std::string params)
@@ -80,7 +104,7 @@ void Client::sendMessage(std::string, std::string params)
 
 void Client::changeUser(std::string, std::string param)
 {
-	std::cout << param << std::endl;
+	std::cout << "Change user : " << param << std::endl;
 	this->send("001 " + this->getName() + ":Welcome");
 }
 
@@ -93,7 +117,7 @@ void Client::exec(std::string prefix, std::string command, std::string args)
 	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("NICK", &Client::changeNick));
 	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("USER", &Client::changeUser));
 
-	std::cout << command << std::endl;
+	std::cout << "I'm trying to execute " << command << " " << args << std::endl;
 	std::list<Pair<std::string, void (Client::*)(std::string, std::string)> >::iterator iter = handlers.begin();
 	while (iter != handlers.end())
 	{

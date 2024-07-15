@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Server.cpp                                         :+:      :+:    :+:   */
+/*   Server.cpp                                                +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 11:42:07 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/06/28 21:14:06 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/07/09 00:18:44 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,45 @@ std::string	Server::read_message(int fd)
 	return msg;
 }
 
+void	Server::handle_clients_messages(size_t pfs_size, struct pollfd *pfs)
+{
+	std::list<Pair<int, Client *> >::iterator iter;
+
+	iter = m_clients.begin();
+	size_t	j = 1;
+	while (j <= pfs_size && iter != m_clients.end()) // If we accepted, m_clients.size() is now equal to pfs_size + 2 instead of + 1
+	{
+		std::string msg;
+		// read and write 
+		if (pfs[j].revents & POLLIN)
+		{
+			try
+			{
+				msg = this->read_message(pfs[j].fd);
+				(*iter).value->parse(msg);
+			}
+			catch (RecvException& e)
+			{
+				// Client disconnected while talking to us
+				delete (*iter).value;
+				iter = m_clients.erase(iter);
+				j++;
+				continue ;
+			}
+			msg = "";
+		}
+		if (pfs[j].revents & POLLHUP)
+		{
+			delete (*iter).value;
+			iter = m_clients.erase(iter);
+			j++;
+			continue ;
+		}
+		j++;
+		iter++;
+	}
+}
+
 void	Server::run(void)
 {
 	size_t	pfs_size;
@@ -133,61 +172,16 @@ void	Server::run(void)
 	while (Server::m_run)
 	{
 		usleep(500000);
-
 		pfs = this->get_pollfd_array();
 		pfs_size = m_clients.size(); // Must be stored here because if we accept a new client we're gonna invalid read in this array later
-
-		std::cout << "Pollin'" << std::endl;
 		if (poll(pfs, m_clients.size() + 1, 0) == -1)
 		{
 			delete[] pfs;
 			perror("poll");
 			throw PollException();
 		}
-
 		this->accept_client(pfs);
-
-		// this->handle_clients_messages(); // TODO create this and move the code that triggers client events here
-		iter = m_clients.begin();
-		size_t	j = 1;
-		while (j <= pfs_size && iter != m_clients.end()) // If we accepted, m_clients.size() is now equal to pfs_size + 2 instead of + 1
-		{
-			std::string msg;
-			// read and write 
-			if (pfs[j].revents & POLLIN)
-			{
-				try
-				{
-					msg = this->read_message(pfs[j].fd);
-					(*iter).value->parse(msg);
-				}
-				catch (RecvException& e)
-				{
-					// close((*iter).value->getfd());
-					// delete (*iter).value;
-					// iter = m_clients.erase(iter);
-					std::cout << e.what() << std::endl;
-				}
-				// std::cout << msg << std::endl;
-				msg = "";
-			}
-
-			if (pfs[j].revents & POLLHUP)
-			{
-				delete (*iter).value;
-				iter = m_clients.erase(iter);
-				// Note that when reading from a channel such as a pipe or a
-				// stream socket, this event merely indicates that the peer
-				// closed its end of the channel. Subsequent reads from the
-				// channel will return 0 (end of file) only after all
-				// outstanding data in the channel has been consumed.
-				
-				j++;
-				continue ;
-			}
-			j++;
-			iter++;
-		}
+		this->handle_clients_messages(pfs_size, pfs); // TODO create this and move the code that triggers client events here
 		delete[] pfs;
 	}
 }

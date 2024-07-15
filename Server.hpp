@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Server.hpp                                         :+:      :+:    :+:   */
+/*   Server.hpp                                                +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 11:37:22 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/06/28 18:28:50 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/07/09 00:17:45 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ class Server
 		struct pollfd	*get_pollfd_array();
 		void			accept_client(struct pollfd *pfs);
 		std::string		read_message(int fd);
+		void			handle_clients_messages(size_t, struct pollfd*);
 
 		// Actual server stuff
 		int					m_port;

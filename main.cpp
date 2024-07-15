@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   main.cpp                                                  +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 13:18:55 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/06/29 14:00:09 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/07/05 14:50:35 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,13 @@ int	main(int argc, char **argv)
 	}
 	catch (std::bad_alloc &b_a)
 	{
+		std::cout << "wtf ?" << std::endl;
 		std::cerr << b_a.what() << std::endl;
 		return (1);
 	}
 	catch (std::exception &e)
 	{
+		std::cout << "wtf ?" << std::endl;
 		std::cerr << e.what() << std::endl;
 		return (1);
 	}
