@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/15 17:27:24 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/15 18:17:04 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,6 @@
 #include "Messageable.h"
 #include "PhoneBook.hpp"
 #include <exception>
-
-#define ERR_NOTONCHANNEL "442" //Only members of the channel are allowed to invite other users.
-#define ERR_CHANOPRIVSNEEDED "482" //SHOULD reject it when the channel has invite-only mode set, and the user is not a channel operator.
-#define ERR_USERONCHANNEL "443" //If the user is already on the target channel
-#define RPL_INVITING "341" //Sent as a reply to the INVITE command to indicate that the attempt was successful and the client with the nickname <nick> has been invited to <channel>.
 
 Channel::Channel(std::string channelName) :
 	Messageable(channelName),
@@ -51,12 +46,6 @@ void Channel::quit(std::string client_name)
 		throw EmptyChannel();
 }
 
-void	Channel::kick(std::string client_name)
-{
-
-	return;
-}
-
 void	Channel::invite(std::string inviter_name, std::string invitee_name)
 {
 	for (std::list<Pair<std::string, bool> >::iterator itr; itr != m_listenList.end(); itr++)
@@ -71,45 +60,19 @@ void	Channel::invite(std::string inviter_name, std::string invitee_name)
 			return ;
 	}
 	throw NotOnChannel();
-
-	// where this is called
-	try
-	{
-		does the channel exist
-	}
-	catch
-	{
-		this->ERR_NOSUCHCHANNEL (403) ;
-	}
-	
-	try
-	{
-		channel->invite(this->getName(), invitee_name);
-	}
-	catch (UserOnChannel)
-	{
-		ERR_USERONCHANNEL
-	}
-	catch (NotOnChannel)
-	{
-		ERR_NOTONCHANNEL
-	}
-	catch (NotOperator)
-	{
-		ERR_CHANOPRIVSNEEDED
-	}
-// When the invite is successful, the server MUST send a RPL_INVITING numeric to 
-// the command issuer, and an INVITE message, with the issuer as <source>, 
-// to the target user. Other channel members SHOULD NOT be notified.
-
 }
 
-void	Channel::topic(std::string topic_name)
-{
+// void	Channel::kick(std::string client_name)
+// {
 
-	return;
-}
+// 	return;
+// }
 
+// void	Channel::topic(std::string topic_name)
+// {
+
+// 	return;
+// }
 
 void Channel::send(std::string msg)
 {

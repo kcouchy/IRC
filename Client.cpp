@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.cpp                                                +**+   +*  *   */
+/*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:28:03 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/15 17:31:55 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/15 18:15:23 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include <iostream>
 #include <string>
 #include <sys/socket.h>
-#include <list>
+#include <vector>
 
 Client::Client(int client_fd) :
 	m_fd(client_fd) {}
@@ -34,9 +34,9 @@ int Client::getfd()const
 	return (this->m_fd);
 }
 
-std::list<std::string>	strsplit(std::string str, char delim)
+std::vector<std::string>	strsplit(std::string str, char delim)
 {
-	std::list<std::string> splitted;
+	std::vector<std::string> splitted;
 	size_t start = 0;
 	size_t stop;
 
@@ -61,8 +61,8 @@ void Client::parse(std::string msg)
 {
 	std::string prefix = "", command = "", args = "";
 
-	std::list<std::string> actions = strsplit(msg, '\n');
-	for (std::list<std::string>::iterator it = actions.begin(); it != actions.end(); it++)
+	std::vector<std::string> actions = strsplit(msg, '\n');
+	for (std::vector<std::string>::iterator it = actions.begin(); it != actions.end(); it++)
 	{
 		std::cout << "command : " << *it << std::endl;
 		if ((*it).length() == 0)
@@ -96,23 +96,13 @@ void Client::changeNick(std::string, std::string params)
 	this->m_name = params;
 }
 
-#define	ERR_NOSUCHNICK "401"
-#define	ERR_NOSUCHSERVER "402"
-#define	ERR_CANNOTSENDTOCHAN "404"
-#define	ERR_TOOMANYTARGETS "407"
-#define	ERR_NORECIPIENT "411"
-#define	ERR_NOTEXTTOSEND "412"
-#define	ERR_NOTOPLEVEL "413"
-#define	ERR_WILDTOPLEVEL "414"
-#define	RPL_AWAY "30"
-
 void Client::sendMessage(std::string, std::string params)
 {
 	std::string msg;
-	std::list<std::string>::iterator it;
-	std::list<std::string> args = strsplit(params, ' ');
+	std::vector<std::string>::iterator it;
+	std::vector<std::string> args = strsplit(params, ' ');
 	std::cout << "Args 0 : " << *args.begin() << std::endl;
-	std::list<std::string> recipients = strsplit((*args.begin()), ',');
+	std::vector<std::string> recipients = strsplit((*args.begin()), ',');
 	for (it = recipients.begin(); it != recipients.end(); it++)
 	{
 		std::string recipient = *it;
@@ -133,7 +123,7 @@ void Client::sendMessage(std::string, std::string params)
 		}
 	
 		std::string msg = "";
-		std::list<std::string>::iterator it2 = ++args.begin();
+		std::vector<std::string>::iterator it2 = ++args.begin();
 		for (; it2 != args.end(); it2++)
 			msg += *it2 + ((it2 == --args.end()) ? '\0' : ' ');
 		m->send(msg);
@@ -148,15 +138,16 @@ void Client::changeUser(std::string, std::string param)
 
 void Client::exec(std::string prefix, std::string command, std::string args)
 {
-	std::list<Pair<std::string, void (Client::*)(std::string, std::string)> > handlers;
+	std::vector<Pair<std::string, void (Client::*)(std::string, std::string)> > handlers;
 	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("PASS", &Client::auth));
 	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("JOIN", &Client::addChannel));
 	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("PRIVMSG", &Client::sendMessage));
 	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("NICK", &Client::changeNick));
 	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("USER", &Client::changeUser));
 	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("LEAVE", &Client::removeChannel));
+	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("INVITE", &Client::inviteToChannel));
 
-	std::list<Pair<std::string, void (Client::*)(std::string, std::string)> >::iterator iter = handlers.begin();
+	std::vector<Pair<std::string, void (Client::*)(std::string, std::string)> >::iterator iter = handlers.begin();
 	while (iter != handlers.end())
 	{
 		if ((*iter).getKey() == command)
@@ -172,12 +163,11 @@ void Client::send(std::string msg)
 	return ;
 }
 
-#define ERR_NOSUCHCHANNEL "403"
 // TODO handle multi-channel join (split channels on ',' and join each splitted channel)
 void	Client::addChannel(std::string, std::string channels)
 {
 	std::string topic;
-	std::list<std::string>::iterator iter;
+	std::vector<std::string>::iterator iter;
 	
 	for (iter = m_channelList.begin(); iter != m_channelList.end(); iter++)
 		if (channels== *iter)
@@ -205,7 +195,7 @@ void	Client::addChannel(std::string, std::string channels)
 
 void	Client::removeChannel(std::string, std::string channelName)
 {
-	std::list<std::string>::iterator iter;
+	std::vector<std::string>::iterator iter;
 	Messageable *channel = NULL;
 
 	for (iter = m_channelList.begin(); iter != m_channelList.end(); iter++)
@@ -222,4 +212,45 @@ void	Client::removeChannel(std::string, std::string channelName)
 			delete channel;
 		}
 	}
+}
+
+void	Client::inviteToChannel(std::string, std::string params)
+{
+	std::vector<std::string> args = strsplit(params, ' ');
+	if (args.size() < 2)
+	{
+		send(ERR_NEEDMOREPARAMS);
+		return ;
+	}
+	//TODO MAYBE also reject if >2 args
+	try
+	{
+		Channel* temp_channel;
+		temp_channel = dynamic_cast <Channel*> (PhoneBook::get().getRecipient(args[1]));
+		if (temp_channel == NULL)
+		{
+			send(ERR_NOSUCHCHANNEL);
+			return ;
+		}
+		temp_channel->invite(m_name, args[0]);
+	}
+	catch (Channel::UserOnChannel& e)
+	{
+		send(ERR_USERONCHANNEL);
+	}
+	catch (Channel::NotOnChannel& e)
+	{
+		send(ERR_NOTONCHANNEL);
+	}
+	catch (Channel::NotOperator& e)
+	{
+		send(ERR_CHANOPRIVSNEEDED);
+	}
+	Messageable* temp_client;
+	temp_client = PhoneBook::get().getRecipient(args[0]);
+	if (temp_client == NULL)
+		return ;
+	send(RPL_INVITING);
+	std::string msg = m_name + ": has invited you to " + args[1];
+	temp_client->send(msg);
 }

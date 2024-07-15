@@ -12,9 +12,26 @@
 
 #pragma once
 
-#include <list>
+#include <vector>
 #include <string>
 #include "Messageable.h"
+
+#define	ERR_NOSUCHNICK "401"
+#define	ERR_NOSUCHSERVER "402"
+#define ERR_NOSUCHCHANNEL "403"
+#define	ERR_CANNOTSENDTOCHAN "404"
+#define	ERR_TOOMANYTARGETS "407"
+#define	ERR_NORECIPIENT "411"
+#define	ERR_NOTEXTTOSEND "412"
+#define	ERR_NOTOPLEVEL "413"
+#define	ERR_WILDTOPLEVEL "414"
+#define	RPL_AWAY "30"
+#define ERR_NOTONCHANNEL "442" //Only members of the channel are allowed to invite other users.
+#define ERR_CHANOPRIVSNEEDED "482" //SHOULD reject it when the channel has invite-only mode set, and the user is not a channel operator.
+#define ERR_USERONCHANNEL "443" //If the user is already on the target channel
+#define RPL_INVITING "341" //Sent as a reply to the INVITE command to indicate that the attempt was successful and the client with the nickname <nick> has been invited to <channel>.
+#define ERR_NEEDMOREPARAMS "461"
+
 
 class Client : public Messageable
 {
@@ -30,7 +47,7 @@ class Client : public Messageable
 	private:
 		int			m_fd;
 		std::string	m_buffer;
-		std::list<std::string> m_channelList;
+		std::vector<std::string> m_channelList;
 
 		Client(void);
 
@@ -43,5 +60,6 @@ class Client : public Messageable
 		void	sendMessage(std::string, std::string channels);
 		void	changeNick(std::string, std::string);
 		void	changeUser(std::string, std::string params);
+		void	inviteToChannel(std::string, std::string params);
 
 };
