@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:28:03 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/05 15:48:51 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/15 17:31:19 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "Messageable.h"
 #include "PhoneBook.hpp"
 #include "Channel.hpp"
+#include <cstdio>
 #include <cstring>
 #include <iostream>
 #include <string>
@@ -30,7 +31,7 @@ Client::~Client(void)
 
 int Client::getfd()const
 {
-	return(this->m_fd);
+	return (this->m_fd);
 }
 
 std::list<std::string>	strsplit(std::string str, char delim)
@@ -39,8 +40,8 @@ std::list<std::string>	strsplit(std::string str, char delim)
 	size_t start = 0;
 	size_t stop;
 
-	std::cout << "str : " << str << std::endl << "delim : " << delim << std::endl;
-	stop = str.find('\n');
+	std::cout << "str : " << str << std::endl << "delim : `" << delim << "`" << std::endl;
+	stop = str.find(delim);
 	while (1)
 	{
 		std::cout << "start : " << start << " stop : " << stop << std::endl;
@@ -51,7 +52,7 @@ std::list<std::string>	strsplit(std::string str, char delim)
 		}
 		splitted.push_back(str.substr(start, stop));
 		start = stop + 1;
-		stop = str.find(start, '\n');
+		stop = str.find(start, delim);
 	}
 	return splitted;
 }
@@ -64,6 +65,8 @@ void Client::parse(std::string msg)
 	for (std::list<std::string>::iterator it = actions.begin(); it != actions.end(); it++)
 	{
 		std::cout << "command : " << *it << std::endl;
+		if ((*it).length() == 0)
+			continue ;
 		prefix = std::strtok((char *) (*it).c_str(), " ");
 		if (prefix[0] != ':')
 		{
@@ -72,13 +75,14 @@ void Client::parse(std::string msg)
 		}
 		else
 			command = std::strtok(NULL, " ");
-		args = std::strtok(NULL, "\0");
+		args = std::strtok(NULL, "");
 		std::cout << "Prefix : " << prefix << ", command : " << command << ", args : " << args << std::endl;
-		// this->exec(prefix, command, args);
+		this->exec(prefix, command, args);
 	}
 	std::cout << "End of parse" << std::endl;
 }
 
+// TODO
 void Client::auth(std::string , std::string args)
 {
 	if (args == "test")
@@ -92,14 +96,48 @@ void Client::changeNick(std::string, std::string params)
 	this->m_name = params;
 }
 
+#define	ERR_NOSUCHNICK "401"
+#define	ERR_NOSUCHSERVER "402"
+#define	ERR_CANNOTSENDTOCHAN "404"
+#define	ERR_TOOMANYTARGETS "407"
+#define	ERR_NORECIPIENT "411"
+#define	ERR_NOTEXTTOSEND "412"
+#define	ERR_NOTOPLEVEL "413"
+#define	ERR_WILDTOPLEVEL "414"
+#define	RPL_AWAY "30"
+
 void Client::sendMessage(std::string, std::string params)
 {
-	std::string dest = params.substr(0, params.find(' '));
-	std::string msg = params.substr(params.find(' ') + 1, params.find(params.find(' ') + 1, ' '));
-
-	std::cout << "msg : " << msg << std::endl;
-	Messageable *m = PhoneBook::get().getRecipient(dest);
-	m->send(msg);
+	std::string msg;
+	std::list<std::string>::iterator it;
+	std::list<std::string> args = strsplit(params, ' ');
+	std::cout << "Args 0 : " << *args.begin() << std::endl;
+	std::list<std::string> recipients = strsplit((*args.begin()), ',');
+	for (it = recipients.begin(); it != recipients.end(); it++)
+	{
+		std::string recipient = *it;
+		std::cout << "Recipient : " << recipient << std::endl;
+		if (recipient.size() == 0)
+		{
+			::send(this->m_fd, ERR_NORECIPIENT, 3, 0);
+			continue ;
+		}
+		Messageable *m = PhoneBook::get().getRecipient(recipient);
+		if (m == NULL)
+		{
+			if (recipient.at(0) == '#')
+				::send(this->m_fd, ERR_CANNOTSENDTOCHAN, 3, 0);
+			else
+				::send(this->m_fd, ERR_NOSUCHNICK, 3, 0);
+			continue ;
+		}
+	
+		std::string msg = "";
+		std::list<std::string>::iterator it2 = ++args.begin();
+		for (; it2 != args.end(); it2++)
+			msg += *it2 + ((it2 == --args.end()) ? '\0' : ' ');
+		m->send(msg);
+	}
 }
 
 void Client::changeUser(std::string, std::string param)
@@ -113,11 +151,11 @@ void Client::exec(std::string prefix, std::string command, std::string args)
 	std::list<Pair<std::string, void (Client::*)(std::string, std::string)> > handlers;
 	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("PASS", &Client::auth));
 	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("JOIN", &Client::addChannel));
-	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("SEND", &Client::sendMessage));
+	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("PRIVMSG", &Client::sendMessage));
 	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("NICK", &Client::changeNick));
 	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("USER", &Client::changeUser));
+	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("LEAVE", &Client::removeChannel));
 
-	std::cout << "I'm trying to execute " << command << " " << args << std::endl;
 	std::list<Pair<std::string, void (Client::*)(std::string, std::string)> >::iterator iter = handlers.begin();
 	while (iter != handlers.end())
 	{
@@ -134,6 +172,7 @@ void Client::send(std::string msg)
 	return ;
 }
 
+#define ERR_NOSUCHCHANNEL "403"
 // TODO handle multi-channel join (split channels on ',' and join each splitted channel)
 void	Client::addChannel(std::string, std::string channels)
 {
@@ -146,14 +185,25 @@ void	Client::addChannel(std::string, std::string channels)
 	Channel *channel;
 	Messageable *c = PhoneBook::get().getRecipient(channels);
 	if (c == NULL)
+	{
 		channel = new Channel(channels);
+	}
 	else
-		channel = reinterpret_cast<Channel *>(c);
+	{
+		channel = NULL;
+		std::cout << c->getName() << std::endl;
+		if (dynamic_cast<Channel *>(c) == NULL)
+		{
+			// TODO return an error code to the client
+			::send(this->m_fd, ERR_NOSUCHCHANNEL, 3, 0);
+			return ;
+		}
+	}
 	channel->join(this->getName());
 	m_channelList.push_back(channels);
 }
 
-void	Client::removeChannel(std::string channelName)
+void	Client::removeChannel(std::string, std::string channelName)
 {
 	std::list<std::string>::iterator iter;
 	Messageable *channel = NULL;
@@ -167,7 +217,7 @@ void	Client::removeChannel(std::string channelName)
 		{
 			reinterpret_cast<Channel *>(channel)->quit(this->getName());
 		}
-		catch(const std::exception& e)
+		catch(const Channel::EmptyChannel& e)
 		{
 			delete channel;
 		}

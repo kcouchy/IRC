@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.h                                           :+:      :+:    :+:   */
+/*   Client.h                                                  +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 23:17:50 by aboyreau               #+#    #+#             */
-/*   Updated: 2024/06/30 15:56:32 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/07/15 14:25:34 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ class Client : public Messageable
 		void	exec(std::string prefix, std::string command, std::string args);
 		void	auth(std::string prefix, std::string args);
 		void	addChannel(std::string, std::string channels);
-		void	removeChannel(std::string channelName);
+		void	removeChannel(std::string, std::string channelName);
 		void	sendMessage(std::string, std::string channels);
 		void	changeNick(std::string, std::string);
 		void	changeUser(std::string, std::string params);
