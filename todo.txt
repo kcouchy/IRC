@@ -1,9 +1,9 @@
 For clients, you must be able to:
-	authenticate, 
-	set a nickname, 
-	a username, 
-	join a channel,
-	send and receive private messages using your reference client.
+	authenticate, (PASS is done)
+	set a nickname, (NICK 
+	a username, (USER 
+	join a channel, (JOIN 
+	send and receive private messages using your reference client. (PRIVMSG 
 
 All the messages sent from one client to a channel have to be forwarded to
 every other client that joined the channel.

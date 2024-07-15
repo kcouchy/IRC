@@ -6,12 +6,13 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 23:17:50 by aboyreau               #+#    #+#             */
-/*   Updated: 2024/07/15 14:25:34 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/15 22:42:13 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
+#include <exception>
 #include <vector>
 #include <string>
 #include "Messageable.h"
@@ -31,22 +32,31 @@
 #define ERR_USERONCHANNEL "443" //If the user is already on the target channel
 #define RPL_INVITING "341" //Sent as a reply to the INVITE command to indicate that the attempt was successful and the client with the nickname <nick> has been invited to <channel>.
 #define ERR_NEEDMOREPARAMS "461"
+#define ERR_ALREADYREGISTERED "462"
+#define ERR_PASSWDMISMATCH "464"
 
 
 class Client : public Messageable
 {
 	public:
-		Client (int client_fd);
+		Client (int client_fd, std::string password);
 		~Client(void);
 
 		int		getfd() const;
-		void	read()  const;
+		void	send(std::string msg);
 		void	parse(std::string);
-		void	send(std::string message);
+
+		class KillMePlease : public std::exception
+		{
+			public:
+				const char *what() const throw();
+		};
 
 	private:
 		int			m_fd;
 		std::string	m_buffer;
+		std::string	m_password;
+		bool		m_authenticated;
 		std::vector<std::string> m_channelList;
 
 		Client(void);
@@ -54,12 +64,21 @@ class Client : public Messageable
 		// Handlers
 		// Find and run a handler according to the command passed as parameter.
 		void	exec(std::string prefix, std::string command, std::string args);
+
+		// Authentication
+		void	capabilites(std::string, std::string params);
 		void	auth(std::string prefix, std::string args);
-		void	addChannel(std::string, std::string channels);
-		void	removeChannel(std::string, std::string channelName);
-		void	sendMessage(std::string, std::string channels);
 		void	changeNick(std::string, std::string);
 		void	changeUser(std::string, std::string params);
+
+		// Channel-related stuff
+		void	addChannel(std::string, std::string channels);
+		void	removeChannel(std::string, std::string channelName);
 		void	inviteToChannel(std::string, std::string params);
 
+		// Message-related stuff
+		void	sendMessage(std::string, std::string channels);
+
+		// I'm outta here
+		void	quit(std::string, std::string params);
 };

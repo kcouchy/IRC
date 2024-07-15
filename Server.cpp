@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 11:42:07 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/09 00:18:44 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/15 20:03:28 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void	Server::accept_client(struct pollfd *pfs)
 		client_fd = accept(m_socketfd, NULL, NULL);
 		if (client_fd == -1)
 			throw AcceptException();
-		Client *c = new Client(client_fd);
+		Client *c = new Client(client_fd, m_password);
 		this->m_clients.push_back(Pair<int, Client *>(client_fd, c));
 	}
 }
@@ -140,6 +140,13 @@ void	Server::handle_clients_messages(size_t pfs_size, struct pollfd *pfs)
 			{
 				msg = this->read_message(pfs[j].fd);
 				(*iter).value->parse(msg);
+			}
+			catch (Client::KillMePlease &e)
+			{
+				delete (*iter).value;
+				iter = m_clients.erase(iter);
+				j++;
+				continue ;
 			}
 			catch (RecvException& e)
 			{
