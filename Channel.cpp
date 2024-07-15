@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Channel.cpp                                               +**+   +*  *   */
+/*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/15 14:18:07 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/15 15:57:40 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,26 @@ void Channel::quit(std::string client_name)
 	if (m_listenList.size() == 0)
 		throw EmptyChannel();
 }
+
+void	Channel::kick(std::string client_name)
+{
+
+	return;
+}
+
+void	Channel::invite(std::string client_name)
+{
+	if 
+	::send()this->
+	return;
+}
+
+void	Channel::topic(std::string topic_name)
+{
+
+	return;
+}
+
 
 void Channel::send(std::string msg)
 {

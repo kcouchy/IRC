@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Channel.hpp                                               +**+   +*  *   */
+/*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:57:02 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/15 14:15:10 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/15 15:52:40 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@ class Channel : public Messageable
 
 		void		join(std::string client_name);
 		void		quit(std::string client_name);
+		void		kick(std::string client_name);
+		void		invite(std::string client_name);
+		void		topic(std::string topic_name);
 		// void mode(std::string client_name, std::string flag);
 
 		void		send(std::string message);
