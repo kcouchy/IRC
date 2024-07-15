@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Messageable.cpp                                    :+:      :+:    :+:   */
+/*   Messageable.cpp                                           +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:26:45 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/06/28 16:15:43 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/07/15 14:13:25 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,9 @@ Messageable& Messageable::operator=(const Messageable&)
 std::string Messageable::getName() const
 {
 	return (this->m_name);
+}
+
+const char *Messageable::RecipientNotFound::what() const throw()
+{
+	return ("Recipient not found.");
 }
