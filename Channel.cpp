@@ -6,13 +6,14 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/06/29 14:58:38 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/07/15 14:18:07 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
 #include "Messageable.h"
 #include "PhoneBook.hpp"
+#include <exception>
 
 Channel::Channel(std::string channelName) :
 	Messageable(channelName) {}
@@ -40,7 +41,7 @@ void Channel::quit(std::string client_name)
 			return;
 	this->setOperator(m_listenList.front().getKey(), true);
 	if (m_listenList.size() == 0)
-		throw std::exception();
+		throw EmptyChannel();
 }
 
 void Channel::send(std::string msg)
@@ -50,8 +51,8 @@ void Channel::send(std::string msg)
 	for (iter = m_listenList.begin(); iter != m_listenList.end(); iter++)
 	{
 		target = PhoneBook::get().getRecipient((*iter).getKey());
-		// if (target == NULL)
-		// TODO throw target not found in PhoneBook error
+		if (target == NULL)
+			throw Messageable::RecipientNotFound();
 		(*target).send(msg);
 	}
 }
@@ -72,4 +73,9 @@ void Channel::setOperator(std::string client_name, bool new_value)
 	for (iter = m_listenList.begin(); iter != m_listenList.end(); iter++)
 		if ((*iter).getKey() == client_name)
 			(*iter).value = new_value;
+}
+
+const char *Channel::EmptyChannel::what() const throw()
+{
+	return ("Don't leave me alone, I'm a lonely empty channel :c");
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Channel.hpp                                        :+:      :+:    :+:   */
+/*   Channel.hpp                                               +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:57:02 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/06/28 15:27:56 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/15 14:15:10 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,12 @@ class Channel : public Messageable
 		std::string	getTopic(void)const;
 		void		setTopic(std::string topic);
 		void		setOperator(std::string client_name, bool new_value);
+
+		class EmptyChannel : public std::exception
+		{
+			public:
+				virtual const char *what() const throw();
+		};
 
 	private:
 		Channel(void);
