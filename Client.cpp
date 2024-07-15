@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:28:03 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/15 17:31:19 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/15 17:31:55 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,9 +190,9 @@ void	Client::addChannel(std::string, std::string channels)
 	}
 	else
 	{
-		channel = NULL;
+		channel = dynamic_cast<Channel *>(c);
 		std::cout << c->getName() << std::endl;
-		if (dynamic_cast<Channel *>(c) == NULL)
+		if (channel == NULL)
 		{
 			// TODO return an error code to the client
 			::send(this->m_fd, ERR_NOSUCHCHANNEL, 3, 0);
