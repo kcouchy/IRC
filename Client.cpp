@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.cpp                                         :+:      :+:    :+:   */
+/*   Client.cpp                                                +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:28:03 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/16 12:51:43 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/16 15:00:42 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,8 @@ void Client::parse(std::string msg)
 			args = args.substr(0, args.size() - 2);
 		std::cout << "I'm executing " << command << " " << args << std::endl;
 		this->exec(prefix, command, args);
-		prefix = "";
 		command = "";
+		prefix = "";
 		args = "";
 	}
 }
@@ -122,7 +122,7 @@ void Client::exec(std::string prefix, std::string command, std::string args)
 // Authentication
 std::string Client::capabilites(std::string, std::string params)
 {
-	(void) params;
+	std::cerr << "`" << params << "`" << std::endl;
 	if (params == "LS 302")
 	{
 		send("CAP * LS :\n");
@@ -145,10 +145,16 @@ std::string Client::auth(std::string , std::string args)
 		this->m_authenticated = true;
 	else
 		return (ERR_PASSWDMISMATCH);
+	return ("");
 }
 
 std::string Client::changeNick(std::string, std::string params)
 {
+	std::string authorized_set = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
+	if (params.find_first_not_of(authorized_set) != std::string::npos)
+	{
+		return (ERR_ERRONEUSNICKNAME);
+	}
 	this->m_name = params;
 	return ("");
 }
@@ -156,7 +162,7 @@ std::string Client::changeNick(std::string, std::string params)
 std::string Client::changeUser(std::string, std::string param)
 {
 	(void) param;
-	this->send(":ft_irc@localhost:6667 001 " + this->getName() + " :Welcome here\n");
+	this->send(":ft_irc 001 " + this->getName() + " :Welcome here\n");
 	return ("");
 }
 
@@ -168,8 +174,8 @@ std::string	Client::addChannel(std::string, std::string channels)
 	std::vector<std::string>::iterator iter;
 	
 	for (iter = m_channelList.begin(); iter != m_channelList.end(); iter++)
-		if (channels== *iter)
-			return;
+		if (channels == *iter)
+			return "";
 	Channel *channel;
 	Messageable *c = PhoneBook::get().getRecipient(channels);
 	if (c == NULL)
@@ -231,10 +237,11 @@ std::string	Client::inviteToChannel(std::string, std::string params)
 	Messageable* temp_client;
 	temp_client = PhoneBook::get().getRecipient(args[0]);
 	if (temp_client == NULL)
-		return ;
+		return "";
 	send(RPL_INVITING);
 	std::string msg = m_name + ": has invited you to " + args[1];
 	temp_client->send(msg);
+	return "";
 }
 
 // Message-related stuff
@@ -248,26 +255,27 @@ std::string Client::sendMessage(std::string, std::string params)
 	for (it = recipients.begin(); it != recipients.end(); it++)
 	{
 		std::string recipient = *it;
-		std::cout << "Recipient : " << recipient << std::endl;
 		if (recipient.size() == 0)
 		{
-			::send(this->m_fd, ERR_NORECIPIENT, 3, 0);
+			send(ERR_NORECIPIENT);
 			continue ;
 		}
 		Messageable *m = PhoneBook::get().getRecipient(recipient);
 		if (m == NULL)
 		{
 			if (recipient.at(0) == '#')
-				::send(this->m_fd, ERR_CANNOTSENDTOCHAN, 3, 0);
+				send(ERR_CANNOTSENDTOCHAN);
 			else
-				::send(this->m_fd, ERR_NOSUCHNICK, 3, 0);
+				send(ERR_NOSUCHNICK);
 			continue ;
 		}
 	
-		std::string msg = "";
+		std::string msg = ":" + m_name + " PRIVMSG " + recipient + " ";
 		std::vector<std::string>::iterator it2 = ++args.begin();
 		for (; it2 != args.end(); it2++)
-			msg += *it2 + ((it2 == --args.end()) ? '\0' : ' ');
+			msg += *it2 + ' ';
+		msg = msg.substr(0, msg.size() - 1);
+		msg += "\n";
 		m->send(msg);
 	}
 	return ("");
@@ -301,10 +309,13 @@ std::string	Client::topicChannel(std::string, std::string params)
 		if (temp_channel == NULL)
 		{
 			send(ERR_NOSUCHCHANNEL);
-			return ;
+			return "";
 		}
 		std::string topic_return;
 		topic_return = temp_channel->topic(args, m_name);
-		send()
+		send("");
 	}
+	catch (std::exception &e)
+	{}
+	return "";
 }

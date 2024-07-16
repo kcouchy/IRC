@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Channel.hpp                                        :+:      :+:    :+:   */
+/*   Channel.hpp                                               +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:57:02 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/16 12:32:51 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/16 13:20:19 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,21 +42,21 @@ class Channel : public Messageable
 			public:
 				virtual const char *what() const throw();
 		};
-		class UserOnChannel : public std::exception
-		{
-			public:
-				virtual const char *what() const throw();
-		};
+		// class UserOnChannel : public std::exception
+		// {
+		// 	public:
+		// 		virtual const char *what() const throw();
+		// };
 		class NotOnChannel : public std::exception
 		{
 			public:
 				virtual const char *what() const throw();
 		};
-		class NotOperator : public std::exception
-		{
-			public:
-				virtual const char *what() const throw();
-		};
+		// class NotOperator : public std::exception
+		// {
+		// 	public:
+		// 		virtual const char *what() const throw();
+		// };
 
 	private:
 		Channel(void);

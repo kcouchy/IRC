@@ -1,19 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Channel.cpp                                        :+:      :+:    :+:   */
+/*   Channel.cpp                                               +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/16 12:40:15 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/16 14:31:34 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
 #include "Messageable.h"
 #include "PhoneBook.hpp"
-#include <exception>
 
 Channel::Channel(std::string channelName) :
 	Messageable(channelName),
@@ -87,7 +86,7 @@ std::string	Channel::topic(std::vector<std::string> args, std::string client_nam
 
 		}
 		else if (args.size() > 1 && (*iter).value == 1)
-
+		{}
 		// if (m_inviteOnly == false && inviter_name == (*itr).getKey())
 		// 		return ;
 		// else if (m_inviteOnly == true && inviter_name == (*itr).getKey() && (*itr).value == 0)
@@ -96,7 +95,7 @@ std::string	Channel::topic(std::vector<std::string> args, std::string client_nam
 		// 	return ;
 	}
 	throw NotOnChannel();
-	return;
+	return "";
 }
 
 void Channel::send(std::string msg)
@@ -108,7 +107,6 @@ void Channel::send(std::string msg)
 		target = PhoneBook::get().getRecipient((*iter).getKey());
 		if (target == NULL)
 			throw Messageable::RecipientNotFound();
-		msg = ":" + m_name + " " + msg;
 		(*target).send(msg);
 	}
 }
@@ -147,10 +145,10 @@ const char *Channel::EmptyChannel::what() const throw()
 // 	return ("Nope, not allowed, you're not a channel operator");
 // }
 
-// const char *Channel::NotOnChannel::what() const throw()
-// {
-// 	return ("Nope, not allowed, the user is not on the channel");
-// }
+const char *Channel::NotOnChannel::what() const throw()
+{
+	return ("Nope, not allowed, the user is not on the channel");
+}
 
 // const char *Channel::UserOnChannel::what() const throw()
 // {
