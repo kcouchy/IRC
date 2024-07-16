@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   PhoneBook.hpp                                      :+:      :+:    :+:   */
+/*   PhoneBook.hpp                                             +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 13:41:40 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/16 18:18:07 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/16 19:20:50 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 #include <list>
 #include <string>
 #include "Messageable.h"
-#include "Channel.h"
+#include "Channel.hpp"
+#include "Client.h"
 
 class Messageable;
 

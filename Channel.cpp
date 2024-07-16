@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Channel.cpp                                        :+:      :+:    :+:   */
+/*   Channel.cpp                                               +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/16 18:53:04 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/16 20:05:01 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,9 @@
 Channel::Channel(std::string channelName) :
 	Messageable(channelName),
 	m_inviteOnly(false),
-	m_topic(""),
-	m_topicProtected(false) {}
+	m_topicProtected(false),
+	m_topic("")
+		{}
 
 Channel::~Channel(void) {}
 
@@ -118,7 +119,7 @@ std::string Channel::setTopic(std::string topic, std::string client_name)
 {
 	if (m_topicProtected == true)
 	{
-		std::list<Pair<std::string, bool> >::iterator user = std::find(m_listenList.begin(), m_listenList.end(), client_name)
+		std::list<Pair<std::string, bool> >::iterator user = std::find(m_listenList.begin(), m_listenList.end(), client_name);
 		if (user == m_listenList.end())
 			return(ERR_NOTONCHANNEL);
 		else if ((*user).value == false)

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   PhoneBook.cpp                                      :+:      :+:    :+:   */
+/*   PhoneBook.cpp                                             +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 13:59:21 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/16 18:50:20 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/16 20:07:21 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void PhoneBook::KiLl()
 void	PhoneBook::addRecipient(Messageable *newRecipient)
 {
 	if (getRecipient(newRecipient->getName()))
-		throw //TODO
+		throw std::exception(); //TODO
 	m_messageableList.push_back(newRecipient);
 	return ;
 }
@@ -71,7 +71,7 @@ Channel *PhoneBook::getChannel(std::string channel_name)
 	return (dynamic_cast<Channel*>(getRecipient(channel_name)));
 }
 
-Channel *PhoneBook::getClient(std::string client_name)
+Client *PhoneBook::getClient(std::string client_name)
 {
 	return (dynamic_cast<Client*>(getRecipient(client_name)));
 }

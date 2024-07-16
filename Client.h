@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 23:17:50 by aboyreau               #+#    #+#             */
-/*   Updated: 2024/07/15 22:42:13 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/16 20:27:06 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <vector>
 #include <string>
 #include "Messageable.h"
+#include "Pair.h"
 
 class Client : public Messageable
 {
@@ -64,3 +65,5 @@ class Client : public Messageable
 		// I'm outta here
 		std::string	quit(std::string, std::string params);
 };
+
+typedef Pair<std::string, std::string (Client::*)(std::string, std::string)> function;

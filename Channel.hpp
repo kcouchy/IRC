@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Channel.hpp                                        :+:      :+:    :+:   */
+/*   Channel.hpp                                               +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:57:02 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/16 16:28:04 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/16 19:26:22 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 #include "Messageable.h"
 #include "Pair.h"
-#include <vector>
 #include <list>
 
 class Channel : public Messageable

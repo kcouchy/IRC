@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.cpp                                         :+:      :+:    :+:   */
+/*   Client.cpp                                                +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/16 18:48:23 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/16 20:26:14 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,18 +100,20 @@ void Client::parse(std::string msg)
 
 void Client::exec(std::string prefix, std::string command, std::string args)
 {
-	std::vector<Pair<std::string, std::string (Client::*)(std::string, std::string)> > handlers;
-	handlers.push_back(Pair<std::string, std::string (Client::*)(std::string, std::string)>("PASS", &Client::auth));
-	handlers.push_back(Pair<std::string, std::string (Client::*)(std::string, std::string)>("JOIN", &Client::addChannel));
-	handlers.push_back(Pair<std::string, std::string (Client::*)(std::string, std::string)>("PRIVMSG", &Client::sendMessage));
-	handlers.push_back(Pair<std::string, std::string (Client::*)(std::string, std::string)>("NICK", &Client::changeNick));
-	handlers.push_back(Pair<std::string, std::string (Client::*)(std::string, std::string)>("USER", &Client::changeUser));
-	handlers.push_back(Pair<std::string, std::string (Client::*)(std::string, std::string)>("LEAVE", &Client::removeChannel));
-	handlers.push_back(Pair<std::string, std::string (Client::*)(std::string, std::string)>("QUIT", &Client::quit));
-	handlers.push_back(Pair<std::string, std::string (Client::*)(std::string, std::string)>("INVITE", &Client::inviteToChannel));
-	handlers.push_back(Pair<std::string, std::string (Client::*)(std::string, std::string)>("CAP", &Client::capabilites));
+	std::vector<function> handlers;
+	handlers.push_back(function("CAP", &Client::capabilites));			// OK
+	handlers.push_back(function("PASS", &Client::auth));				// KO
+	handlers.push_back(function("NICK", &Client::changeNick));			// KO
+	handlers.push_back(function("USER", &Client::changeUser));			// KO
 
-	std::vector<Pair<std::string, std::string (Client::*)(std::string, std::string)> >::iterator iter = handlers.begin();
+	handlers.push_back(function("JOIN", &Client::addChannel));			// KO
+	handlers.push_back(function("LEAVE", &Client::removeChannel));		// KO
+	handlers.push_back(function("INVITE", &Client::inviteToChannel));	// KO
+
+	handlers.push_back(function("PRIVMSG", &Client::sendMessage));		// KO
+	handlers.push_back(function("QUIT", &Client::quit));				// KO
+
+	std::vector<function>::iterator iter = handlers.begin();
 	while (iter != handlers.end())
 	{
 		if ((*iter).getKey() == command)
@@ -306,7 +308,7 @@ std::string	Client::topicChannel(std::string, std::string params)
 		return ("");
 	}
 	Channel* temp_channel;
-	temp_channel = PhoneBook::get().getChannel(args[0]));
+	temp_channel = PhoneBook::get().getChannel(args[0]);
 	if (temp_channel == NULL)
 	{
 		send(ERR_NOSUCHCHANNEL);
@@ -331,8 +333,9 @@ std::string	Client::topicChannel(std::string, std::string params)
 		std::vector<std::string>::iterator iter = args.begin() + 2;
 		for (; iter != args.end(); iter++)
 			new_topic += " " + *iter;
-		std::string topic_return = temp_channel->setTopic(new_topic);
+		std::string topic_return = temp_channel->setTopic(new_topic, m_name);
 		if (topic_return != "")
 			send(":" + temp_channel->getName() + " " + topic_return);
 	}
+	return "";
 }
