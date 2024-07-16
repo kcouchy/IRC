@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.cpp                                                +**+   +*  *   */
+/*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:28:03 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/15 23:25:52 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/16 11:35:48 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,7 +256,6 @@ void	Client::inviteToChannel(std::string, std::string params)
 	std::string msg = m_name + ": has invited you to " + args[1];
 	temp_client->send(msg);
 }
-
 // Message-related stuff
 void Client::sendMessage(std::string, std::string params)
 {
@@ -302,4 +301,25 @@ void Client::quit(std::string, std::string)
 const char *Client::KillMePlease::what() const throw()
 {
 	return ("Please delete me");
+}
+
+void	Client::topicChannel(std::string, std::string params)
+{
+	std::vector<std::string> args = strsplit(params, ' ');
+	if (args.size() < 1)
+	{
+		send(ERR_NEEDMOREPARAMS);
+		return ;
+	}
+	try
+	{
+		Channel* temp_channel;
+		temp_channel = dynamic_cast <Channel*> (PhoneBook::get().getRecipient(args[0]));
+		if (temp_channel == NULL)
+		{
+			send(ERR_NOSUCHCHANNEL);
+			return ;
+		}
+		temp_channel->topic(args, m_name);
+	}
 }

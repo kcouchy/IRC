@@ -75,6 +75,7 @@ class Client : public Messageable
 		void	addChannel(std::string, std::string channels);
 		void	removeChannel(std::string, std::string channelName);
 		void	inviteToChannel(std::string, std::string params);
+		void	topicChannel(std::string, std::string params);
 
 		// Message-related stuff
 		void	sendMessage(std::string, std::string channels);

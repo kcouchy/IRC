@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/15 18:17:04 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/16 11:26:25 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,11 +68,35 @@ void	Channel::invite(std::string inviter_name, std::string invitee_name)
 // 	return;
 // }
 
-// void	Channel::topic(std::string topic_name)
-// {
+// --------------------------------------------------------------------------
+// TODO - format messages to add the sender (channel or user) to the message
+// --------------------------------------------------------------------------
 
-// 	return;
-// }
+void	Channel::topic(std::vector<std::string> args, std::string client_name)
+{
+	for (std::list<Pair<std::string, bool> >::iterator iter; iter != m_listenList.end(); iter++)
+	{
+		if (client_name == (*iter).getKey() && args.size() == 1)
+		{
+			PhoneBook::get().getRecipient(client_name)->send(m_topic); // TODO should use sendMessage?
+			return ;
+		}
+		else if (args.size() > 1 && (*iter).value == 0)
+		{
+
+		}
+		else if (args.size() > 1 && (*iter).value == 1)
+
+		if (m_inviteOnly == false && inviter_name == (*itr).getKey())
+				return ;
+		else if (m_inviteOnly == true && inviter_name == (*itr).getKey() && (*itr).value == 0)
+			throw NotOperator();
+		else if (m_inviteOnly == true && inviter_name == (*itr).getKey() && (*itr).value == 1)
+			return ;
+	}
+	throw NotOnChannel();
+	return;
+}
 
 void Channel::send(std::string msg)
 {
@@ -123,7 +147,7 @@ const char *Channel::NotOperator::what() const throw()
 
 const char *Channel::NotOnChannel::what() const throw()
 {
-	return ("Nope, not allowed, the user cannot invite to a channel they don't belong to");
+	return ("Nope, not allowed, the user is not on the channel");
 }
 
 const char *Channel::UserOnChannel::what() const throw()
