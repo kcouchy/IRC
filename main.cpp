@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                                  +**+   +*  *   */
+/*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 13:18:55 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/15 15:48:04 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/16 18:50:12 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 #include <csignal>
 #include <iostream>
 #include <sstream>
+
+//TODO check new clients and channels don't already exist in constructor
+//TODO DUMBARSE use std::find to remove unnecessary loops
 
 long	check_inputs(int argc, char **argv)
 {

@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 13:59:21 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/06/28 15:32:48 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/16 18:50:20 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void PhoneBook::KiLl()
 
 void	PhoneBook::addRecipient(Messageable *newRecipient)
 {
+	if (getRecipient(newRecipient->getName()))
+		throw //TODO
 	m_messageableList.push_back(newRecipient);
 	return ;
 }
@@ -53,6 +55,7 @@ void	PhoneBook::removeRecipient(Messageable *killRecipient)
 			iter = m_messageableList.erase(iter);
 	}
 }
+
 Messageable *PhoneBook::getRecipient(std::string name)
 {
 	std::list<Messageable *>::iterator iter;
@@ -60,5 +63,15 @@ Messageable *PhoneBook::getRecipient(std::string name)
 	for (iter = m_messageableList.begin(); iter != m_messageableList.end(); iter++)
 		if ((*iter)->getName() == name)
 			return (*iter);
-	return (NULL);//TODO this should trigger a destinator not found message to the sender
+	return (NULL); //TODO this should trigger a destinator not found message to the sender
+}
+
+Channel *PhoneBook::getChannel(std::string channel_name)
+{
+	return (dynamic_cast<Channel*>(getRecipient(channel_name)));
+}
+
+Channel *PhoneBook::getClient(std::string client_name)
+{
+	return (dynamic_cast<Client*>(getRecipient(client_name)));
 }

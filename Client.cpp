@@ -1,13 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                              ++            */
-/*   Client.cpp                                                +**+   +*  *   */
-/*                                                             ##%#*###*+++   */
-/*   By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+     */
-/*                                                            # *   *. #*     */
-/*   Created: 2024/07/16 17:33:15 by aboyreau          **+*+  * -_._-   #+    */
-/*   Updated: 2024/07/16 17:33:15 by aboyreau          +#-.-*  +         *    */
-/*                                                     *-.. *   ++       #    */
+/*                                                        :::      ::::::::   */
+/*   Client.cpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
+/*   Updated: 2024/07/16 18:48:23 by kcouchma         ###   ########.fr       */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.h"
@@ -202,16 +202,18 @@ std::string	Client::addChannel(std::string, std::string params)
 std::string	Client::removeChannel(std::string, std::string channelName)
 {
 	std::vector<std::string>::iterator iter;
-	Messageable *channel = NULL;
+	Channel *channel = NULL;
 
 	for (iter = m_channelList.begin(); iter != m_channelList.end(); iter++)
 	{
 		if (channelName == *iter)
 			iter = m_channelList.erase(iter);
-		channel = PhoneBook::get().getRecipient(channelName);
+		channel = PhoneBook::get().getChannel(channelName);
+		if (channel == NULL)
+			continue ;
 		try
 		{
-			reinterpret_cast<Channel *>(channel)->quit(this->getName());
+			channel->quit(this->getName());
 		}
 		catch(const Channel::EmptyChannel& e)
 		{
@@ -229,7 +231,7 @@ std::string	Client::inviteToChannel(std::string, std::string params)
 	//TODO MAYBE also reject if >2 args
 	std::string invite_return;
 	Channel* temp_channel;
-	temp_channel = dynamic_cast <Channel*> (PhoneBook::get().getRecipient(args[1]));
+	temp_channel = PhoneBook::get().getChannel(args[1]);
 	if (temp_channel == NULL)
 		return (ERR_NOSUCHCHANNEL);
 	invite_return = temp_channel->invite(m_name, args[0]);
@@ -303,37 +305,34 @@ std::string	Client::topicChannel(std::string, std::string params)
 		send(ERR_NEEDMOREPARAMS);
 		return ("");
 	}
-
-	// try handle empty topic here, then split by ';' and send to topic method
-	// add a messageable method to get channel or return null
+	Channel* temp_channel;
+	temp_channel = PhoneBook::get().getChannel(args[0]));
+	if (temp_channel == NULL)
 	{
-		Channel* temp_channel;
-		temp_channel = dynamic_cast <Channel*> (PhoneBook::get().getRecipient(args[0]));
-		if (temp_channel == NULL)
+		send(ERR_NOSUCHCHANNEL);
+		return ("");
+	}
+	if (args.size() == 1)
+	{
+		std::string temp_topic = temp_channel->getTopic();
+		if (temp_topic == "")
+			send(":" + temp_channel->getName() + " " + RPL_NOTOPIC);
+		else
+			send(":" + temp_channel->getName() + " " + RPL_TOPIC + " :"  + temp_topic + "\n");
+	}
+	else
+	{
+		if (args[1][0] != ':')
 		{
-			send(ERR_NOSUCHCHANNEL);
+			send(":" + temp_channel->getName() + " " + ERR_UNKNOWNERROR);
 			return ("");
 		}
-		if (args.size() == 1)
-		{
-			std::string temp_topic = temp_channel->getTopic();
-			if (temp_topic == "")
-				send(":" + temp_channel->getName() + " " + RPL_NOTOPIC);
-			else
-				send(":" + temp_channel->getName() + " " + RPL_TOPIC + " :"  + temp_topic + "\n");
-		}
-		else
-		{
-			if (args[1][0] != ':')
-			{
-				send(":" + temp_channel->getName() + " " + ERR_UNKNOWNERROR);
-				return ("");
-			}
-			std::string new_topic = args[1].substr(1, args[1].size() - 1);
-			std::vector<std::string>::iterator iter = args.begin() + 2;
-			for (; iter != args.end(); iter++)
-				new_topic += " " + *iter;
-			temp_channel->setTopic(new_topic);
-		}
+		std::string new_topic = args[1].substr(1, args[1].size() - 1);
+		std::vector<std::string>::iterator iter = args.begin() + 2;
+		for (; iter != args.end(); iter++)
+			new_topic += " " + *iter;
+		std::string topic_return = temp_channel->setTopic(new_topic);
+		if (topic_return != "")
+			send(":" + temp_channel->getName() + " " + topic_return);
 	}
 }

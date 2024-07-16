@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/16 16:44:24 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/16 18:53:04 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ void Channel::send(std::string msg)
 		(*target).send(msg);
 	}
 }
+
 std::string Channel::getTopic(void)const
 {
 	return (m_topic);
@@ -115,8 +116,14 @@ std::string Channel::getTopic(void)const
 
 std::string Channel::setTopic(std::string topic, std::string client_name)
 {
-	if (m_topicProtected == true && std::find(m_listenList.begin(), m_listenList.end(), client_name) == m_listenList.end())
-		return(ERR_CHANOPRIVSNEEDED);
+	if (m_topicProtected == true)
+	{
+		std::list<Pair<std::string, bool> >::iterator user = std::find(m_listenList.begin(), m_listenList.end(), client_name)
+		if (user == m_listenList.end())
+			return(ERR_NOTONCHANNEL);
+		else if ((*user).value == false)
+			return(ERR_CHANOPRIVSNEEDED);
+	}
 	m_topic = topic;
 	send(":" + m_name + " PRIVMSG " + m_name + " :channel topic has been changed to: " + topic);
 	return ("");
