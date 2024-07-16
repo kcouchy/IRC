@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:57:02 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/16 11:05:33 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/16 12:32:51 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ class Channel : public Messageable
 		~Channel(void);
 
 		void		join(std::string client_name);
-		void		quit(std::string client_name);
+		std::string	quit(std::string client_name);
 
-		void		invite(std::string inviter_name, std::string invitee_name);
-		void		topic(std::vector<std::string> args, std::string client_name);
+		std::string	invite(std::string inviter_name, std::string invitee_name);
+		std::string	topic(std::vector<std::string> args, std::string client_name);
 		// void		kick(std::string client_name);
 		// void		mode(std::string client_name, std::string flag);
 

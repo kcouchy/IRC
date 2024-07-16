@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/16 11:26:25 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/16 12:40:15 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void Channel::join(std::string client_name)
 	m_listenList.push_back(to_add);
 }
 
-void Channel::quit(std::string client_name)
+std::string Channel::quit(std::string client_name)
 {
 	std::list<Pair<std::string, bool> >::iterator iter;
 
@@ -40,26 +40,27 @@ void Channel::quit(std::string client_name)
 			iter = m_listenList.erase(iter);
 	for (iter = m_listenList.begin(); iter != m_listenList.end(); iter++)
 		if ((*iter).value == true)
-			return;
+			return ("");
 	this->setOperator(m_listenList.front().getKey(), true);
 	if (m_listenList.size() == 0)
 		throw EmptyChannel();
+	return ("");
 }
 
-void	Channel::invite(std::string inviter_name, std::string invitee_name)
+std::string	Channel::invite(std::string inviter_name, std::string invitee_name)
 {
 	for (std::list<Pair<std::string, bool> >::iterator itr; itr != m_listenList.end(); itr++)
 	{
 		if (invitee_name == (*itr).getKey())
-			throw UserOnChannel();
+			return (ERR_USERONCHANNEL);
 		if (m_inviteOnly == false && inviter_name == (*itr).getKey())
-				return ;
+				return ("");
 		else if (m_inviteOnly == true && inviter_name == (*itr).getKey() && (*itr).value == 0)
-			throw NotOperator();
+			return (ERR_CHANOPRIVSNEEDED);
 		else if (m_inviteOnly == true && inviter_name == (*itr).getKey() && (*itr).value == 1)
-			return ;
+			return ("");
 	}
-	throw NotOnChannel();
+	return (ERR_NOTONCHANNEL);
 }
 
 // void	Channel::kick(std::string client_name)
@@ -72,14 +73,14 @@ void	Channel::invite(std::string inviter_name, std::string invitee_name)
 // TODO - format messages to add the sender (channel or user) to the message
 // --------------------------------------------------------------------------
 
-void	Channel::topic(std::vector<std::string> args, std::string client_name)
+std::string	Channel::topic(std::vector<std::string> args, std::string client_name)
 {
 	for (std::list<Pair<std::string, bool> >::iterator iter; iter != m_listenList.end(); iter++)
 	{
 		if (client_name == (*iter).getKey() && args.size() == 1)
 		{
-			PhoneBook::get().getRecipient(client_name)->send(m_topic); // TODO should use sendMessage?
-			return ;
+			// PhoneBook::get().getRecipient(client_name)->send(m_topic);
+			return (m_topic);
 		}
 		else if (args.size() > 1 && (*iter).value == 0)
 		{
@@ -87,12 +88,12 @@ void	Channel::topic(std::vector<std::string> args, std::string client_name)
 		}
 		else if (args.size() > 1 && (*iter).value == 1)
 
-		if (m_inviteOnly == false && inviter_name == (*itr).getKey())
-				return ;
-		else if (m_inviteOnly == true && inviter_name == (*itr).getKey() && (*itr).value == 0)
-			throw NotOperator();
-		else if (m_inviteOnly == true && inviter_name == (*itr).getKey() && (*itr).value == 1)
-			return ;
+		// if (m_inviteOnly == false && inviter_name == (*itr).getKey())
+		// 		return ;
+		// else if (m_inviteOnly == true && inviter_name == (*itr).getKey() && (*itr).value == 0)
+		// 	throw NotOperator();
+		// else if (m_inviteOnly == true && inviter_name == (*itr).getKey() && (*itr).value == 1)
+		// 	return ;
 	}
 	throw NotOnChannel();
 	return;
@@ -107,6 +108,7 @@ void Channel::send(std::string msg)
 		target = PhoneBook::get().getRecipient((*iter).getKey());
 		if (target == NULL)
 			throw Messageable::RecipientNotFound();
+		msg = ":" + m_name + " " + msg;
 		(*target).send(msg);
 	}
 }
@@ -140,17 +142,17 @@ const char *Channel::EmptyChannel::what() const throw()
 	return ("Don't leave me alone, I'm a lonely empty channel :c");
 }
 
-const char *Channel::NotOperator::what() const throw()
-{
-	return ("Nope, not allowed, you're not a channel operator");
-}
+// const char *Channel::NotOperator::what() const throw()
+// {
+// 	return ("Nope, not allowed, you're not a channel operator");
+// }
 
-const char *Channel::NotOnChannel::what() const throw()
-{
-	return ("Nope, not allowed, the user is not on the channel");
-}
+// const char *Channel::NotOnChannel::what() const throw()
+// {
+// 	return ("Nope, not allowed, the user is not on the channel");
+// }
 
-const char *Channel::UserOnChannel::what() const throw()
-{
-	return ("Nope, can't invite a user to a channel they already belong to");
-}
+// const char *Channel::UserOnChannel::what() const throw()
+// {
+// 	return ("Nope, can't invite a user to a channel they already belong to");
+// }

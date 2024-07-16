@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:28:03 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/16 11:37:07 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/16 12:51:43 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,18 +99,18 @@ void Client::parse(std::string msg)
 
 void Client::exec(std::string prefix, std::string command, std::string args)
 {
-	std::vector<Pair<std::string, void (Client::*)(std::string, std::string)> > handlers;
-	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("PASS", &Client::auth));
-	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("JOIN", &Client::addChannel));
-	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("PRIVMSG", &Client::sendMessage));
-	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("NICK", &Client::changeNick));
-	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("USER", &Client::changeUser));
-	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("LEAVE", &Client::removeChannel));
-	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("QUIT", &Client::quit));
-	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("INVITE", &Client::inviteToChannel));
-	handlers.push_back(Pair<std::string, void (Client::*)(std::string, std::string)>("CAP", &Client::capabilites));
+	std::vector<Pair<std::string, std::string (Client::*)(std::string, std::string)> > handlers;
+	handlers.push_back(Pair<std::string, std::string (Client::*)(std::string, std::string)>("PASS", &Client::auth));
+	handlers.push_back(Pair<std::string, std::string (Client::*)(std::string, std::string)>("JOIN", &Client::addChannel));
+	handlers.push_back(Pair<std::string, std::string (Client::*)(std::string, std::string)>("PRIVMSG", &Client::sendMessage));
+	handlers.push_back(Pair<std::string, std::string (Client::*)(std::string, std::string)>("NICK", &Client::changeNick));
+	handlers.push_back(Pair<std::string, std::string (Client::*)(std::string, std::string)>("USER", &Client::changeUser));
+	handlers.push_back(Pair<std::string, std::string (Client::*)(std::string, std::string)>("LEAVE", &Client::removeChannel));
+	handlers.push_back(Pair<std::string, std::string (Client::*)(std::string, std::string)>("QUIT", &Client::quit));
+	handlers.push_back(Pair<std::string, std::string (Client::*)(std::string, std::string)>("INVITE", &Client::inviteToChannel));
+	handlers.push_back(Pair<std::string, std::string (Client::*)(std::string, std::string)>("CAP", &Client::capabilites));
 
-	std::vector<Pair<std::string, void (Client::*)(std::string, std::string)> >::iterator iter = handlers.begin();
+	std::vector<Pair<std::string, std::string (Client::*)(std::string, std::string)> >::iterator iter = handlers.begin();
 	while (iter != handlers.end())
 	{
 		if ((*iter).getKey() == command)
@@ -120,52 +120,48 @@ void Client::exec(std::string prefix, std::string command, std::string args)
 }
 
 // Authentication
-void Client::capabilites(std::string, std::string params)
+std::string Client::capabilites(std::string, std::string params)
 {
 	(void) params;
 	if (params == "LS 302")
 	{
 		send("CAP * LS :\n");
-		return ;
+		return ("");
 	}
 	if (params == "END")
-		return ;
+		return ("");
 	send(":localhost 404 :Not found");
+	return ("");
 }
 
-void Client::auth(std::string , std::string args)
+std::string Client::auth(std::string , std::string args)
 {
 	if (args.size() == 0)
-	{
-		send(ERR_NEEDMOREPARAMS);
-		return ;
-	}
+		return (ERR_NEEDMOREPARAMS);
 	if (m_authenticated)
-	{
-		send(ERR_ALREADYREGISTERED);
-		return ;
-	}
+		return (ERR_ALREADYREGISTERED);
 	std::cout << "Authenticating with " << args << " against password " << m_password << std::endl;
 	if (args == m_password)
 		this->m_authenticated = true;
 	else
-		send(ERR_PASSWDMISMATCH);
-	return ;
+		return (ERR_PASSWDMISMATCH);
 }
 
-void Client::changeNick(std::string, std::string params)
+std::string Client::changeNick(std::string, std::string params)
 {
 	this->m_name = params;
+	return ("");
 }
 
-void Client::changeUser(std::string, std::string param)
+std::string Client::changeUser(std::string, std::string param)
 {
 	(void) param;
 	this->send(":ft_irc@localhost:6667 001 " + this->getName() + " :Welcome here\n");
+	return ("");
 }
 
 // Channel
-void	Client::addChannel(std::string, std::string channels)
+std::string	Client::addChannel(std::string, std::string channels)
 {
 	// TODO handle multi-channel join (split channels on ',' and join each splitted channel)
 	std::string topic;
@@ -188,14 +184,15 @@ void	Client::addChannel(std::string, std::string channels)
 		{
 			// TODO return an error code to the client
 			::send(this->m_fd, ERR_NOSUCHCHANNEL, 3, 0);
-			return ;
+			return ("");
 		}
 	}
 	channel->join(this->getName());
 	m_channelList.push_back(channels);
+	return ("");
 }
 
-void	Client::removeChannel(std::string, std::string channelName)
+std::string	Client::removeChannel(std::string, std::string channelName)
 {
 	std::vector<std::string>::iterator iter;
 	Messageable *channel = NULL;
@@ -214,40 +211,23 @@ void	Client::removeChannel(std::string, std::string channelName)
 			delete channel;
 		}
 	}
+	return ("");
 }
 
-void	Client::inviteToChannel(std::string, std::string params)
+std::string	Client::inviteToChannel(std::string, std::string params)
 {
 	std::vector<std::string> args = strsplit(params, ' ');
 	if (args.size() < 2)
-	{
-		send(ERR_NEEDMOREPARAMS);
-		return ;
-	}
+		return (ERR_NEEDMOREPARAMS);
 	//TODO MAYBE also reject if >2 args
-	try
-	{
-		Channel* temp_channel;
-		temp_channel = dynamic_cast <Channel*> (PhoneBook::get().getRecipient(args[1]));
-		if (temp_channel == NULL)
-		{
-			send(ERR_NOSUCHCHANNEL);
-			return ;
-		}
-		temp_channel->invite(m_name, args[0]);
-	}
-	catch (Channel::UserOnChannel& e)
-	{
-		send(ERR_USERONCHANNEL);
-	}
-	catch (Channel::NotOnChannel& e)
-	{
-		send(ERR_NOTONCHANNEL);
-	}
-	catch (Channel::NotOperator& e)
-	{
-		send(ERR_CHANOPRIVSNEEDED);
-	}
+	std::string invite_return;
+	Channel* temp_channel;
+	temp_channel = dynamic_cast <Channel*> (PhoneBook::get().getRecipient(args[1]));
+	if (temp_channel == NULL)
+		return (ERR_NOSUCHCHANNEL);
+	invite_return = temp_channel->invite(m_name, args[0]);
+	if (invite_return != "")
+		send (invite_return);
 	Messageable* temp_client;
 	temp_client = PhoneBook::get().getRecipient(args[0]);
 	if (temp_client == NULL)
@@ -256,8 +236,9 @@ void	Client::inviteToChannel(std::string, std::string params)
 	std::string msg = m_name + ": has invited you to " + args[1];
 	temp_client->send(msg);
 }
+
 // Message-related stuff
-void Client::sendMessage(std::string, std::string params)
+std::string Client::sendMessage(std::string, std::string params)
 {
 	std::string msg;
 	std::vector<std::string>::iterator it;
@@ -289,13 +270,15 @@ void Client::sendMessage(std::string, std::string params)
 			msg += *it2 + ((it2 == --args.end()) ? '\0' : ' ');
 		m->send(msg);
 	}
+	return ("");
 }
 
 // I'm outta here (for real this time)
-void Client::quit(std::string, std::string)
+std::string Client::quit(std::string, std::string)
 {
 	close(m_fd);
 	throw Client::KillMePlease();
+	return ("");
 }
 
 const char *Client::KillMePlease::what() const throw()
@@ -303,13 +286,13 @@ const char *Client::KillMePlease::what() const throw()
 	return ("Please delete me");
 }
 
-void	Client::topicChannel(std::string, std::string params)
+std::string	Client::topicChannel(std::string, std::string params)
 {
 	std::vector<std::string> args = strsplit(params, ' ');
 	if (args.size() < 1)
 	{
 		send(ERR_NEEDMOREPARAMS);
-		return ;
+		return ("");
 	}
 	try
 	{
@@ -320,6 +303,8 @@ void	Client::topicChannel(std::string, std::string params)
 			send(ERR_NOSUCHCHANNEL);
 			return ;
 		}
-		temp_channel->topic(args, m_name);
+		std::string topic_return;
+		topic_return = temp_channel->topic(args, m_name);
+		send()
 	}
 }
