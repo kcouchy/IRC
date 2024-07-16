@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/16 15:20:45 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/16 16:44:24 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@
 
 Channel::Channel(std::string channelName) :
 	Messageable(channelName),
-	m_inviteOnly(false) {}
+	m_inviteOnly(false),
+	m_topic(""),
+	m_topicProtected(false) {}
 
 Channel::~Channel(void) {}
 
@@ -68,31 +70,31 @@ std::string	Channel::invite(std::string inviter_name, std::string invitee_name)
 // 	return;
 // }
 
-std::string	Channel::topic(std::vector<std::string> args, std::string client_name)
-{
-	for (std::list<Pair<std::string, bool> >::iterator iter; iter != m_listenList.end(); iter++)
-	{
-		if (client_name == (*iter).getKey() && args.size() == 1)
-		{
-			// PhoneBook::get().getRecipient(client_name)->send(m_topic);
-			return (m_topic);
-		}
-		else if (args.size() > 1 && (*iter).value == 0)
-		{
+// std::string	Channel::topic(std::vector<std::string> args, std::string client_name)
+// {
+// 	for (std::list<Pair<std::string, bool> >::iterator iter; iter != m_listenList.end(); iter++)
+// 	{
+// 		if (client_name == (*iter).getKey() && args.size() == 1)
+// 		{
+// 			// PhoneBook::get().getRecipient(client_name)->send(m_topic);
+// 			return (m_topic);
+// 		}
+// 		else if (args.size() > 1 && (*iter).value == 0)
+// 		{
 
-		}
-		else if (args.size() > 1 && (*iter).value == 1)
-		{}
-		// if (m_inviteOnly == false && inviter_name == (*itr).getKey())
-		// 		return ;
-		// else if (m_inviteOnly == true && inviter_name == (*itr).getKey() && (*itr).value == 0)
-		// 	throw NotOperator();
-		// else if (m_inviteOnly == true && inviter_name == (*itr).getKey() && (*itr).value == 1)
-		// 	return ;
-	}
-	throw NotOnChannel();
-	return "";
-}
+// 		}
+// 		else if (args.size() > 1 && (*iter).value == 1)
+// 		{}
+// 		// if (m_inviteOnly == false && inviter_name == (*itr).getKey())
+// 		// 		return ;
+// 		// else if (m_inviteOnly == true && inviter_name == (*itr).getKey() && (*itr).value == 0)
+// 		// 	throw NotOperator();
+// 		// else if (m_inviteOnly == true && inviter_name == (*itr).getKey() && (*itr).value == 1)
+// 		// 	return ;
+// 	}
+// 	throw NotOnChannel();
+// 	return "";
+// }
 
 void Channel::send(std::string msg)
 {
@@ -102,7 +104,7 @@ void Channel::send(std::string msg)
 	{
 		target = PhoneBook::get().getRecipient((*iter).getKey());
 		if (target == NULL)
-			throw Messageable::RecipientNotFound();
+			throw Messageable::RecipientNotFound(); //TODO CATCH ME BABY
 		(*target).send(msg);
 	}
 }
@@ -111,9 +113,23 @@ std::string Channel::getTopic(void)const
 	return (m_topic);
 }
 
-void Channel::setTopic(std::string topic)
+std::string Channel::setTopic(std::string topic, std::string client_name)
 {
+	if (m_topicProtected == true && std::find(m_listenList.begin(), m_listenList.end(), client_name) == m_listenList.end())
+		return(ERR_CHANOPRIVSNEEDED);
 	m_topic = topic;
+	send(":" + m_name + " PRIVMSG " + m_name + " :channel topic has been changed to: " + topic);
+	return ("");
+}
+
+bool	Channel::getTopicProtected(void)const
+{
+	return (m_topicProtected);
+}
+
+void	Channel::setTopicProtected(bool isProtected)
+{
+	m_topicProtected = isProtected;
 }
 
 void Channel::setOperator(std::string client_name, bool new_value)

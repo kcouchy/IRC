@@ -1,19 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Messageable.h                                             +**+   +*  *   */
+/*   Messageable.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:12:41 by atu               #+#    #+#             */
-/*   Updated: 2024/07/16 12:56:00 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/16 16:40:05 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include <string>
+#include <algorithm>
 
+#define ERR_UNKNOWNERROR "400"
 #define	ERR_NOSUCHNICK "401"
 #define	ERR_NOSUCHSERVER "402"
 #define ERR_NOSUCHCHANNEL "403"
@@ -32,6 +34,8 @@
 #define ERR_ALREADYREGISTERED "462"
 #define ERR_PASSWDMISMATCH "464"
 #define ERR_ERRONEUSNICKNAME "432"
+#define RPL_NOTOPIC "331"
+#define RPL_TOPIC "332"
 
 class Messageable
 {
@@ -42,9 +46,9 @@ class Messageable
 		Messageable& operator=(const Messageable&);
 		virtual ~Messageable();
 		
-		virtual void send(std::string message) = 0;
-		std::string getName() const;
-		void setName(std::string);
+		virtual void	send(std::string message) = 0;
+		std::string 	getName() const;
+		void			setName(std::string);
 
 		class RecipientNotFound : public std::exception
 		{

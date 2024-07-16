@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Channel.hpp                                               +**+   +*  *   */
+/*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:57:02 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/16 13:20:19 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/16 16:28:04 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,15 @@ class Channel : public Messageable
 		std::string	quit(std::string client_name);
 
 		std::string	invite(std::string inviter_name, std::string invitee_name);
-		std::string	topic(std::vector<std::string> args, std::string client_name);
+// DELETE		// std::string	topic(std::vector<std::string> args, std::string client_name);
 		// void		kick(std::string client_name);
 		// void		mode(std::string client_name, std::string flag);
 
 		void		send(std::string message);
 		std::string	getTopic(void)const;
-		void		setTopic(std::string topic);
+		std::string	setTopic(std::string topic, std::string client_name);
+		bool		getTopicProtected(void)const;
+		void		setTopicProtected(bool isProtected);
 		void		setOperator(std::string client_name, bool new_value);
 		void		setInvite(bool inviteOnly);
 
@@ -61,6 +63,7 @@ class Channel : public Messageable
 	private:
 		Channel(void);
 		bool		m_inviteOnly;
+		bool		m_topicProtected;
 		std::string	m_topic;
 		std::list<Pair<std::string, bool> > m_listenList; //std::string = client_name; bool = is_operator status
 };

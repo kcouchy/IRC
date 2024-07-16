@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:28:03 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/16 15:13:45 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/16 16:46:03 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -302,6 +302,7 @@ std::string	Client::topicChannel(std::string, std::string params)
 		send(ERR_NEEDMOREPARAMS);
 		return ("");
 	}
+
 	// try handle empty topic here, then split by ';' and send to topic method
 	// add a messageable method to get channel or return null
 	{
@@ -310,10 +311,28 @@ std::string	Client::topicChannel(std::string, std::string params)
 		if (temp_channel == NULL)
 		{
 			send(ERR_NOSUCHCHANNEL);
-			return ;
+			return ("");
 		}
-		std::string topic_return;
-		topic_return = temp_channel->topic(args, m_name);
-		send()
+		if (args.size() == 1)
+		{
+			std::string temp_topic = temp_channel->getTopic();
+			if (temp_topic == "")
+				send(":" + temp_channel->getName() + " " + RPL_NOTOPIC);
+			else
+				send(":" + temp_channel->getName() + " " + RPL_TOPIC + " :"  + temp_topic + "\n");
+		}
+		else
+		{
+			if (args[1][0] != ':')
+			{
+				send(":" + temp_channel->getName() + " " + ERR_UNKNOWNERROR);
+				return ("");
+			}
+			std::string new_topic = args[1].substr(1, args[1].size() - 1);
+			std::vector<std::string>::iterator iter = args.begin() + 2;
+			for (; iter != args.end(); iter++)
+				new_topic += " " + *iter;
+			temp_channel->setTopic(new_topic);
+		}
 	}
 }
