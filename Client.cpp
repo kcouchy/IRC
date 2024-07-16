@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.cpp                                                +**+   +*  *   */
+/*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:28:03 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/16 15:00:42 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/16 15:13:45 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -302,20 +302,18 @@ std::string	Client::topicChannel(std::string, std::string params)
 		send(ERR_NEEDMOREPARAMS);
 		return ("");
 	}
-	try
+	// try handle empty topic here, then split by ';' and send to topic method
+	// add a messageable method to get channel or return null
 	{
 		Channel* temp_channel;
 		temp_channel = dynamic_cast <Channel*> (PhoneBook::get().getRecipient(args[0]));
 		if (temp_channel == NULL)
 		{
 			send(ERR_NOSUCHCHANNEL);
-			return "";
+			return ;
 		}
 		std::string topic_return;
 		topic_return = temp_channel->topic(args, m_name);
-		send("");
+		send()
 	}
-	catch (std::exception &e)
-	{}
-	return "";
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Channel.cpp                                               +**+   +*  *   */
+/*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/16 14:31:34 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/16 15:20:45 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,6 @@ std::string	Channel::invite(std::string inviter_name, std::string invitee_name)
 
 // 	return;
 // }
-
-// --------------------------------------------------------------------------
-// TODO - format messages to add the sender (channel or user) to the message
-// --------------------------------------------------------------------------
 
 std::string	Channel::topic(std::vector<std::string> args, std::string client_name)
 {
