@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/16 20:26:14 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/17 00:23:38 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,13 @@ std::vector<std::string> strsplit(std::string str, char delim)
 			splitted.push_back(str.substr(start, str.size()));
 			break ;
 		}
+		std::cerr << "Pushing back : " << str.substr(start, stop - start) << std::endl;
 		splitted.push_back(str.substr(start, stop - start));
 		start = stop + 1;
-		stop = str.find(start, delim);
+		std::cerr << "start : " << start << std::endl;
+		std::cerr << "searching `" << delim << "` in " << str.substr(start, str.size() - 1) << std::endl;
+		stop = str.find(delim, start);
+		std::cerr << "stop : " << stop << std::endl;
 	}
 	return splitted;
 }
@@ -73,7 +77,7 @@ void Client::parse(std::string msg)
 	size_t i = 0;
 	std::string prefix = "", command = "", args = "";
 
-	std::vector<std::string> actions = strsplit(msg, '\n');
+	std::vector<std::string> actions = strsplit(msg, '\n'); // TODO This does not split in more than 3 pieces
 	for (std::vector<std::string>::iterator it = actions.begin(); it != actions.end(); it++)
 	{
 		(*it).erase((*it).find_last_not_of("\n") + 1);
@@ -101,23 +105,33 @@ void Client::parse(std::string msg)
 void Client::exec(std::string prefix, std::string command, std::string args)
 {
 	std::vector<function> handlers;
-	handlers.push_back(function("CAP", &Client::capabilites));			// OK
-	handlers.push_back(function("PASS", &Client::auth));				// KO
-	handlers.push_back(function("NICK", &Client::changeNick));			// KO
-	handlers.push_back(function("USER", &Client::changeUser));			// KO
+	handlers.push_back(function("CAP", &Client::capabilites));			// tested, OK
+	handlers.push_back(function("PASS", &Client::auth));				// tested, OK
+	handlers.push_back(function("NICK", &Client::changeNick));			// tested, KO
+	handlers.push_back(function("USER", &Client::changeUser));			// tested, KO
 
-	handlers.push_back(function("JOIN", &Client::addChannel));			// KO
-	handlers.push_back(function("LEAVE", &Client::removeChannel));		// KO
-	handlers.push_back(function("INVITE", &Client::inviteToChannel));	// KO
+	handlers.push_back(function("JOIN", &Client::addChannel));			// untested, KO
+	handlers.push_back(function("PART", &Client::removeChannel));		// untested, KO
+	handlers.push_back(function("INVITE", &Client::inviteToChannel));	// untested, KO
 
-	handlers.push_back(function("PRIVMSG", &Client::sendMessage));		// KO
-	handlers.push_back(function("QUIT", &Client::quit));				// KO
+	handlers.push_back(function("PRIVMSG", &Client::sendMessage));		// untested, KO
+	handlers.push_back(function("QUIT", &Client::quit));				// untested, KO
+
+	// TODO KICK
+	// TODO INVITE
+	// TODO TOPIC
+	// TODO MODE
 
 	std::vector<function>::iterator iter = handlers.begin();
 	while (iter != handlers.end())
 	{
 		if ((*iter).getKey() == command)
-			(this->*((*iter).value))(prefix, args); // Calls this->function() based on function pointer to function but still on this instance
+		{
+			std::string error;
+			error = (this->*((*iter).value))(prefix, args); // Calls this->function() based on function pointer to function but still on this instance
+			if (error != "")
+				send(":ft_irc " + error);
+		}
 		iter++;
 	}
 }
