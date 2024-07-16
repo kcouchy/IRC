@@ -1,13 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Client.cpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/26 16:28:03 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/16 16:46:03 by kcouchma         ###   ########.fr       */
-/*                                                                            */
+/*                                                              ++            */
+/*   Client.cpp                                                +**+   +*  *   */
+/*                                                             ##%#*###*+++   */
+/*   By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+     */
+/*                                                            # *   *. #*     */
+/*   Created: 2024/07/16 17:33:15 by aboyreau          **+*+  * -_._-   #+    */
+/*   Updated: 2024/07/16 17:33:15 by aboyreau          +#-.-*  +         *    */
+/*                                                     *-.. *   ++       #    */
 /* ************************************************************************** */
 
 #include "Client.h"
@@ -88,7 +88,8 @@ void Client::parse(std::string msg)
 		for (std::vector<std::string>::iterator it2 = splitted_command.begin() + i; it2 != splitted_command.end(); it2++)
 			args += *it2 + ' ';
 		if (args.size() > 0)
-			args = args.substr(0, args.size() - 2);
+			args = args.substr(0, args.size() - 1);
+		args.erase(args.find_last_not_of("\n\r") + 1);
 		std::cout << "I'm executing " << command << " " << args << std::endl;
 		this->exec(prefix, command, args);
 		command = "";
@@ -167,20 +168,20 @@ std::string Client::changeUser(std::string, std::string param)
 }
 
 // Channel
-std::string	Client::addChannel(std::string, std::string channels)
+std::string	Client::addChannel(std::string, std::string params)
 {
-	// TODO handle multi-channel join (split channels on ',' and join each splitted channel)
+	// TODO handle multi-channel join (split params on ',' and join each splitted channel)
 	std::string topic;
 	std::vector<std::string>::iterator iter;
 	
 	for (iter = m_channelList.begin(); iter != m_channelList.end(); iter++)
-		if (channels == *iter)
+		if (params == *iter)
 			return "";
 	Channel *channel;
-	Messageable *c = PhoneBook::get().getRecipient(channels);
+	Messageable *c = PhoneBook::get().getRecipient(params);
 	if (c == NULL)
 	{
-		channel = new Channel(channels);
+		channel = new Channel(params);
 	}
 	else
 	{
@@ -194,7 +195,7 @@ std::string	Client::addChannel(std::string, std::string channels)
 		}
 	}
 	channel->join(this->getName());
-	m_channelList.push_back(channels);
+	m_channelList.push_back(params);
 	return ("");
 }
 
