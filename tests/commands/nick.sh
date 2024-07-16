@@ -6,7 +6,7 @@
 #    By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+      #
 #                                                             # *   *. #*      #
 #    Created: 2024/07/15 23:08:17 by aboyreau          **+*+  * -_._-   #+     #
-#    Updated: 2024/07/16 00:51:58 by aboyreau          +#-.-*  +         *     #
+#    Updated: 2024/07/16 22:31:11 by aboyreau          +#-.-*  +         *     #
 #                                                      *-.. *   ++       #     #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ empty()
 		QUIT
 	EOF`
 	EXPECTED="431"
-	tests/run_test.sh "$TEST" "" "$COMMAND" "$EXPECTED"
+	$TESTDIR/utils/run_test.sh "$TEST" "" "$COMMAND" "$EXPECTED"
 }
 
 invalid()
@@ -36,7 +36,7 @@ invalid()
 			NICK $nick
 			QUIT
 		EOF`
-		tests/run_test.sh "$TEST" "" "$COMMAND" "$EXPECTED"
+		$TESTDIR/utils/run_test.sh "$TEST" "" "$COMMAND" "$EXPECTED"
 	done
 }
 
@@ -59,13 +59,15 @@ duplicated() # This guy is a bit too complicated to use run_test.sh
 	EOF
 
 	EXIT_CODE=$?
-	tests/print_res.sh "$RES" "433" "$EXIT_CODE"
+	$TESTDIR/utils/print_res.sh "$RES" "433" "$EXIT_CODE"
 
 	kill $CLIENT_PID
 	kill $SRV_PID
 }
 
-echo "NICK command tester"
+echo "#######################"
+echo "# NICK command tester #"
+echo "#######################"
 echo ""
 
 empty

@@ -6,13 +6,11 @@
 #    By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+      #
 #                                                             # *   *. #*      #
 #    Created: 2024/07/15 19:54:14 by aboyreau          **+*+  * -_._-   #+     #
-#    Updated: 2024/07/16 00:44:29 by aboyreau          +#-.-*  +         *     #
+#    Updated: 2024/07/16 23:29:27 by aboyreau          +#-.-*  +         *     #
 #                                                      *-.. *   ++       #     #
 # **************************************************************************** #
 
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-WHITE='\033[0m'
+#!/bin/bash
 
 empty()
 {
@@ -22,7 +20,7 @@ empty()
 		QUIT
 	EOF`
 	EXPECTED="462"
-	tests/run_test.sh "$TEST" "" "$COMMAND" "$EXPECTED"
+	$TESTDIR/utils/run_test.sh "$TEST" "" "$COMMAND" "$EXPECTED"
 }
 
 wrong()
@@ -34,7 +32,7 @@ wrong()
 		QUIT
 	EOF`
 	EXPECTED="464"
-	tests/run_test.sh "$TEST" "$PASSWORD" "$COMMAND" "$EXPECTED"
+	$TESTDIR/utils/run_test.sh "$TEST" "$PASSWORD" "$COMMAND" "$EXPECTED"
 }
 
 not_enough_params()
@@ -45,7 +43,7 @@ not_enough_params()
 		QUIT
 	EOF`
 	EXPECTED="461"
-	tests/run_test.sh "$TEST" "" "$COMMAND" "$EXPECTED"
+	$TESTDIR/utils/run_test.sh "$TEST" "" "$COMMAND" "$EXPECTED"
 }
 
 too_many_params()
@@ -57,10 +55,12 @@ too_many_params()
 		QUIT
 	EOF`
 	EXPECTED="464"
-	tests/run_test.sh "$TEST" "$PASSWORD" "$COMMAND" "$EXPECTED"
+	$TESTDIR/utils/run_test.sh "$TEST" "$PASSWORD" "$COMMAND" "$EXPECTED"
 }
 
-echo "PASS command tester"
+echo "#######################"
+echo "# PASS command tester #"
+echo "#######################"
 echo ""
 
 empty

@@ -6,7 +6,7 @@
 #    By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+      #
 #                                                             # *   *. #*      #
 #    Created: 2024/07/15 23:52:33 by aboyreau          **+*+  * -_._-   #+     #
-#    Updated: 2024/07/16 00:13:58 by aboyreau          +#-.-*  +         *     #
+#    Updated: 2024/07/16 22:19:12 by aboyreau          +#-.-*  +         *     #
 #                                                      *-.. *   ++       #     #
 # **************************************************************************** #
 
@@ -37,6 +37,6 @@ timeout 5 <<< $COMMAND nc localhost 6667 > tmp
 
 EXIT_CODE=$?
 
-tests/print_res.sh "$(cat tmp)" "$EXPECTED_RESULT" $EXIT_CODE
+tests/utils/print_res.sh "$(cat tmp)" "$EXPECTED_RESULT" $EXIT_CODE
 
 kill $SRV_PID

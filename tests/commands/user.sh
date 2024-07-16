@@ -6,7 +6,7 @@
 #    By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+      #
 #                                                             # *   *. #*      #
 #    Created: 2024/07/15 23:16:54 by aboyreau          **+*+  * -_._-   #+     #
-#    Updated: 2024/07/16 00:45:57 by aboyreau          +#-.-*  +         *     #
+#    Updated: 2024/07/16 22:30:34 by aboyreau          +#-.-*  +         *     #
 #                                                      *-.. *   ++       #     #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ not_enough_params()
 			USER $tests
 			QUIT
 		EOF`
-		tests/run_test.sh "$TEST" "" "$COMMAND" "461"
+		$TESTDIR/utils/run_test.sh "$TEST" "" "$COMMAND" "461"
 
 	done
 }
@@ -38,10 +38,12 @@ already_registered()
 		QUIT
 	EOF`
 
-	tests/run_test.sh "Multiple user commands : " "" "$COMMAND" "462"
+	$TESTDIR/utils/run_test.sh "Multiple user commands : " "" "$COMMAND" "462"
 }
 
-echo "USER command tester"
+echo "#######################"
+echo "# USER command tester #"
+echo "#######################"
 echo ""
 
 not_enough_params
