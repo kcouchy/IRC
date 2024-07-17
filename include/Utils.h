@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 14:19:12 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/17 14:51:22 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/17 14:52:15 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,3 @@ bool find_only(L &list, std::string search)
 		return (false);
 	return (true);
 }
-
-implemented m_inviteList in Channels (modified join), addded a Utils.h to handle 
-list find and list find and erase
