@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 14:19:12 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/17 14:52:15 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/17 15:24:49 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ bool find_erase(L &list, std::string search)
 }
 
 template <typename L>
-bool find_only(L &list, std::string search)
+bool contains(L &list, std::string search)
 {
 	typename L::iterator iter;
 	iter = std::find(list.begin(), list.end(), search);

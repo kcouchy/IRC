@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.cpp                                                +**+   +*  *   */
+/*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/17 14:53:14 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/17 18:45:06 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@ std::vector<std::string> strsplit(std::string str, char delim)
 
 Client::Client(int client_fd, std::string password) :
 	m_fd(client_fd),
-	m_password(password)
+	m_password(password),
+	m_registrationComplete(false)
 {
 	m_authenticated = m_password.size() == 0; // Authenticated by default if password is empty
 }
@@ -100,19 +101,46 @@ std::string Client::auth(std::string password)
 
 std::string Client::changeNick(std::string, std::string params)
 {
-	std::string authorized_set = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
-	if (params.find_first_not_of(authorized_set) != std::string::npos)
-	{
+	if (m_authenticated == false)
+		return (ERR_PASSWDMISMATCH);
+	std::string authorized_set = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_[]{}\\|";
+	if (params == "" || params.find_first_not_of(authorized_set) != std::string::npos)
 		return (ERR_ERRONEUSNICKNAME);
+	try
+	{
+		PhoneBook::get().getRecipient(params);
+		return (ERR_NICKNAMEINUSE);
 	}
-	this->m_name = params;
+	catch (std::exception &e)
+	{
+		this->m_name = params;
+	}
 	return ("");
 }
 
 std::string Client::changeUser(std::string, std::string param)
 {
 	(void) param;
+	if (m_authenticated == false)
+		return (ERR_PASSWDMISMATCH);
+	if (m_name.length() == 0)
+		return (ERR_NONICKNAMEGIVEN);
+	if (m_registrationComplete == true)
+		return (ERR_ALREADYREGISTERED);
+	while (true)
+	{
+		try
+		{
+			PhoneBook::get().addRecipient(this);
+			break ;
+		}
+		catch (std::exception &e)
+		{
+			m_name += "_nope";
+		}
+	}
 	this->send(":ft_irc 001 " + this->getName() + " :Welcome here\n");
+	this->m_registrationComplete = true;
 	return ("");
 }
 

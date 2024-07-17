@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/17 14:45:17 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/17 16:17:25 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,28 @@ Channel::Channel(std::string channelName) :
 	m_topicProtected(false),
 	m_topic(),
 	m_listenList(),
-	m_inviteList() {}
+	m_inviteList() 
+{
+	while (true)
+	{
+		try
+		{
+			PhoneBook::get().addRecipient(this);
+			break ;
+		}
+		catch (std::exception &e)
+		{
+			m_name += "_nope";
+		}
+	}
+}
 
 Channel::~Channel(void) {}
 
 //TODO check inviteOnly status
 void Channel::join(std::string client_name)
 {
-	if (m_inviteOnly == true && find_only(m_inviteList, client_name) == false)
+	if (m_inviteOnly == true && contains(m_inviteList, client_name) == false)
 		return ;
 
 	Pair<std::string, bool> to_add(client_name, false);

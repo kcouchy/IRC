@@ -35,11 +35,13 @@ class Client : public Messageable
 		};
 
 	private:
+
 		int							m_fd;
 		std::string					m_buffer;
 		std::string					m_password;
 		std::vector<std::string>	m_channelList;
 		bool						m_authenticated;
+		bool 						m_registrationComplete;
 
 		Client(void);
 

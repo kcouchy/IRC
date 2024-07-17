@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:12:41 by atu               #+#    #+#             */
-/*   Updated: 2024/07/17 14:30:34 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/17 16:41:59 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@
 #define	ERR_NOTOPLEVEL "413"
 #define	ERR_WILDTOPLEVEL "414"
 #define	RPL_AWAY "30"
-#define ERR_NOTONCHANNEL "442" //Only members of the channel are allowed to invite other users.
+#define ERR_NOTONCHANNEL "442"
 #define ERR_CHANOPRIVSNEEDED "482" //SHOULD reject it when the channel has invite-only mode set, and the user is not a channel operator.
-#define ERR_USERONCHANNEL "443" //If the user is already on the target channel
+#define ERR_USERONCHANNEL "443"
 #define ERR_USERNOTINCHANNEL "441"
 #define RPL_INVITING "341" //Sent as a reply to the INVITE command to indicate that the attempt was successful and the client with the nickname <nick> has been invited to <channel>.
 #define ERR_NEEDMOREPARAMS "461"
@@ -38,6 +38,8 @@
 #define ERR_ERRONEUSNICKNAME "432"
 #define RPL_NOTOPIC "331"
 #define RPL_TOPIC "332"
+#define ERR_NONICKNAMEGIVEN "431"
+#define ERR_NICKNAMEINUSE "433" 
 
 class Messageable
 {
