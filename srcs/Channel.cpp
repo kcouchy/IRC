@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Channel.cpp                                               +**+   +*  *   */
+/*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/16 20:05:01 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/17 11:39:07 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,6 +153,11 @@ void	Channel::setInvite(bool inviteOnly)
 {
 	m_inviteOnly = inviteOnly;
 	return ;
+}
+
+std::string	Channel::kick(std::string client_name, std::string channel_name, std::string kick_msg)
+{
+
 }
 
 const char *Channel::EmptyChannel::what() const throw()

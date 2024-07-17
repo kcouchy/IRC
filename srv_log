@@ -1,0 +1,28 @@
+Port number: 6667
+Password: 
+Pushing back : PASS test
+start : 10
+searching `
+` in NICK dup
+
+stop : 18
+Pushing back : NICK dup
+start : 19
+searching `
+` in 
+stop : 18446744073709551615
+Pushing back : PASS
+start : 5
+searching ` ` in test
+stop : 18446744073709551615
+I'm executing PASS test
+ <- :ft_irc 462
+Pushing back : NICK
+start : 5
+searching ` ` in dup
+stop : 18446744073709551615
+I'm executing NICK dup
+stop
+End of the server
+Deleting 4
+Oh no I'm dying4
