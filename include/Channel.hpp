@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:57:02 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/17 12:50:57 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/17 14:11:26 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ class Channel : public Messageable
 		std::string	quit(std::string client_name);
 
 		std::string	invite(std::string inviter_name, std::string invitee_name);
-// DELETE		// std::string	topic(std::vector<std::string> args, std::string client_name);
 		// void		mode(std::string client_name, std::string flag);
 
 		void		send(std::string message);
@@ -65,5 +64,6 @@ class Channel : public Messageable
 		bool		m_inviteOnly;
 		bool		m_topicProtected;
 		std::string	m_topic;
-		std::list<Pair<std::string, bool> > m_listenList; //std::string = client_name; bool = is_operator status
+		std::list<Pair<std::string, bool> >	m_listenList; //std::string = client_name; bool = is_operator status
+		std::vector<std::string>			m_inviteList;
 };

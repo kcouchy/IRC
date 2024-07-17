@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Pair.h                                                    +**+   +*  *   */
+/*   Pair.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 12:01:42 by atu               #+#    #+#             */
-/*   Updated: 2024/07/16 20:06:27 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/17 14:37:06 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,13 @@ T Pair<T, D>::getKey()
 }
 
 template <typename T, typename D>
-bool operator==(Pair<T, D> pair, const T a)
+bool operator==(Pair<T, D> pair, const T a) //compares name only
 {
 	return pair.getKey() == a;
 }
 
-template <typename T, typename D>
-bool operator==(Pair<T, D> pair, const D a)
-{
-	return pair.value == a;
-}
+// template <typename T, typename D>
+// bool operator==(Pair<T, D> pair, const D a)
+// {
+// 	return pair.value == a;
+// }

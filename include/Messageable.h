@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:12:41 by atu               #+#    #+#             */
-/*   Updated: 2024/07/17 12:03:52 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/17 14:30:34 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 #include <string>
 #include <algorithm>
+#include "Utils.h"
 
 #define ERR_UNKNOWNERROR "400"
 #define	ERR_NOSUCHNICK "401"

@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/17 12:50:45 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/17 14:45:17 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,19 @@ Channel::Channel(std::string channelName) :
 	Messageable(channelName),
 	m_inviteOnly(false),
 	m_topicProtected(false),
-	m_topic("")
-		{}
+	m_topic(),
+	m_listenList(),
+	m_inviteList() {}
 
 Channel::~Channel(void) {}
 
 //TODO check inviteOnly status
 void Channel::join(std::string client_name)
 {
-	Pair<std::string, bool> to_add(client_name, false);
+	if (m_inviteOnly == true && find_only(m_inviteList, client_name) == false)
+		return ;
 
+	Pair<std::string, bool> to_add(client_name, false);
 	if(m_listenList.size() == 0)
 		to_add.value = true;
 	m_listenList.push_back(to_add);
@@ -35,14 +38,13 @@ void Channel::join(std::string client_name)
 
 std::string Channel::quit(std::string client_name)
 {
-	std::list<Pair<std::string, bool> >::iterator iter;
+	find_erase(m_listenList, client_name);
 
-	for (iter = m_listenList.begin(); iter != m_listenList.end(); iter++)
-		if ((*iter).getKey() == client_name)
-			iter = m_listenList.erase(iter);
+	std::list<Pair<std::string, bool> >::iterator iter;
 	for (iter = m_listenList.begin(); iter != m_listenList.end(); iter++)
 		if ((*iter).value == true)
 			return ("");
+
 	this->setOperator(m_listenList.front().getKey(), true);
 	if (m_listenList.size() == 0)
 		throw EmptyChannel();
@@ -60,42 +62,13 @@ std::string	Channel::invite(std::string inviter_name, std::string invitee_name)
 		else if (m_inviteOnly == true && inviter_name == (*itr).getKey() && (*itr).value == 0)
 			return (ERR_CHANOPRIVSNEEDED);
 		else if (m_inviteOnly == true && inviter_name == (*itr).getKey() && (*itr).value == 1)
+		{
+			m_inviteList.push_back(invitee_name);
 			return ("");
+		}
 	}
 	return (ERR_NOTONCHANNEL);
 }
-
-// void	Channel::kick(std::string client_name)
-// {
-
-// 	return;
-// }
-
-// std::string	Channel::topic(std::vector<std::string> args, std::string client_name)
-// {
-// 	for (std::list<Pair<std::string, bool> >::iterator iter; iter != m_listenList.end(); iter++)
-// 	{
-// 		if (client_name == (*iter).getKey() && args.size() == 1)
-// 		{
-// 			// PhoneBook::get().getRecipient(client_name)->send(m_topic);
-// 			return (m_topic);
-// 		}
-// 		else if (args.size() > 1 && (*iter).value == 0)
-// 		{
-
-// 		}
-// 		else if (args.size() > 1 && (*iter).value == 1)
-// 		{}
-// 		// if (m_inviteOnly == false && inviter_name == (*itr).getKey())
-// 		// 		return ;
-// 		// else if (m_inviteOnly == true && inviter_name == (*itr).getKey() && (*itr).value == 0)
-// 		// 	throw NotOperator();
-// 		// else if (m_inviteOnly == true && inviter_name == (*itr).getKey() && (*itr).value == 1)
-// 		// 	return ;
-// 	}
-// 	throw NotOnChannel();
-// 	return "";
-// }
 
 void Channel::send(std::string msg)
 {
