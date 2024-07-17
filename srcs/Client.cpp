@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/17 18:45:06 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/17 18:47:52 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void Client::send(std::string msg)
 std::string Client::capabilites(std::string, std::string params)
 {
 	std::cerr << "`" << params << "`" << std::endl;
-	if (params == "LS 302")
+	if (params == "LS")
 	{
 		send("CAP * LS :\n");
 		return ("");
@@ -106,15 +106,9 @@ std::string Client::changeNick(std::string, std::string params)
 	std::string authorized_set = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_[]{}\\|";
 	if (params == "" || params.find_first_not_of(authorized_set) != std::string::npos)
 		return (ERR_ERRONEUSNICKNAME);
-	try
-	{
-		PhoneBook::get().getRecipient(params);
+	if (PhoneBook::get().getRecipient(params) != NULL)
 		return (ERR_NICKNAMEINUSE);
-	}
-	catch (std::exception &e)
-	{
-		this->m_name = params;
-	}
+	this->m_name = params;
 	return ("");
 }
 
@@ -127,17 +121,13 @@ std::string Client::changeUser(std::string, std::string param)
 		return (ERR_NONICKNAMEGIVEN);
 	if (m_registrationComplete == true)
 		return (ERR_ALREADYREGISTERED);
-	while (true)
+	try
 	{
-		try
-		{
-			PhoneBook::get().addRecipient(this);
-			break ;
-		}
-		catch (std::exception &e)
-		{
-			m_name += "_nope";
-		}
+		PhoneBook::get().addRecipient(this);
+	}
+	catch (std::exception &e)
+	{
+		return (ERR_NICKNAMEINUSE);
 	}
 	this->send(":ft_irc 001 " + this->getName() + " :Welcome here\n");
 	this->m_registrationComplete = true;
@@ -145,6 +135,9 @@ std::string Client::changeUser(std::string, std::string param)
 }
 
 // Channel
+//TODO While a client is joined to a channel, they receive all relevant 
+// information about that channel including the JOIN, PART, KICK, and MODE messages
+//  affecting the channel. AND THE REST
 std::string	Client::addChannel(std::string, std::string params)
 {
 	// TODO handle multi-channel join (split params on ',' and join each splitted channel)

@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:12:41 by atu               #+#    #+#             */
-/*   Updated: 2024/07/17 16:41:59 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/17 18:31:15 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,30 +16,30 @@
 #include <algorithm>
 #include "Utils.h"
 
-#define ERR_UNKNOWNERROR "400"
-#define	ERR_NOSUCHNICK "401"
-#define	ERR_NOSUCHSERVER "402"
-#define ERR_NOSUCHCHANNEL "403"
-#define	ERR_CANNOTSENDTOCHAN "404"
-#define	ERR_TOOMANYTARGETS "407"
-#define	ERR_NORECIPIENT "411"
-#define	ERR_NOTEXTTOSEND "412"
-#define	ERR_NOTOPLEVEL "413"
-#define	ERR_WILDTOPLEVEL "414"
-#define	RPL_AWAY "30"
-#define ERR_NOTONCHANNEL "442"
-#define ERR_CHANOPRIVSNEEDED "482" //SHOULD reject it when the channel has invite-only mode set, and the user is not a channel operator.
-#define ERR_USERONCHANNEL "443"
-#define ERR_USERNOTINCHANNEL "441"
-#define RPL_INVITING "341" //Sent as a reply to the INVITE command to indicate that the attempt was successful and the client with the nickname <nick> has been invited to <channel>.
-#define ERR_NEEDMOREPARAMS "461"
-#define ERR_ALREADYREGISTERED "462"
-#define ERR_PASSWDMISMATCH "464"
-#define ERR_ERRONEUSNICKNAME "432"
-#define RPL_NOTOPIC "331"
-#define RPL_TOPIC "332"
-#define ERR_NONICKNAMEGIVEN "431"
-#define ERR_NICKNAMEINUSE "433" 
+#define	RPL_AWAY "30 :RPL_AWAY"
+#define RPL_NOTOPIC "331 :RPL_NOTOPIC"
+#define RPL_TOPIC "332 :RPL_TOPIC"
+#define RPL_INVITING "341 :RPL_INVITING"
+#define ERR_UNKNOWNERROR "400 :ERR_UNKNOWNERROR"
+#define	ERR_NOSUCHNICK "401 :ERR_NOSUCHNICK"
+#define	ERR_NOSUCHSERVER "402 :ERR_NOSUCHSERVER"
+#define ERR_NOSUCHCHANNEL "403 :ERR_NOSUCHCHANNEL"
+#define	ERR_CANNOTSENDTOCHAN "404 :ERR_CANNOTSENDTOCHAN"
+#define	ERR_TOOMANYTARGETS "407 :ERR_TOOMANYTARGETS"
+#define	ERR_NORECIPIENT "411 :ERR_NORECIPIENT"
+#define	ERR_NOTEXTTOSEND "412 :ERR_NOTEXTTOSEND"
+#define	ERR_NOTOPLEVEL "413 :ERR_NOTOPLEVEL"
+#define	ERR_WILDTOPLEVEL "414 :ERR_WILDTOPLEVEL"
+#define ERR_NONICKNAMEGIVEN "431 :ERR_NONICKNAMEGIVEN"
+#define ERR_ERRONEUSNICKNAME "432 :ERR_ERRONEUSNICKNAME"
+#define ERR_NICKNAMEINUSE "433 :ERR_NICKNAMEINUSE"
+#define ERR_NOTONCHANNEL "442 :ERR_NOTONCHANNEL"
+#define ERR_USERONCHANNEL "443 :ERR_USERONCHANNEL"
+#define ERR_USERNOTINCHANNEL "441 :ERR_USERNOTINCHANNEL"
+#define ERR_NEEDMOREPARAMS "461 :ERR_NEEDMOREPARAMS"
+#define ERR_ALREADYREGISTERED "462 :ERR_ALREADYREGISTERED"
+#define ERR_PASSWDMISMATCH "464 :ERR_PASSWDMISMATCH"
+#define ERR_CHANOPRIVSNEEDED "482 :ERR_CHANOPRIVSNEEDED"
 
 class Messageable
 {

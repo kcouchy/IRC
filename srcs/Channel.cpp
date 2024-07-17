@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/17 16:17:25 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/17 18:37:31 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ std::string	Channel::invite(std::string inviter_name, std::string invitee_name)
 	return (ERR_NOTONCHANNEL);
 }
 
+//TODO remove sender from broadcast list
 void Channel::send(std::string msg)
 {
 	std::list<Pair<std::string, bool> >::iterator iter;
