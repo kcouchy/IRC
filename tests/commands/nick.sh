@@ -6,7 +6,7 @@
 #    By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+      #
 #                                                             # *   *. #*      #
 #    Created: 2024/07/15 23:08:17 by aboyreau          **+*+  * -_._-   #+     #
-#    Updated: 2024/07/16 22:31:11 by aboyreau          +#-.-*  +         *     #
+#    Updated: 2024/07/17 01:54:43 by aboyreau          +#-.-*  +         *     #
 #                                                      *-.. *   ++       #     #
 # **************************************************************************** #
 
@@ -42,27 +42,20 @@ invalid()
 
 duplicated() # This guy is a bit too complicated to use run_test.sh
 {
-	echo -n "Duplicated nickname : "
-
-	./ircserv 6667 "" >/dev/null 2>/dev/null &
-	SRV_PID=$!
-
-	<<- EOF nc localhost 6667 &
+	TEST="Duplicated nickname : "
+	PASSWORD="test"
+	COMMAND_1=`<<- EOF nc localhost 6667 &
+		PASS $PASSWORD
 		NICK dup
-	EOF
-
-	CLIENT_PID=$!
-
-	timeout 5 <<- EOF nc localhost 6667 > tmp
+	EOF`
+	COMMAND_2=`<<- EOF nc localhost 6667 > tmp
+		PASS $PASSWORD
 		NICK dup
 		QUIT
-	EOF
+	EOF`
+	EXPECTED="433"
 
-	EXIT_CODE=$?
-	$TESTDIR/utils/print_res.sh "$RES" "433" "$EXIT_CODE"
-
-	kill $CLIENT_PID
-	kill $SRV_PID
+	$TESTDIR/utils/run_test_multiuser.sh "$TEST" "$PASSWORD" "$COMMAND_1" "*" "$COMMAND_2" "$EXPECTED"
 }
 
 echo "#######################"
@@ -73,5 +66,3 @@ echo ""
 empty
 invalid
 duplicated
-
-rm tmp

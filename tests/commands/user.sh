@@ -6,7 +6,7 @@
 #    By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+      #
 #                                                             # *   *. #*      #
 #    Created: 2024/07/15 23:16:54 by aboyreau          **+*+  * -_._-   #+     #
-#    Updated: 2024/07/16 22:30:34 by aboyreau          +#-.-*  +         *     #
+#    Updated: 2024/07/17 01:54:51 by aboyreau          +#-.-*  +         *     #
 #                                                      *-.. *   ++       #     #
 # **************************************************************************** #
 
@@ -48,5 +48,3 @@ echo ""
 
 not_enough_params
 already_registered
-
-rm tmp

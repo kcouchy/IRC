@@ -6,13 +6,37 @@
 #    By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+      #
 #                                                             # *   *. #*      #
 #    Created: 2024/07/16 23:18:58 by aboyreau          **+*+  * -_._-   #+     #
-#    Updated: 2024/07/16 23:29:14 by aboyreau          +#-.-*  +         *     #
+#    Updated: 2024/07/17 02:05:19 by aboyreau          +#-.-*  +         *     #
 #                                                      *-.. *   ++       #     #
 # **************************************************************************** #
 
 #!/bin/bash
 
-if [[ $# != 6 ]]
+RED='\033[0;31m'
+WHITE='\033[0m'
+
+cleanup()
+{
+	rm tmp_1 -f
+	rm tmp_2 -f
+	rm srv_log -f
+	rm leaks.log -f
+}
+
+server_crash()
+{
+	printf $RED
+	echo -n "CRASH"
+	printf $WHITE
+	echo 
+	echo "Server log :"
+	echo 
+	cat srv_log | sed 's/.*/	\0/g' 
+	cleanup
+	exit 1
+}
+
+if [ $# != 6 ]
 then
 	echo "./run_test <name> <password> <command_user_1> <expected_result_1> <command_user_2> <expected_result_2>"
 	echo "This command runs a basic test involving 2 users:"
@@ -27,6 +51,11 @@ then
 	exit 1
 fi
 
+if [ -n "$LEAKS" ]
+then
+	PREFIX="valgrind --log-file=leaks.log "
+fi
+
 NAME=$1
 PASSWORD=$2
 COMMAND_1=$3
@@ -36,20 +65,36 @@ EXPECTED_RESULT_2=$6
 
 echo -n "$NAME"
 
-./ircserv 6667 "$PASSWORD" >/dev/null 2>/dev/null &
+$PREFIX ./ircserv 6667 "$PASSWORD" > srv_log 2>&1 &
 SRV_PID=$!
 
-timeout 5 <<< $COMMAND_1 nc localhost 6667 > tmp_1 &
+if [ -n "$LEAKS" ]
+then
+	sleep 1
+fi
+
+timeout 5 <<< "$COMMAND_1" nc localhost 6667 > tmp_1 2> /dev/null &
 USR1_PID=$!
-timeout 5 <<< $COMMAND_2 nc localhost 6667 > tmp_2
-USR2_PID=$!
+
+timeout 5 <<< "$COMMAND_2" nc localhost 6667 > tmp_2 2> /dev/null
+
+EXIT_CODE_2=$?
 
 EXIT_CODE_1=$(wait $USR1_PID)
-EXIT_CODE_2=$(wait $USR2_PID)
+
+kill -s INT $SRV_PID 2> /dev/null || server_crash || exit 1
+
+if [ -n "$LEAKS" ]
+then
+	sleep 1
+	LEAKS=$(cat leaks.log | grep 'LEAK SUMMARY' | wc -l)
+else
+	LEAKS=0
+fi
 
 echo -n " client 1 : "
-tests/utils/print_res.sh "$(cat tmp_1)" "$EXPECTED_RESULT_1" $EXIT_CODE_1
+tests/utils/print_res.sh "$(cat tmp_1)" "$EXPECTED_RESULT_1" $EXIT_CODE_1 $LEAKS
 echo -n ", client 2 : "
-tests/utils/print_res.sh "$(cat tmp_2)" "$EXPECTED_RESULT_2" $EXIT_CODE_2
+tests/utils/print_res.sh "$(cat tmp_2)" "$EXPECTED_RESULT_2" $EXIT_CODE_2 $LEAKS
 
-kill $SRV_PID
+cleanup

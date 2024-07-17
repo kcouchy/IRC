@@ -6,7 +6,7 @@
 #    By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+      #
 #                                                             # *   *. #*      #
 #    Created: 2024/07/15 19:54:14 by aboyreau          **+*+  * -_._-   #+     #
-#    Updated: 2024/07/16 23:29:27 by aboyreau          +#-.-*  +         *     #
+#    Updated: 2024/07/17 01:28:17 by aboyreau          +#-.-*  +         *     #
 #                                                      *-.. *   ++       #     #
 # **************************************************************************** #
 
@@ -67,5 +67,3 @@ empty
 wrong
 not_enough_params
 too_many_params
-
-rm tmp
