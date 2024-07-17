@@ -6,7 +6,7 @@
 #    By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/21 21:38:16 by kiri              #+#    #+#              #
-#    Updated: 2024/07/17 11:19:17 by aboyreau          +#-.-*  +         *     #
+#    Updated: 2024/07/17 12:31:48 by aboyreau          +#-.-*  +         *     #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,7 @@ CXXFLAGS += -Wall -Wextra -Werror -std=c++98 -I include
 SRC =	main		\
 		Server		\
 		Client		\
+		ClientParser\
 		Channel		\
 		PhoneBook	\
 		InputErrors	\

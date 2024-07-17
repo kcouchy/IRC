@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.cpp                                         :+:      :+:    :+:   */
+/*   Client.cpp                                                +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/17 13:41:29 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/17 14:53:14 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Client.h"
 #include "Messageable.h"
 #include "PhoneBook.hpp"
 #include "Channel.hpp"
+#include "Client.h"
 #include <cstdio>
 #include <cstring>
 #include <iostream>
@@ -72,70 +72,6 @@ void Client::send(std::string msg)
 	return ;
 }
 
-void Client::parse(std::string msg)
-{
-	size_t i = 0;
-	std::string prefix = "", command = "", args = "";
-
-	std::vector<std::string> actions = strsplit(msg, '\n'); // TODO This does not split in more than 3 pieces
-	for (std::vector<std::string>::iterator it = actions.begin(); it != actions.end(); it++)
-	{
-		(*it).erase((*it).find_last_not_of("\n") + 1);
-		if ((*it).length() == 0)
-			continue ;
-		i = 0;
-		std::vector<std::string> splitted_command = strsplit(*it, ' ');
-		if (splitted_command[i][0] == ':')
-			prefix = splitted_command[i++];
-		if (splitted_command.size() > i)
-			command = splitted_command[i++];
-		for (std::vector<std::string>::iterator it2 = splitted_command.begin() + i; it2 != splitted_command.end(); it2++)
-			args += *it2 + ' ';
-		if (args.size() > 0)
-			args = args.substr(0, args.size() - 1);
-		args.erase(args.find_last_not_of("\n\r") + 1);
-		std::cout << "I'm executing " << command << " " << args << std::endl;
-		this->exec(prefix, command, args);
-		command = "";
-		prefix = "";
-		args = "";
-	}
-}
-
-void Client::exec(std::string prefix, std::string command, std::string args)
-{
-	std::vector<function> handlers;
-	handlers.push_back(function("CAP", &Client::capabilites));			// tested, OK
-	handlers.push_back(function("PASS", &Client::auth));				// tested, OK
-	handlers.push_back(function("NICK", &Client::changeNick));			// tested, KO
-	handlers.push_back(function("USER", &Client::changeUser));			// tested, KO
-
-	handlers.push_back(function("JOIN", &Client::addChannel));			// untested, KO
-	handlers.push_back(function("PART", &Client::removeChannel));		// untested, KO
-	handlers.push_back(function("INVITE", &Client::inviteToChannel));	// untested, KO
-
-	handlers.push_back(function("PRIVMSG", &Client::sendMessage));		// untested, KO
-	handlers.push_back(function("QUIT", &Client::quit));				// untested, KO
-
-	// TODO KICK
-	// TODO INVITE
-	// TODO TOPIC
-	// TODO MODE
-
-	std::vector<function>::iterator iter = handlers.begin();
-	while (iter != handlers.end())
-	{
-		if ((*iter).getKey() == command)
-		{
-			std::string error;
-			error = (this->*((*iter).value))(prefix, args); // Calls this->function() based on function pointer to function but still on this instance
-			if (error != "")
-				send(":ft_irc " + error);
-		}
-		iter++;
-	}
-}
-
 // Authentication
 std::string Client::capabilites(std::string, std::string params)
 {
@@ -151,17 +87,14 @@ std::string Client::capabilites(std::string, std::string params)
 	return ("");
 }
 
-std::string Client::auth(std::string , std::string args)
+std::string Client::auth(std::string password)
 {
-	if (args.size() == 0)
-		return (ERR_NEEDMOREPARAMS);
 	if (m_authenticated)
-		return (ERR_ALREADYREGISTERED);
-	std::cout << "Authenticating with " << args << " against password " << m_password << std::endl;
-	if (args == m_password)
+		send(ERR_ALREADYREGISTERED);
+	if (password == m_password)
 		this->m_authenticated = true;
 	else
-		return (ERR_PASSWDMISMATCH);
+		send(ERR_PASSWDMISMATCH);
 	return ("");
 }
 

@@ -1,6 +1,7 @@
 .vscode
 *.pdf
 *.o
+objs/
 ircserv
 compile_commands.json
 .cache

@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 23:17:50 by aboyreau               #+#    #+#             */
-/*   Updated: 2024/07/16 20:27:06 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/17 14:06:07 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 #include <exception>
 #include <vector>
 #include <string>
+
 #include "Messageable.h"
-#include "Pair.h"
 
 class Client : public Messageable
 {
@@ -35,11 +35,11 @@ class Client : public Messageable
 		};
 
 	private:
-		int			m_fd;
-		std::string	m_buffer;
-		std::string	m_password;
-		bool		m_authenticated;
-		std::vector<std::string> m_channelList;
+		int							m_fd;
+		std::string					m_buffer;
+		std::string					m_password;
+		std::vector<std::string>	m_channelList;
+		bool						m_authenticated;
 
 		Client(void);
 
@@ -47,9 +47,10 @@ class Client : public Messageable
 		// Find and run a handler according to the command passed as parameter.
 		void	exec(std::string prefix, std::string command, std::string args);
 
+	public:
 		// Authentication
 		std::string	capabilites(std::string, std::string params);
-		std::string	auth(std::string prefix, std::string args);
+		std::string	auth(std::string password);
 		std::string	changeNick(std::string, std::string);
 		std::string	changeUser(std::string, std::string params);
 
@@ -67,4 +68,3 @@ class Client : public Messageable
 		std::string	quit(std::string, std::string params);
 };
 
-typedef Pair<std::string, std::string (Client::*)(std::string, std::string)> function;

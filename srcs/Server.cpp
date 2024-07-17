@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 11:42:07 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/15 20:03:28 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/17 14:01:24 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <cstring>
 #include <iostream>
 
+#include "ClientParser.h"
 #include "Server.hpp"
 #include "PhoneBook.hpp"
 
@@ -29,7 +30,6 @@ Server::Server(int port, std::string password) :
 	m_address.sin_family = AF_INET;
 	m_address.sin_addr.s_addr = htonl(INADDR_ANY);
 	m_address.sin_port = htons(m_port);
-	// m_address.sin_zero = 0;
 	return ;
 }
 
@@ -127,6 +127,7 @@ std::string	Server::read_message(int fd)
 void	Server::handle_clients_messages(size_t pfs_size, struct pollfd *pfs)
 {
 	std::list<Pair<int, Client *> >::iterator iter;
+	ClientParser	parser;
 
 	iter = m_clients.begin();
 	size_t	j = 1;
@@ -139,7 +140,7 @@ void	Server::handle_clients_messages(size_t pfs_size, struct pollfd *pfs)
 			try
 			{
 				msg = this->read_message(pfs[j].fd);
-				(*iter).value->parse(msg);
+				parser.parse(msg, *(*iter).value);
 			}
 			catch (Client::KillMePlease &e)
 			{

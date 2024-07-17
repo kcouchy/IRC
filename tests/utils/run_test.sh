@@ -8,7 +8,7 @@
 #    By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+      #
 #                                                             # *   *. #*      #
 #    Created: 2024/07/15 23:52:33 by aboyreau          **+*+  * -_._-   #+     #
-#    Updated: 2024/07/17 02:05:21 by aboyreau          +#-.-*  +         *     #
+#    Updated: 2024/07/17 11:43:34 by aboyreau          +#-.-*  +         *     #
 #                                                      *-.. *   ++       #     #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ server_crash()
 	exit 1
 }
 
-if [[ $# != 4 ]]
+if [ $# != 4 ]
 then
 	echo "./run_test <name> <password> <command> <expected result>"
 	echo "This command runs a basic test :"
