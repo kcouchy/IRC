@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/17 11:39:07 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/17 12:50:45 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,9 +155,17 @@ void	Channel::setInvite(bool inviteOnly)
 	return ;
 }
 
-std::string	Channel::kick(std::string client_name, std::string channel_name, std::string kick_msg)
+std::string	Channel::kick(Client* toKick, std::string kicker)
 {
-
+	if (std::find( m_listenList.begin(), m_listenList.end(), toKick->getName()) == m_listenList.end())
+		return (ERR_USERNOTINCHANNEL);
+	std::list<Pair<std::string, bool> >::iterator kicker_isOP = std::find(m_listenList.begin(), m_listenList.end(), kicker);
+	if (kicker_isOP == m_listenList.end())
+		return (ERR_NOTONCHANNEL);
+	else if ((*kicker_isOP).value == false)
+		return (ERR_CHANOPRIVSNEEDED);
+	send(":" + kicker + " KICK " + m_name + " " + toKick->getName());
+	return ("");
 }
 
 const char *Channel::EmptyChannel::what() const throw()

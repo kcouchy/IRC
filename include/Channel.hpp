@@ -6,13 +6,14 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:57:02 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/17 11:39:06 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/17 12:50:57 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include "Messageable.h"
+#include "Client.h"
 #include "Pair.h"
 #include <list>
 
@@ -27,7 +28,6 @@ class Channel : public Messageable
 
 		std::string	invite(std::string inviter_name, std::string invitee_name);
 // DELETE		// std::string	topic(std::vector<std::string> args, std::string client_name);
-		std::string		kick(std::string client_name, std::string channel_name, std::string kick_msg);
 		// void		mode(std::string client_name, std::string flag);
 
 		void		send(std::string message);
@@ -37,6 +37,7 @@ class Channel : public Messageable
 		void		setTopicProtected(bool isProtected);
 		void		setOperator(std::string client_name, bool new_value);
 		void		setInvite(bool inviteOnly);
+		std::string	kick(Client* toKick, std::string kicker);
 
 		class EmptyChannel : public std::exception
 		{

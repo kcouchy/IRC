@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.cpp                                                +**+   +*  *   */
+/*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/17 00:23:38 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/17 12:51:18 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,17 +223,19 @@ std::string	Client::removeChannel(std::string, std::string channelName)
 	for (iter = m_channelList.begin(); iter != m_channelList.end(); iter++)
 	{
 		if (channelName == *iter)
+		{
+			channel = PhoneBook::get().getChannel(channelName);
+			if (channel == NULL)
+				continue ;
+			try
+			{
+				channel->quit(this->getName());
+			}
+			catch(const Channel::EmptyChannel& e)
+			{
+				delete channel;
+			}
 			iter = m_channelList.erase(iter);
-		channel = PhoneBook::get().getChannel(channelName);
-		if (channel == NULL)
-			continue ;
-		try
-		{
-			channel->quit(this->getName());
-		}
-		catch(const Channel::EmptyChannel& e)
-		{
-			delete channel;
 		}
 	}
 	return ("");
@@ -352,4 +354,34 @@ std::string	Client::topicChannel(std::string, std::string params)
 			send(":" + temp_channel->getName() + " " + topic_return);
 	}
 	return "";
+}
+
+std::string	Client::kickChannel(std::string channel_name, std::string client_name, std::string kick_msg)
+{
+	Channel* temp_channel;
+	temp_channel = PhoneBook::get().getChannel(channel_name);
+	if (temp_channel == NULL)
+	{
+		send(":" + temp_channel->getName() + " " + ERR_NOSUCHCHANNEL);
+		return ("");
+	}
+	Client* temp_client;
+	temp_client = PhoneBook::get().getClient(client_name);
+	if (temp_client == NULL)
+	{
+		send(":" + temp_channel->getName() + " " + ERR_NOSUCHNICK);
+		return ("");
+	}
+	std::string kick_return = temp_channel->kick(temp_client, m_name);
+	if (kick_return != "")
+		send(":" + temp_channel->getName() + " " + kick_return);
+	else //send kick_msg to kicked client?
+	{
+		if (kick_msg == "")
+			temp_client->send("KICK " + channel_name + " " + client_name + "\n");
+		else
+			temp_client->send("KICK " + channel_name + " " + client_name + " :" + kick_msg + "\n");
+	}
+	temp_client->removeChannel("", channel_name);
+	return ("");
 }

@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:12:41 by atu               #+#    #+#             */
-/*   Updated: 2024/07/16 16:40:05 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/17 12:03:52 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 #define ERR_NOTONCHANNEL "442" //Only members of the channel are allowed to invite other users.
 #define ERR_CHANOPRIVSNEEDED "482" //SHOULD reject it when the channel has invite-only mode set, and the user is not a channel operator.
 #define ERR_USERONCHANNEL "443" //If the user is already on the target channel
+#define ERR_USERNOTINCHANNEL "441"
 #define RPL_INVITING "341" //Sent as a reply to the INVITE command to indicate that the attempt was successful and the client with the nickname <nick> has been invited to <channel>.
 #define ERR_NEEDMOREPARAMS "461"
 #define ERR_ALREADYREGISTERED "462"

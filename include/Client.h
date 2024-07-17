@@ -58,6 +58,7 @@ class Client : public Messageable
 		std::string	removeChannel(std::string, std::string channelName);
 		std::string	inviteToChannel(std::string, std::string params);
 		std::string	topicChannel(std::string, std::string params);
+		std::string	kickChannel(std::string channel_name, std::string client_name, std::string kick_msg);
 
 		// Message-related stuff
 		std::string	sendMessage(std::string, std::string channels);

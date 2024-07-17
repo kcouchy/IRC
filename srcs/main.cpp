@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 13:18:55 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/16 18:50:12 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/17 11:47:58 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ int	main(int argc, char **argv)
 	}
 	catch (std::bad_alloc &b_a)
 	{
-		std::cout << "wtf ?" << std::endl;
 		std::cerr << b_a.what() << std::endl;
 		return (1);
 	}
