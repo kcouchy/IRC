@@ -1,24 +1,7 @@
-For clients, you must be able to:
-	authenticate, (PASS is done)
-	set a nickname, (NICK 
-	a username, (USER 
-	join a channel, (JOIN 
-	send and receive private messages using your reference client. (PRIVMSG 
+TODO :
 
-All the messages sent from one client to a channel have to be forwarded to
-every other client that joined the channel.
-
-You must have operators and regular users.
-
-Then, you have to implement the commands that are specific to channel
-operators:
-∗ KICK - Eject a client from the channel
-∗ INVITE - Invite a client to a channel
-∗ TOPIC - Change or view the channel topic
-∗ MODE - Change the channel’s mode:
-	· i: Set/remove Invite-only channel
-	· t: Set/remove the restrictions of the TOPIC command to channel operators
-	· k: Set/remove the channel key (password)
-	· o: Give/take channel operator privilege
-	· l: Set/remove the user limit to channel
+- Mode handler in the channel
+- Error message formatting
+- More parsing
+- PhoneBook throws a random exception instead of doing nothing on duplicated nicknames
 

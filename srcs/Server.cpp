@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 11:42:07 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/18 18:20:53 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/18 18:26:51 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,7 +187,7 @@ void	Server::run(void)
 			throw PollException();
 		}
 		this->accept_client(pfs);
-		this->handle_clients_messages(pfs_size, pfs); // TODO create this and move the code that triggers client events here
+		this->handle_clients_messages(pfs_size, pfs);
 		delete[] pfs;
 	}
 }
