@@ -6,13 +6,14 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/18 12:02:51 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/18 15:26:43 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
 #include "Messageable.h"
 #include "PhoneBook.hpp"
+#include <climits>
 
 Channel::Channel(std::string channelName) :
 	Messageable(channelName),
@@ -20,6 +21,7 @@ Channel::Channel(std::string channelName) :
 	m_topicProtected(false),
 	m_topic(),
 	m_clientLimit(0),
+	m_channelKey("", false),
 	m_listenList(),
 	m_inviteList() 
 {
@@ -157,29 +159,75 @@ std::string	Channel::kick(Client* toKick, std::string kicker)
 	return ("");
 }
 
-std::string	Channel::mode(std::string client_name, std::string mode_string)
+std::string	Channel::mode(std::string client_name, bool plusminus, char modechar, std::string mode_arg)
 {
-	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	(void)mode_string;
-	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 	if (contains(m_listenList, client_name) == false)
 		return (ERR_NOTONCHANNEL);//not in doc but is logical to add
 	if (find_return(m_listenList, client_name)->value == false)
 		return (ERR_CHANOPRIVSNEEDED);
 
 // · i: Set/remove Invite-only channel
-		// toggle m_inviteOnly
-// · t: Set/remove the restrictions of the TOPIC command to channel operators
-		// toggle m_topicProtected
-// · k: Set/remove the channel key (password - FORBID SPACES)
-		//TODO - handling seems complicated
-		// invalid password type ERR_INVALIDMODEPARAM (696) && ERR_INVALIDKEY (525)
-// · o: Give/take channel operator privilege
-		//toggle corresponding value in m_listenList
-// · l: Set/remove the user limit to channel
-		//TODO - store as unsigned int with 0 being no limit?
+	if (modechar == 'i')
+	{
+		if (plusminus == true)
+			m_inviteOnly = true;
+		else if (plusminus == false)
+			m_inviteOnly = false;
+	}
 
+// · t: Set/remove the restrictions of the TOPIC command to channel operators
+	if (modechar == 't')
+	{
+		if (plusminus == true)
+			m_topicProtected = true;
+		else if (plusminus == false)
+			m_topicProtected = false;
+	}
+
+// · k: Set/remove the channel key (replicate allowed character list from nickname set)
+	if (modechar == 'k')
+	{
+		//TO PARSING LEVEL- ERR_INVALIDMODEPARAM (696)
+		if (plusminus == true)
+		{
+			if (mode_arg.find_first_not_of(AUTHORISED_SET) != mode_arg.npos)
+				return (ERR_INVALIDKEY);
+			m_channelKey.second = true;
+			m_channelKey.first = mode_arg;
+		}
+		else if (plusminus == false)
+		{
+			m_channelKey.second = false;
+			m_channelKey.first = "";
+		}
+	}
+
+// · o: Give/take channel operator privilege
+	if (modechar == 'o')
+	{
+		if (contains(m_listenList, mode_arg) == false)
+			return (ERR_USERNOTINCHANNEL);
+		if (plusminus == true)
+			find_return(m_listenList, mode_arg)->value = true;
+		else if (plusminus == false)
+			find_return(m_listenList, mode_arg)->value = false;
+	}
+
+// · l: Set/remove the user limit to channel
+	if (modechar == 'l')
+	{
+		if (plusminus == true)
+		{
+			if (mode_arg.find_first_not_of("1234567890") != mode_arg.npos)
+				return (ERR_INVALIDMODEPARAM);
+			double	new_limit = std::atof(mode_arg.c_str());
+			if (new_limit > INT_MAX || new_limit < 1)
+				return (ERR_INVALIDMODEPARAM);
+			m_clientLimit = (int)new_limit;
+		}
+		else if (plusminus == false)
+			m_clientLimit = 0;
+	}
 		//Need to add to join function:
 		//	ERR_CHANNELISFULL (471) if -l is set and number to users joined matches or exceeds this value
 		//	ERR_INVITEONLYCHAN (473) if user has not received invite before trying to join channel

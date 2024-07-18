@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:12:41 by atu               #+#    #+#             */
-/*   Updated: 2024/07/18 11:21:55 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/18 15:21:40 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,10 @@
 #define ERR_ALREADYREGISTERED "462 :ERR_ALREADYREGISTERED"
 #define ERR_PASSWDMISMATCH "464 :ERR_PASSWDMISMATCH"
 #define ERR_CHANOPRIVSNEEDED "482 :ERR_CHANOPRIVSNEEDED"
+#define ERR_INVALIDKEY "525: ERR_INVALIDKEY"
+#define ERR_INVALIDMODEPARAM "696: ERR_INVALIDMODEPARAM"
+
+#define AUTHORISED_SET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_[]{}\\|"
 
 class Messageable
 {

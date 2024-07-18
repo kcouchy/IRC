@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/18 11:59:56 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/18 15:27:02 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,7 @@ std::string Client::changeNick(std::string, std::string params)
 {
 	if (m_authenticated == false)
 		return (ERR_PASSWDMISMATCH);
-	std::string authorized_set = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_[]{}\\|";
-	if (params == "" || params.find_first_not_of(authorized_set) != std::string::npos)
+	if (params == "" || params.find_first_not_of(AUTHORISED_SET) != std::string::npos)
 		return (ERR_ERRONEUSNICKNAME);
 	if (PhoneBook::get().getRecipient(params) != NULL)
 		return (ERR_NICKNAMEINUSE);
@@ -340,18 +339,18 @@ std::string	Client::kickChannel(std::string channel_name, std::string client_nam
 	return ("");
 }
 
-std::string	Client::modeChannel(std::string, std::string channel_name, std::string mode_string)
+std::string	Client::modeChannel(std::string channel_name, bool plusminus, char modechar, std::string mode_arg)
 {
 	Channel *temp_channel = PhoneBook::get().getChannel(channel_name);
 	if (temp_channel == NULL)
 		return (ERR_NOSUCHCHANNEL);
-	if (mode_string == "")
+	if (modechar == '\0')
 	{
 		//TODO wtf?
 		// send(<client> <channel> <modestring> <mode arguments>...);
-		return (RPL_CHANNELMODEIS);
+		return (RPL_CHANNELMODEIS);//TODO formatting return messages
 	}
-	std::string mode_return = temp_channel->mode(m_name, mode_string);
+	std::string mode_return = temp_channel->mode(m_name, plusminus, modechar, mode_arg);
 	if (mode_return != "")
 		return (mode_return);//TODO formatting return messages
 	return ("");

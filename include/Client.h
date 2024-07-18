@@ -62,7 +62,7 @@ class Client : public Messageable
 		std::string	inviteToChannel(std::string, std::string params);
 		std::string	topicChannel(std::string, std::string params);
 		std::string	kickChannel(std::string channel_name, std::string client_name, std::string kick_msg);
-		std::string	modeChannel(std::string, std::string channel_name, std::string mode_string);
+		std::string	modeChannel(std::string client_name, bool plusminus, char modechar, std::string mode_arg);
 
 		// Message-related stuff
 		std::string	sendMessage(std::string, std::string channels);
