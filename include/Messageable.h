@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:12:41 by atu               #+#    #+#             */
-/*   Updated: 2024/07/18 15:59:04 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/18 16:13:49 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,9 @@ class Messageable
 		Messageable& operator=(const Messageable&);
 		virtual ~Messageable();
 		
-		virtual void	send(std::string message) = 0;
+		virtual void	send(std::string sender_name, std::string message) = 0;
 		std::string 	getName() const;
-		void			setName(std::string);
+		// void			setName(std::string);
 
 		class RecipientNotFound : public std::exception
 		{

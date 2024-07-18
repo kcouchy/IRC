@@ -1,13 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                              ++            */
-/*   ClientParser.cpp                                          +**+   +*  *   */
-/*                                                             ##%#*###*+++   */
-/*   By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+     */
-/*                                                            # *   *. #*     */
-/*   Created: 2024/07/17 11:59:26 by aboyreau          **+*+  * -_._-   #+    */
-/*   Updated: 2024/07/18 15:32:48 by aboyreau          +#-.-*  +         *    */
-/*                                                     *-.. *   ++       #    */
+/*                                                        :::      ::::::::   */
+/*   ClientParser.cpp                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 11:59:26 by aboyreau          #+#    #+#             */
+/*   Updated: 2024/07/18 16:44:22 by kcouchma         ###   ########.fr       */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "ClientParser.h"
@@ -76,7 +76,7 @@ void ClientParser::parse_command(std::string prefix, std::string command, std::s
 		error = (this->*(*it).value)(prefix, args, client); // Calls this->function() based on function pointer to function but still on this instance
 		if (error != "")
 		{
-			client.send(":ft_irc " + error);
+			client.send("", ":ft_irc " + error);
 		}
 	}
 	

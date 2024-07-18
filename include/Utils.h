@@ -6,13 +6,14 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 14:19:12 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/18 14:51:55 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/18 16:45:17 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # pragma once
 
 #include <string>
+#include <algorithm>
 
 template <typename L>
 bool find_erase(L &list, std::string search)

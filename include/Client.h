@@ -25,7 +25,7 @@ class Client : public Messageable
 		~Client(void);
 
 		int		getfd() const;
-		void	send(std::string msg);
+		void	send(std::string, std::string msg);
 		void	parse(std::string);
 
 		class KillMePlease : public std::exception

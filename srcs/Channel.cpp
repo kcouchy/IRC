@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/18 16:01:37 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/18 16:50:59 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ Channel::~Channel(void) {}
 
 std::string Channel::join(std::string client_name, std::string key)
 {
-	if (m_clientLimit != 0 && m_listenList.size() >= m_clientLimit)
+	if (m_clientLimit != 0 && m_listenList.size() >= (size_t)m_clientLimit)
 		return (ERR_CHANNELISFULL);
 	if (m_inviteOnly == true && contains(m_inviteList, client_name) == false)
 		return (ERR_INVITEONLYCHAN);
@@ -55,6 +55,7 @@ std::string Channel::join(std::string client_name, std::string key)
 		to_add.value = true;
 	m_listenList.push_back(to_add);
 	find_erase(m_inviteList, client_name);
+	return ("");
 }
 
 std::string Channel::quit(std::string client_name)
@@ -91,8 +92,7 @@ std::string	Channel::invite(std::string inviter_name, std::string invitee_name)
 	return (ERR_NOTONCHANNEL);
 }
 
-//TODO remove sender from broadcast list
-void Channel::send(std::string msg)
+void Channel::send(std::string sender_name, std::string message)
 {
 	std::list<Pair<std::string, bool> >::iterator iter;
 	Messageable *target;
@@ -100,8 +100,9 @@ void Channel::send(std::string msg)
 	{
 		target = PhoneBook::get().getRecipient((*iter).getKey());
 		if (target == NULL)
-			throw Messageable::RecipientNotFound(); //TODO CATCH ME BABY
-		(*target).send(msg);
+			find_erase(m_listenList, target->getName());
+		if (target->getName() != sender_name)
+			(*target).send("", message);
 	}
 }
 
@@ -114,14 +115,14 @@ std::string Channel::setTopic(std::string topic, std::string client_name)
 {
 	if (m_topicProtected == true)
 	{
-		std::list<Pair<std::string, bool> >::iterator user = std::find(m_listenList.begin(), m_listenList.end(), client_name);
+		std::list<Pair<std::string, bool> >::iterator user = find_return(m_listenList, client_name);
 		if (user == m_listenList.end())
 			return(ERR_NOTONCHANNEL);
 		else if ((*user).value == false)
 			return(ERR_CHANOPRIVSNEEDED);
 	}
 	m_topic = topic;
-	send(":" + m_name + " PRIVMSG " + m_name + " :channel topic has been changed to: " + topic);
+	send("", ":" + m_name + " PRIVMSG " + m_name + " :channel topic has been changed to: " + topic);
 	return ("");
 }
 
@@ -152,14 +153,14 @@ void	Channel::setInvite(bool inviteOnly)
 
 std::string	Channel::kick(Client* toKick, std::string kicker)
 {
-	if (std::find( m_listenList.begin(), m_listenList.end(), toKick->getName()) == m_listenList.end())
+	if (contains(m_listenList, toKick->getName()))
 		return (ERR_USERNOTINCHANNEL);
-	std::list<Pair<std::string, bool> >::iterator kicker_isOP = std::find(m_listenList.begin(), m_listenList.end(), kicker);
+	std::list<Pair<std::string, bool> >::iterator kicker_isOP = find_return(m_listenList, kicker);
 	if (kicker_isOP == m_listenList.end())
 		return (ERR_NOTONCHANNEL);
 	else if ((*kicker_isOP).value == false)
 		return (ERR_CHANOPRIVSNEEDED);
-	send(":" + kicker + " KICK " + m_name + " " + toKick->getName());
+	send("", ":" + kicker + " KICK " + m_name + " " + toKick->getName());
 	return ("");
 }
 
@@ -239,18 +240,3 @@ const char *Channel::EmptyChannel::what() const throw()
 {
 	return ("Don't leave me alone, I'm a lonely empty channel :c");
 }
-
-// const char *Channel::NotOperator::what() const throw()
-// {
-// 	return ("Nope, not allowed, you're not a channel operator");
-// }
-
-const char *Channel::NotOnChannel::what() const throw()
-{
-	return ("Nope, not allowed, the user is not on the channel");
-}
-
-// const char *Channel::UserOnChannel::what() const throw()
-// {
-// 	return ("Nope, can't invite a user to a channel they already belong to");
-// }

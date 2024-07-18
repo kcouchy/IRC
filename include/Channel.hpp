@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:57:02 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/18 15:57:49 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/18 16:35:39 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ class Channel : public Messageable
 		std::string	invite(std::string inviter_name, std::string invitee_name);
 		// void		mode(std::string client_name, std::string flag);
 
-		void		send(std::string message);
+		void		send(std::string sender_name, std::string message);
 		std::string	getTopic(void)const;
 		std::string	setTopic(std::string topic, std::string client_name);
 		bool		getTopicProtected(void)const;
@@ -44,21 +44,6 @@ class Channel : public Messageable
 			public:
 				virtual const char *what() const throw();
 		};
-		// class UserOnChannel : public std::exception
-		// {
-		// 	public:
-		// 		virtual const char *what() const throw();
-		// };
-		class NotOnChannel : public std::exception
-		{
-			public:
-				virtual const char *what() const throw();
-		};
-		// class NotOperator : public std::exception
-		// {
-		// 	public:
-		// 		virtual const char *what() const throw();
-		// };
 
 	private:
 		Channel(void);
