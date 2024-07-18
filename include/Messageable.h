@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:12:41 by atu               #+#    #+#             */
-/*   Updated: 2024/07/17 18:31:15 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/18 11:21:55 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "Utils.h"
 
 #define	RPL_AWAY "30 :RPL_AWAY"
+#define	RPL_CHANNELMODEIS "324 :RPL_CHANNELMODEIS"
 #define RPL_NOTOPIC "331 :RPL_NOTOPIC"
 #define RPL_TOPIC "332 :RPL_TOPIC"
 #define RPL_INVITING "341 :RPL_INVITING"

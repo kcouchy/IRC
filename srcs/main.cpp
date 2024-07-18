@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 13:18:55 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/17 11:47:58 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/18 11:15:33 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 #include <iostream>
 #include <sstream>
 
-//TODO check new clients and channels don't already exist in constructor
 //TODO DUMBARSE use std::find to remove unnecessary loops
 
 long	check_inputs(int argc, char **argv)

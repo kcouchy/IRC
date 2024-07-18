@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:57:02 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/17 14:11:26 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/18 12:00:25 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ class Channel : public Messageable
 		void		setOperator(std::string client_name, bool new_value);
 		void		setInvite(bool inviteOnly);
 		std::string	kick(Client* toKick, std::string kicker);
+		std::string	mode(std::string client_name, std::string mode_string);
 
 		class EmptyChannel : public std::exception
 		{
@@ -64,6 +65,7 @@ class Channel : public Messageable
 		bool		m_inviteOnly;
 		bool		m_topicProtected;
 		std::string	m_topic;
+		int			m_clientLimit;
 		std::list<Pair<std::string, bool> >	m_listenList; //std::string = client_name; bool = is_operator status
 		std::vector<std::string>			m_inviteList;
 };

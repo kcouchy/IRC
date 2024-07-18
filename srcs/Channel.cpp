@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/17 18:37:31 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/18 12:02:51 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ Channel::Channel(std::string channelName) :
 	m_inviteOnly(false),
 	m_topicProtected(false),
 	m_topic(),
+	m_clientLimit(0),
 	m_listenList(),
 	m_inviteList() 
 {
@@ -154,6 +155,36 @@ std::string	Channel::kick(Client* toKick, std::string kicker)
 		return (ERR_CHANOPRIVSNEEDED);
 	send(":" + kicker + " KICK " + m_name + " " + toKick->getName());
 	return ("");
+}
+
+std::string	Channel::mode(std::string client_name, std::string mode_string)
+{
+	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	(void)mode_string;
+	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+	if (contains(m_listenList, client_name) == false)
+		return (ERR_NOTONCHANNEL);//not in doc but is logical to add
+	if (find_return(m_listenList, client_name)->value == false)
+		return (ERR_CHANOPRIVSNEEDED);
+
+// · i: Set/remove Invite-only channel
+		// toggle m_inviteOnly
+// · t: Set/remove the restrictions of the TOPIC command to channel operators
+		// toggle m_topicProtected
+// · k: Set/remove the channel key (password - FORBID SPACES)
+		//TODO - handling seems complicated
+		// invalid password type ERR_INVALIDMODEPARAM (696) && ERR_INVALIDKEY (525)
+// · o: Give/take channel operator privilege
+		//toggle corresponding value in m_listenList
+// · l: Set/remove the user limit to channel
+		//TODO - store as unsigned int with 0 being no limit?
+
+		//Need to add to join function:
+		//	ERR_CHANNELISFULL (471) if -l is set and number to users joined matches or exceeds this value
+		//	ERR_INVITEONLYCHAN (473) if user has not received invite before trying to join channel
+		//	ERR_BADCHANNELKEY (475) if -k is set and they do not supply a key(channel password) or it is wrong
+		return ("");
 }
 
 const char *Channel::EmptyChannel::what() const throw()

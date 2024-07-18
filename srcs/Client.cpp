@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/17 18:48:12 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/18 11:59:56 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -337,5 +337,22 @@ std::string	Client::kickChannel(std::string channel_name, std::string client_nam
 			temp_client->send("KICK " + channel_name + " " + client_name + " :" + kick_msg + "\n");
 	}
 	temp_client->removeChannel("", channel_name);
+	return ("");
+}
+
+std::string	Client::modeChannel(std::string, std::string channel_name, std::string mode_string)
+{
+	Channel *temp_channel = PhoneBook::get().getChannel(channel_name);
+	if (temp_channel == NULL)
+		return (ERR_NOSUCHCHANNEL);
+	if (mode_string == "")
+	{
+		//TODO wtf?
+		// send(<client> <channel> <modestring> <mode arguments>...);
+		return (RPL_CHANNELMODEIS);
+	}
+	std::string mode_return = temp_channel->mode(m_name, mode_string);
+	if (mode_return != "")
+		return (mode_return);//TODO formatting return messages
 	return ("");
 }
