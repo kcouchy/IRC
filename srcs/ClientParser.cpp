@@ -6,14 +6,16 @@
 /*   By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+     */
 /*                                                            # *   *. #*     */
 /*   Created: 2024/07/17 11:59:26 by aboyreau          **+*+  * -_._-   #+    */
-/*   Updated: 2024/07/17 16:26:17 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/18 15:32:48 by aboyreau          +#-.-*  +         *    */
 /*                                                     *-.. *   ++       #    */
 /* ************************************************************************** */
 
 #include "ClientParser.h"
 #include "Messageable.h"
 #include "utils.h"
+#include <algorithm>
 #include <iostream>
+#include <map>
 
 ClientParser::ClientParser() {}
 ClientParser::~ClientParser() {}
@@ -51,38 +53,33 @@ void ClientParser::parse(std::string msg, Client &client)
 void ClientParser::parse_command(std::string prefix, std::string command, std::string args, Client &client)
 {
 	std::vector<function> handlers;
-	handlers.push_back(function("CAP", &ClientParser::cap));					// tested, OK
-	handlers.push_back(function("PASS", &ClientParser::pass));					// tested, OK
-	handlers.push_back(function("NICK", &ClientParser::nick));					// tested, KO
+	handlers.push_back(function("CAP", &ClientParser::cap));			// tested, OK
+	handlers.push_back(function("PASS", &ClientParser::pass));			// tested, OK
+	handlers.push_back(function("NICK", &ClientParser::nick));			// tested, KO
 	handlers.push_back(function("USER", &ClientParser::user));			// tested, KO
 
 	handlers.push_back(function("JOIN", &ClientParser::join));			// untested, KO
-	// handlers.push_back(function("PART", &ClientParser::removeChannel));		// untested, KO
-	// handlers.push_back(function("INVITE", &ClientParser::inviteToChannel));	// untested, KO
-	handlers.push_back(function("KICK", &ClientParser::kick));	// untested, KO
+	handlers.push_back(function("PART", &ClientParser::part));			// untested, KO
+	handlers.push_back(function("INVITE", &ClientParser::invite));		// untested, KO
+	handlers.push_back(function("KICK", &ClientParser::kick));			// untested, KO
 
-	// handlers.push_back(function("PRIVMSG", &ClientParser::sendMessage));		// untested, KO
-	handlers.push_back(function("QUIT", &ClientParser::quit));					// untested, KO
+	handlers.push_back(function("PRIVMSG", &ClientParser::privmsg));	// untested, KO
+	handlers.push_back(function("QUIT", &ClientParser::quit));			// untested, KO
 
-	// TODO KICK
-	// TODO INVITE
 	// TODO TOPIC
 	// TODO MODE
 
-	std::vector<function>::iterator iter = handlers.begin();
-	while (iter != handlers.end())
+	std::vector<function>::iterator it = std::find(handlers.begin(), handlers.end(), command);
+	if (it != handlers.end())
 	{
-		if ((*iter).getKey() == command)
+		std::string error;
+		error = (this->*(*it).value)(prefix, args, client); // Calls this->function() based on function pointer to function but still on this instance
+		if (error != "")
 		{
-			std::string error;
-			error = (this->*((*iter).value))(prefix, args, client); // Calls this->function() based on function pointer to function but still on this instance
-			if (error != "")
-			{
-				; // send(":ft_irc " + error);
-			}
+			client.send(":ft_irc " + error);
 		}
-		iter++;
 	}
+	
 }
 
 std::string ClientParser::parse_postfix(std::string args)
@@ -132,6 +129,11 @@ std::string ClientParser::part(std::string prefix, std::string args, Client &cli
 	return client.removeChannel(prefix, args);
 }
 
+std::string ClientParser::invite(std::string prefix, std::string args, Client &client)
+{
+	return client.inviteToChannel(prefix, args);
+}
+
 std::string ClientParser::kick(std::string prefix, std::string args, Client &client)
 {
 	(void) prefix;
@@ -156,6 +158,11 @@ std::string ClientParser::kick(std::string prefix, std::string args, Client &cli
 	for (it = kicked_users.begin(); it != kicked_users.end(); it++)
 		client.kickChannel(channel, *it, message);
 	return "";
+}
+
+std::string ClientParser::privmsg(std::string prefix, std::string args, Client &client)
+{
+	return client.sendMessage(prefix, args);
 }
 
 std::string ClientParser::quit(std::string prefix, std::string args, Client &client)

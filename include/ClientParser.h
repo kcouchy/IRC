@@ -6,12 +6,13 @@
 /*   By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+     */
 /*                                                            # *   *. #*     */
 /*   Created: 2024/07/17 11:59:19 by aboyreau          **+*+  * -_._-   #+    */
-/*   Updated: 2024/07/17 16:19:48 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/18 14:59:56 by aboyreau          +#-.-*  +         *    */
 /*                                                     *-.. *   ++       #    */
 /* ************************************************************************** */
 
 #pragma once
 
+#include <climits>
 #ifndef CLIENTPARSER_H
 #define CLIENTPARSER_H
 
@@ -44,7 +45,10 @@ class ClientParser
 
 		std::string join(std::string prefix, std::string arsg, Client &client);
 		std::string part(std::string prefix, std::string arsg, Client &client);
+		std::string invite(std::string prefix, std::string arsg, Client &client);
 		std::string kick(std::string prefix, std::string arsg, Client &client);
+
+		std::string privmsg(std::string prefix, std::string arsg, Client &client);
 
 		std::string quit(std::string prefix, std::string args, Client &client);
 };

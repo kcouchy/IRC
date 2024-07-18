@@ -31,7 +31,7 @@ wrong()
 		PASS wrong
 		QUIT
 	EOF`
-	EXPECTED="464"
+	EXPECTED="464 :ERR_PASSWDMISMATCH"
 	$TESTDIR/utils/run_test.sh "$TEST" "$PASSWORD" "$COMMAND" "$EXPECTED"
 }
 

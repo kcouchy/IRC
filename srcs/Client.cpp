@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/18 15:35:12 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/18 15:36:13 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,12 +76,16 @@ std::string Client::auth(std::string password)
 
 std::string Client::changeNick(std::string, std::string params)
 {
+	std::cout << "Hi" << std::endl;
 	if (m_authenticated == false)
-		return (ERR_PASSWDMISMATCH);
-	if (params == "" || params.find_first_not_of(AUTHORISED_SET) != std::string::npos)
-		return (ERR_ERRONEUSNICKNAME);
+		send(ERR_PASSWDMISMATCH);
+	if (params == "")
+		send(ERR_NONICKNAMEGIVEN);
+	std::string authorized_set = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_[]{}\\|";
+	if (params.find_first_not_of(authorized_set) != std::string::npos)
+		send(ERR_ERRONEUSNICKNAME);
 	if (PhoneBook::get().getRecipient(params) != NULL)
-		return (ERR_NICKNAMEINUSE);
+		send(ERR_NICKNAMEINUSE);
 	this->m_name = params;
 	return ("");
 }

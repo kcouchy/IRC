@@ -1,20 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Messageable.h                                      :+:      :+:    :+:   */
+/*   Messageable.h                                             +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:12:41 by atu               #+#    #+#             */
-/*   Updated: 2024/07/18 15:21:40 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/18 15:35:43 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include <string>
-#include <algorithm>
-#include "Utils.h"
 
 #define	RPL_AWAY "30 :RPL_AWAY"
 #define	RPL_CHANNELMODEIS "324 :RPL_CHANNELMODEIS"
