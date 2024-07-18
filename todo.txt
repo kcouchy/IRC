@@ -5,3 +5,12 @@ TODO :
 - More parsing
 - PhoneBook throws a random exception instead of doing nothing on duplicated nicknames
 
+Tests :
+- JOIN
+- PART
+- INVITE
+- KICK
+- TOPIC
+- MODE
+- PRIVMSG
+- QUIT
