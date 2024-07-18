@@ -6,7 +6,7 @@
 /*   By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+     */
 /*                                                            # *   *. #*     */
 /*   Created: 2024/07/17 11:59:19 by aboyreau          **+*+  * -_._-   #+    */
-/*   Updated: 2024/07/17 14:06:41 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/17 16:19:48 by aboyreau          +#-.-*  +         *    */
 /*                                                     *-.. *   ++       #    */
 /* ************************************************************************** */
 
@@ -37,11 +37,18 @@ class ClientParser
 		void parse_command(std::string prefix, std::string command, std::string param, Client &client);
 
 		// command-specific parsers
-		std::string kick(std::string prefix, std::string arsg, Client &client);
 		std::string cap(std::string prefix, std::string arsg, Client &client);
+		std::string pass(std::string prefix, std::string args, Client &client);
+		std::string nick(std::string prefix, std::string args, Client &client);
+		std::string user(std::string prefix, std::string args, Client &client);
+
+		std::string join(std::string prefix, std::string arsg, Client &client);
+		std::string part(std::string prefix, std::string arsg, Client &client);
+		std::string kick(std::string prefix, std::string arsg, Client &client);
+
+		std::string quit(std::string prefix, std::string args, Client &client);
 };
 
 typedef Pair<std::string, std::string (ClientParser::*)(std::string, std::string, Client&)> function;
 
 #endif
-

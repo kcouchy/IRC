@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.cpp                                         :+:      :+:    :+:   */
+/*   Client.cpp                                                +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/18 15:27:02 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/18 15:35:12 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,31 +21,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <vector>
-
-std::vector<std::string> strsplit(std::string str, char delim)
-{
-	std::vector<std::string> splitted;
-	size_t start = 0;
-	size_t stop;
-
-	stop = str.find(delim);
-	while (1)
-	{
-		if (stop == std::string::npos)
-		{
-			splitted.push_back(str.substr(start, str.size()));
-			break ;
-		}
-		std::cerr << "Pushing back : " << str.substr(start, stop - start) << std::endl;
-		splitted.push_back(str.substr(start, stop - start));
-		start = stop + 1;
-		std::cerr << "start : " << start << std::endl;
-		std::cerr << "searching `" << delim << "` in " << str.substr(start, str.size() - 1) << std::endl;
-		stop = str.find(delim, start);
-		std::cerr << "stop : " << stop << std::endl;
-	}
-	return splitted;
-}
+#include "utils.h"
 
 Client::Client(int client_fd, std::string password) :
 	m_fd(client_fd),
@@ -76,8 +52,7 @@ void Client::send(std::string msg)
 // Authentication
 std::string Client::capabilites(std::string, std::string params)
 {
-	std::cerr << "`" << params << "`" << std::endl;
-	if (params == "LS")
+	if (params == "LS" || params == "LS 302")
 	{
 		send("CAP * LS :\n");
 		return ("");

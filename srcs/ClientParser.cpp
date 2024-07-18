@@ -6,7 +6,7 @@
 /*   By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+     */
 /*                                                            # *   *. #*     */
 /*   Created: 2024/07/17 11:59:26 by aboyreau          **+*+  * -_._-   #+    */
-/*   Updated: 2024/07/17 14:17:09 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/17 16:26:17 by aboyreau          +#-.-*  +         *    */
 /*                                                     *-.. *   ++       #    */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void ClientParser::parse(std::string msg, Client &client)
 	size_t i = 0;
 	std::string prefix = "", command = "", args = "";
 
+	std::cout << "msg : " << msg << std::endl;
 	std::vector<std::string> actions = strsplit(msg, '\n');
 	for (std::vector<std::string>::iterator it = actions.begin(); it != actions.end(); it++)
 	{
@@ -39,8 +40,7 @@ void ClientParser::parse(std::string msg, Client &client)
 			args += *it2 + ' ';
 		if (args.size() > 0)
 			args = args.substr(0, args.size() - 1);
-		args.erase(args.find_last_not_of("\n\r") + 1);
-		std::cout << "I'm executing " << command << " " << args << std::endl;
+		args.erase(args.find_last_not_of("\n") + 1);
 		this->parse_command(prefix, command, args, client);
 		command = "";
 		prefix = "";
@@ -51,18 +51,18 @@ void ClientParser::parse(std::string msg, Client &client)
 void ClientParser::parse_command(std::string prefix, std::string command, std::string args, Client &client)
 {
 	std::vector<function> handlers;
-	handlers.push_back(function("CAP", &ClientParser::cap));			// tested, OK
-	// handlers.push_back(function("PASS", &ClientParser::auth));				// tested, OK
-	// handlers.push_back(function("NICK", &ClientParser::changeNick));			// tested, KO
-	// handlers.push_back(function("USER", &ClientParser::changeUser));			// tested, KO
+	handlers.push_back(function("CAP", &ClientParser::cap));					// tested, OK
+	handlers.push_back(function("PASS", &ClientParser::pass));					// tested, OK
+	handlers.push_back(function("NICK", &ClientParser::nick));					// tested, KO
+	handlers.push_back(function("USER", &ClientParser::user));			// tested, KO
 
-	// handlers.push_back(function("JOIN", &ClientParser::addChannel));			// untested, KO
+	handlers.push_back(function("JOIN", &ClientParser::join));			// untested, KO
 	// handlers.push_back(function("PART", &ClientParser::removeChannel));		// untested, KO
 	// handlers.push_back(function("INVITE", &ClientParser::inviteToChannel));	// untested, KO
 	handlers.push_back(function("KICK", &ClientParser::kick));	// untested, KO
 
 	// handlers.push_back(function("PRIVMSG", &ClientParser::sendMessage));		// untested, KO
-	// handlers.push_back(function("QUIT", &ClientParser::quit));				// untested, KO
+	handlers.push_back(function("QUIT", &ClientParser::quit));					// untested, KO
 
 	// TODO KICK
 	// TODO INVITE
@@ -97,6 +97,41 @@ std::string ClientParser::parse_postfix(std::string args)
 	return postfix;
 }
 
+std::string ClientParser::cap(std::string prefix, std::string args, Client &client)
+{
+	if (args.size() == 0)
+		return (ERR_NEEDMOREPARAMS);
+	(void) prefix;
+	(void) client;
+	return "";
+}
+
+std::string ClientParser::pass(std::string prefix, std::string args, Client &client)
+{
+	(void) prefix;
+	return client.auth(args);
+}
+
+std::string ClientParser::nick(std::string prefix, std::string args, Client &client)
+{
+	return client.changeNick(prefix, args);
+}
+
+std::string ClientParser::user(std::string prefix, std::string args, Client &client)
+{
+	return client.changeUser(prefix, args);
+}
+
+std::string ClientParser::join(std::string prefix, std::string args, Client &client)
+{
+	return client.addChannel(prefix, args);
+}
+
+std::string ClientParser::part(std::string prefix, std::string args, Client &client)
+{
+	return client.removeChannel(prefix, args);
+}
+
 std::string ClientParser::kick(std::string prefix, std::string args, Client &client)
 {
 	(void) prefix;
@@ -119,15 +154,11 @@ std::string ClientParser::kick(std::string prefix, std::string args, Client &cli
 		return (ERR_NEEDMOREPARAMS);
 	std::vector<std::string>::iterator it;
 	for (it = kicked_users.begin(); it != kicked_users.end(); it++)
-		client.kickChannel(channel, *it, message); // TODO
+		client.kickChannel(channel, *it, message);
 	return "";
 }
 
-std::string ClientParser::cap(std::string prefix, std::string args, Client &client)
+std::string ClientParser::quit(std::string prefix, std::string args, Client &client)
 {
-	if (args.size() == 0)
-		return (ERR_NEEDMOREPARAMS);
-	(void) prefix;
-	(void) client;
-	return "";
+	return client.quit(prefix, args);
 }
