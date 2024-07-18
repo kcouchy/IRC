@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.cpp                                                +**+   +*  *   */
+/*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/18 15:36:13 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/18 15:51:49 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,13 @@ std::string	Client::addChannel(std::string, std::string params)
 			return ("");
 		}
 	}
-	channel->join(this->getName());
+	std::string join_return = channel->join(this->getName());
+	if (join_return != "")
+	{
+		// TODO CHECK THIS
+		::send(this->m_fd, &join_return, join_return.size(), 0);
+		return ("");
+	}
 	m_channelList.push_back(params);
 	return ("");
 }

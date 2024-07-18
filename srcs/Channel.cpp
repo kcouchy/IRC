@@ -6,13 +6,14 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/18 15:26:43 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/18 16:01:37 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
 #include "Messageable.h"
 #include "PhoneBook.hpp"
+#include "Utils.h"
 #include <climits>
 
 Channel::Channel(std::string channelName) :
@@ -41,16 +42,19 @@ Channel::Channel(std::string channelName) :
 
 Channel::~Channel(void) {}
 
-//TODO check inviteOnly status
-void Channel::join(std::string client_name)
+std::string Channel::join(std::string client_name, std::string key)
 {
+	if (m_clientLimit != 0 && m_listenList.size() >= m_clientLimit)
+		return (ERR_CHANNELISFULL);
 	if (m_inviteOnly == true && contains(m_inviteList, client_name) == false)
-		return ;
-
+		return (ERR_INVITEONLYCHAN);
+	if (m_channelKey.second == true && key != m_channelKey.first)
+		return (ERR_BADCHANNELKEY);
 	Pair<std::string, bool> to_add(client_name, false);
 	if(m_listenList.size() == 0)
 		to_add.value = true;
 	m_listenList.push_back(to_add);
+	find_erase(m_inviteList, client_name);
 }
 
 std::string Channel::quit(std::string client_name)
@@ -228,11 +232,7 @@ std::string	Channel::mode(std::string client_name, bool plusminus, char modechar
 		else if (plusminus == false)
 			m_clientLimit = 0;
 	}
-		//Need to add to join function:
-		//	ERR_CHANNELISFULL (471) if -l is set and number to users joined matches or exceeds this value
-		//	ERR_INVITEONLYCHAN (473) if user has not received invite before trying to join channel
-		//	ERR_BADCHANNELKEY (475) if -k is set and they do not supply a key(channel password) or it is wrong
-		return ("");
+	return ("");
 }
 
 const char *Channel::EmptyChannel::what() const throw()

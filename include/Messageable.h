@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Messageable.h                                             +**+   +*  *   */
+/*   Messageable.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:12:41 by atu               #+#    #+#             */
-/*   Updated: 2024/07/18 15:35:43 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/18 15:59:04 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,9 @@
 #define ERR_CHANOPRIVSNEEDED "482 :ERR_CHANOPRIVSNEEDED"
 #define ERR_INVALIDKEY "525: ERR_INVALIDKEY"
 #define ERR_INVALIDMODEPARAM "696: ERR_INVALIDMODEPARAM"
+#define ERR_CHANNELISFULL "471: ERR_CHANNELISFULL"
+#define ERR_INVITEONLYCHAN "473: ERR_INVITEONLYCHAN"
+#define ERR_BADCHANNELKEY "475: ERR_BADCHANNELKEY"
 
 #define AUTHORISED_SET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_[]{}\\|"
 
