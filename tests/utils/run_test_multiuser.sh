@@ -6,7 +6,7 @@
 #    By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+      #
 #                                                             # *   *. #*      #
 #    Created: 2024/07/16 23:18:58 by aboyreau          **+*+  * -_._-   #+     #
-#    Updated: 2024/07/17 02:05:19 by aboyreau          +#-.-*  +         *     #
+#    Updated: 2024/07/18 17:36:06 by aboyreau          +#-.-*  +         *     #
 #                                                      *-.. *   ++       #     #
 # **************************************************************************** #
 
@@ -73,10 +73,10 @@ then
 	sleep 1
 fi
 
-timeout 5 <<< "$COMMAND_1" nc localhost 6667 > tmp_1 2> /dev/null &
+<<< "$COMMAND_1" nc localhost 6667 > tmp_1 2>&1 &
 USR1_PID=$!
 
-timeout 5 <<< "$COMMAND_2" nc localhost 6667 > tmp_2 2> /dev/null
+timeout 5 <<< "$COMMAND_2" nc localhost 6667 > tmp_2 2>&1
 
 EXIT_CODE_2=$?
 
@@ -90,6 +90,20 @@ then
 	LEAKS=$(cat leaks.log | grep 'LEAK SUMMARY' | wc -l)
 else
 	LEAKS=0
+fi
+
+if [ -n "$VERBOSE" ]
+then
+	echo
+	echo "log"
+	cat srv_log
+	echo
+	echo "client 1"
+	cat tmp_1
+	echo
+	echo "client 2"
+	cat tmp_2
+	echo
 fi
 
 echo -n " client 1 : "

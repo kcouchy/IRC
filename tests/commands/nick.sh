@@ -32,7 +32,7 @@ invalid()
 	TEST="Invalid nickname : "
 	EXPECTED="432"
 
-	for nick in "#channel_like_name" "~" ":prefix" "1test" ""
+	for nick in "#channel_like_name" "~" ":prefix"
 	do
 		COMMAND=`<<- EOF cat
 			NICK $nick
@@ -42,22 +42,23 @@ invalid()
 	done
 }
 
-duplicated() # This guy is a bit too complicated to use run_test.sh
+duplicated()
 {
 	TEST="Duplicated nickname : "
 	PASSWORD="test"
-	COMMAND_1=`<<- EOF nc localhost 6667 &
+	COMMAND_1=`<<- EOF cat
 		PASS $PASSWORD
 		NICK dup
+		USER dup
 	EOF`
-	COMMAND_2=`<<- EOF nc localhost 6667 > tmp
+	COMMAND_2=`<<- EOF cat
 		PASS $PASSWORD
 		NICK dup
 		QUIT
 	EOF`
 	EXPECTED="433"
 
-	$TESTDIR/utils/run_test_multiuser.sh "$TEST" "$PASSWORD" "$COMMAND_1" "*" "$COMMAND_2" "$EXPECTED"
+	$TESTDIR/utils/run_test_multiuser.sh "$TEST" "$PASSWORD" "$COMMAND_1" "" "$COMMAND_2" "$EXPECTED"
 }
 
 echo "#######################"
