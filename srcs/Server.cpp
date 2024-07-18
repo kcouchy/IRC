@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 11:42:07 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/17 14:01:24 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/18 18:20:53 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 
 #include "ClientParser.h"
 #include "Server.hpp"
-#include "PhoneBook.hpp"
 
 #define LISTEN 5
 
@@ -46,7 +45,6 @@ Server::~Server(void)
 	}
 	close(m_bindfd);
 	close(m_socketfd);
-	PhoneBook::KiLl();
 	return ;
 }
 

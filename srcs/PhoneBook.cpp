@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 13:59:21 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/16 20:07:21 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/18 18:20:20 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,26 +15,11 @@
 
 PhoneBook* PhoneBook::instance = NULL;
 
-PhoneBook::PhoneBook(void)
-{
-	return ;
-}
-
-PhoneBook::~PhoneBook(void) {}
-
 PhoneBook& PhoneBook::get()
 {
 	if (instance == NULL)
 		instance = new PhoneBook;
 	return (*instance);
-}
-
-void PhoneBook::KiLl()
-{
-	if (instance != NULL)
-		delete instance;
-	instance = NULL;
-	return ;
 }
 
 void	PhoneBook::addRecipient(Messageable *newRecipient)

@@ -6,7 +6,7 @@
 /*   By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+     */
 /*                                                            # *   *. #*     */
 /*   Created: 2024/07/17 11:59:26 by aboyreau          **+*+  * -_._-   #+    */
-/*   Updated: 2024/07/18 17:24:03 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/18 17:55:27 by aboyreau          +#-.-*  +         *    */
 /*                                                     *-.. *   ++       #    */
 /* ************************************************************************** */
 
@@ -61,12 +61,11 @@ void ClientParser::parse_command(std::string prefix, std::string command, std::s
 	handlers.push_back(function("PART", &ClientParser::part));			// untested, KO
 	handlers.push_back(function("INVITE", &ClientParser::invite));		// untested, KO
 	handlers.push_back(function("KICK", &ClientParser::kick));			// untested, KO
+	// handlers.push_back(function("TOPIC", &ClientParser::topic));		// untested, KO
+	// handlers.push_back(function("MODE", &ClientParser::mode));			// untested, KO
 
 	handlers.push_back(function("PRIVMSG", &ClientParser::privmsg));	// untested, KO
 	handlers.push_back(function("QUIT", &ClientParser::quit));			// untested, KO
-
-	// TODO TOPIC
-	// TODO MODE
 
 	std::vector<function>::iterator it = std::find(handlers.begin(), handlers.end(), command);
 	if (it != handlers.end())
@@ -168,6 +167,9 @@ std::string ClientParser::kick(std::string prefix, std::string args, Client &cli
 		client.kickChannel(channel, *it, message);
 	return "";
 }
+
+// std::string ClientParser::mode(std::string prefix, std::string args, Client &client) {return "";}
+// std::string ClientParser::topic(std::string prefix, std::string args, Client &client) {return "";}
 
 std::string ClientParser::privmsg(std::string prefix, std::string args, Client &client)
 {

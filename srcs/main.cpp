@@ -1,15 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   main.cpp                                                  +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 13:18:55 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/18 11:15:33 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:19:46 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "PhoneBook.hpp"
 #include "Server.hpp"
 #include "InputErrors.hpp"
 #include <csignal>
@@ -69,5 +70,6 @@ int	main(int argc, char **argv)
 		std::cerr << e.what() << std::endl;
 		return (1);
 	}
+	delete &PhoneBook::get();
 	return (0);
 }

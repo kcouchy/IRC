@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.cpp                                         :+:      :+:    :+:   */
+/*   Client.cpp                                                +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/18 16:42:52 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:18:52 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,23 @@ Client::Client(int client_fd, std::string password) :
 Client::~Client(void)
 {
 	std::cout << "Oh no I'm dying" << this->getfd() << std::endl;
+	std::vector<std::string>::iterator it;
+	for (it = m_channelList.begin(); it != m_channelList.end();)
+	{
+		Channel *channel = PhoneBook::get().getChannel(*it);
+		if (channel == NULL)
+			continue ;
+		try
+		{
+			channel->quit(this->getName());
+		}
+		catch(const Channel::EmptyChannel& e)
+		{
+			delete channel;
+		}
+		it = m_channelList.erase(it);
+	}
+	close(m_fd);
 }
 
 int Client::getfd()const

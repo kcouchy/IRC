@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Channel.cpp                                        :+:      :+:    :+:   */
+/*   Channel.cpp                                               +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/18 16:50:59 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:07:42 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,10 @@ Channel::Channel(std::string channelName) :
 	}
 }
 
-Channel::~Channel(void) {}
+Channel::~Channel(void)
+{
+	PhoneBook::get().removeRecipient(this);
+}
 
 std::string Channel::join(std::string client_name, std::string key)
 {
