@@ -1,13 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ClientParser.cpp                                   :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/17 11:59:26 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/18 16:44:22 by kcouchma         ###   ########.fr       */
-/*                                                                            */
+/*                                                              ++            */
+/*   ClientParser.cpp                                          +**+   +*  *   */
+/*                                                             ##%#*###*+++   */
+/*   By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+     */
+/*                                                            # *   *. #*     */
+/*   Created: 2024/07/17 11:59:26 by aboyreau          **+*+  * -_._-   #+    */
+/*   Updated: 2024/07/18 17:24:03 by aboyreau          +#-.-*  +         *    */
+/*                                                     *-.. *   ++       #    */
 /* ************************************************************************** */
 
 #include "ClientParser.h"
@@ -15,7 +15,6 @@
 #include "utils.h"
 #include <algorithm>
 #include <iostream>
-#include <map>
 
 ClientParser::ClientParser() {}
 ClientParser::~ClientParser() {}
@@ -98,9 +97,7 @@ std::string ClientParser::cap(std::string prefix, std::string args, Client &clie
 {
 	if (args.size() == 0)
 		return (ERR_NEEDMOREPARAMS);
-	(void) prefix;
-	(void) client;
-	return "";
+	return client.capabilites(prefix, args);
 }
 
 std::string ClientParser::pass(std::string prefix, std::string args, Client &client)
@@ -126,7 +123,19 @@ std::string ClientParser::join(std::string prefix, std::string args, Client &cli
 
 std::string ClientParser::part(std::string prefix, std::string args, Client &client)
 {
-	return client.removeChannel(prefix, args);
+	std::vector<std::string> channels;
+	std::string reason = parse_postfix(args);
+	if (reason != "")
+	{
+		args.erase(args.find_last_of(":"), reason.size());
+		args = args.substr(0, args.size() - 1);
+		reason = reason.substr(1, reason.size());
+	}
+	channels = strsplit(args, ',');
+	(void) client;
+	(void) prefix;
+	return ERR_NEEDMOREPARAMS;
+	// return client.removeChannel(prefix, args);
 }
 
 std::string ClientParser::invite(std::string prefix, std::string args, Client &client)
