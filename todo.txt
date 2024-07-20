@@ -13,7 +13,7 @@ https://modern.ircdocs.horse/#numeric-replies
 
 Tests :
 - JOIN (some tests are written, what about `JOIN 0`)
-- INVITE
+- INVITE (some tests are written)
 - KICK
 - TOPIC
 - MODE
