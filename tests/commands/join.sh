@@ -36,7 +36,9 @@ unauthenticated()
 		JOIN #chan
 		QUIT
 	EOF`
-	EXPECTED=":ft_irc 451 * :You have not registered"
+	EXPECTED=`<<- EOF cat
+		:ft_irc 451 * :You have not registered
+	EOF`
 	$TESTDIR/utils/run_test.sh "$TEST" "" "$COMMAND" "$EXPECTED"
 }
 

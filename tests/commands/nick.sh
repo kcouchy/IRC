@@ -23,20 +23,22 @@ empty()
 		NICK
 		QUIT
 	EOF`
-	EXPECTED="431"
+	EXPECTED=":ft_irc 431 * :No nickname given"
 	$TESTDIR/utils/run_test.sh "$TEST" "" "$COMMAND" "$EXPECTED"
 }
 
 invalid()
 {
 	TEST="Invalid nickname : "
-	EXPECTED="432"
 
 	for nick in "#channel_like_name" "~" ":prefix"
 	do
 		COMMAND=`<<- EOF cat
 			NICK $nick
 			QUIT
+		EOF`
+		EXPECTED=`<<- EOF cat
+			:ft_irc 432 * $nick :Erroneus nickname
 		EOF`
 		$TESTDIR/utils/run_test.sh "$TEST" "" "$COMMAND" "$EXPECTED"
 	done
@@ -56,7 +58,9 @@ duplicated()
 		NICK dup
 		QUIT
 	EOF`
-	EXPECTED="433"
+	EXPECTED=`<<- EOF cat
+		:ft_irc 433 * dup :Nickname is already in use
+	EOF`
 
 	$TESTDIR/utils/run_test_multiuser.sh "$TEST" "$PASSWORD" "$COMMAND_1" "" "$COMMAND_2" "$EXPECTED"
 }

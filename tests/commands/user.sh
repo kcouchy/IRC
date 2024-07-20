@@ -19,28 +19,29 @@ WHITE='\033[0m'
 not_enough_params()
 {
 	TEST="Not enough params : "
+	EXPECTED=":ft_irc 461 * USER :Not enough parameters"
 
-	for tests in "" "test" "test 0 *" "myname :my real name" "0 * my_real_name"
+	for tests in "" "test" "test 0 *" "myname :my real name" "0 * my_real_name" "atu 0 * Arthur B."
 	do
 		COMMAND=`<<- EOF cat
 			USER $tests
 			QUIT
 		EOF`
-		$TESTDIR/utils/run_test.sh "$TEST" "" "$COMMAND" "461"
-
+		$TESTDIR/utils/run_test.sh "$TEST" "" "$COMMAND" "$EXPECTED"
 	done
 }
 
 already_registered()
 {
+	TEST="Multiple user commands : "
 	COMMAND=`<<- EOF cat
 		NICK atu
 		USER atu 0 * :My NAME
 		USER atu 0 * :My NAME
 		QUIT
 	EOF`
-
-	$TESTDIR/utils/run_test.sh "Multiple user commands : " "" "$COMMAND" "462"
+	EXPECTED=":ft_irc 462 atu :You may not reregister"
+	$TESTDIR/utils/run_test.sh "$TEST" "" "$COMMAND" "$EXPECTED"
 }
 
 echo "#######################"

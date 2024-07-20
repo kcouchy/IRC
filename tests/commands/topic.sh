@@ -23,7 +23,7 @@ nonexistent_channel()
 		TOPIC #chan :Hello world
 		QUIT
 	EOF`
-	EXPECTED="442"
+	EXPECTED=":ft_irc 442 atu #chan :You're not on that channel"
 	$TESTDIR/utils/run_test.sh "$TEST" "$PASSWORD" "$COMMAND" "$EXPECTED"
 }
 
@@ -45,7 +45,7 @@ not_on_channel()
 		QUIT
 	EOF`
 	EXPECTED_1="*"
-	EXPECTED_2="442"
+	EXPECTED_2=":ft_irc 442 atu #chan :You're not on that channel"
 	$TESTDIR/utils/run_test_multiuser.sh "$TEST" "$PASSWORD" "$COMMAND_1" "$EXPECTED_1" "$COMMAND_2" "$EXPECTED_2"
 }
 
@@ -60,7 +60,7 @@ no_params()
 		TOPIC
 		QUIT
 	EOF`
-	EXPECTED="461"
+	EXPECTED=":ft_irc 461 atu TOPIC :Not enough parameters"
 	$TESTDIR/utils/run_test.sh "$TEST" "$PASSWORD" "$COMMAND" "$EXPECTED"
 }
 
@@ -76,7 +76,7 @@ change_topic()
 		TOPIC #chan :test
 		QUIT
 	EOF`
-	EXPECTED="332 #chan :test"
+	EXPECTED=":ft_irc 332 #chan :test"
 	$TESTDIR/utils/run_test.sh "$TEST" "$PASSWORD" "$COMMAND" "$EXPECTED"
 }
 
@@ -99,7 +99,7 @@ get_topic()
 		TOPIC #chan
 		QUIT
 	EOF`
-	EXPECTED="332 #chan :test"
+	EXPECTED=":ft_irc 332 #chan :test"
 	$TESTDIR/utils/run_test_multiuser.sh "$TEST" "$PASSWORD" "$COMMAND_1" "" "$COMMAND_2" "$EXPECTED"
 }
 
@@ -122,10 +122,11 @@ removal()
 		TOPIC #chan :
 		QUIT
 	EOF`
-	EXPECTED="332 #chan :"
+	EXPECTED=":ft_irc 332 #chan :"
 	$TESTDIR/utils/run_test_multiuser.sh "$TEST" "$PASSWORD" "$COMMAND_1" "" "$COMMAND_2" "$EXPECTED"
 }
 
+# TODO move this in mode tests
 unauthorized()
 {
 	TEST="Unauthorized topic change (YOU NEED MODE) : "
@@ -146,7 +147,7 @@ unauthorized()
 		TOPIC #chan :new
 		QUIT
 	EOF`
-	EXPECTED="482 #chan"
+	EXPECTED=":ft_irc 482 other #chan :You're not channel operator"
 	$TESTDIR/utils/run_test_multiuser.sh "$TEST" "$PASSWORD" "$COMMAND_1" "" "$COMMAND_2" "$EXPECTED"
 }
 
