@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/18 18:18:52 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/20 18:53:29 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ void Client::send(std::string, std::string msg)
 // Authentication
 std::string Client::capabilites(std::string, std::string params)
 {
+	std::cout << "`" << params << "`" << std::endl;
 	if (params == "LS" || params == "LS 302")
 	{
 		send("", "CAP * LS :\n");
@@ -76,7 +77,7 @@ std::string Client::capabilites(std::string, std::string params)
 	}
 	if (params == "END")
 		return ("");
-	send("", ":localhost 404 :Not found");
+	send("", ":ft_irc 404 :Not found");
 	return ("");
 }
 
@@ -87,7 +88,10 @@ std::string Client::auth(std::string password)
 	if (password == m_password)
 		this->m_authenticated = true;
 	else
-		send("", ERR_PASSWDMISMATCH);
+	{
+		send("", ":ft_irc 464 * :Password mismatch");
+		throw KillMePlease(); // required by irssi, specified as a MAY by the IRC protocol
+	}
 	return ("");
 }
 
@@ -95,7 +99,7 @@ std::string Client::changeNick(std::string, std::string params)
 {
 	std::cout << "Hi" << std::endl;
 	if (m_authenticated == false)
-		send("", ERR_PASSWDMISMATCH);
+		send("", ":ft_irc 464 " + m_name + ":Password mismatch");
 	if (params == "")
 		send("", ERR_NONICKNAMEGIVEN);
 	std::string authorized_set = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_[]{}\\|";
@@ -111,7 +115,10 @@ std::string Client::changeUser(std::string, std::string param)
 {
 	(void) param;
 	if (m_authenticated == false)
-		return (ERR_PASSWDMISMATCH);
+	{
+		send("", ":ft_irc 464 " + m_name + " :Password mismatch");
+		return ("");
+	}
 	if (m_name.length() == 0)
 		return (ERR_NONICKNAMEGIVEN);
 	if (m_registrationComplete == true)

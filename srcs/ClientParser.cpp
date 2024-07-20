@@ -6,7 +6,7 @@
 /*   By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+     */
 /*                                                            # *   *. #*     */
 /*   Created: 2024/07/17 11:59:26 by aboyreau          **+*+  * -_._-   #+    */
-/*   Updated: 2024/07/18 17:55:27 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/20 18:29:26 by aboyreau          +#-.-*  +         *    */
 /*                                                     *-.. *   ++       #    */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void ClientParser::parse(std::string msg, Client &client)
 	std::vector<std::string> actions = strsplit(msg, '\n');
 	for (std::vector<std::string>::iterator it = actions.begin(); it != actions.end(); it++)
 	{
-		(*it).erase((*it).find_last_not_of("\n") + 1);
+		(*it).erase((*it).find_last_not_of("\r\n") + 1);
 		if ((*it).length() == 0)
 			continue ;
 		i = 0;
@@ -41,7 +41,7 @@ void ClientParser::parse(std::string msg, Client &client)
 			args += *it2 + ' ';
 		if (args.size() > 0)
 			args = args.substr(0, args.size() - 1);
-		args.erase(args.find_last_not_of("\n") + 1);
+		args.erase(args.find_last_not_of("\r\n") + 1);
 		this->parse_command(prefix, command, args, client);
 		command = "";
 		prefix = "";
@@ -102,6 +102,11 @@ std::string ClientParser::cap(std::string prefix, std::string args, Client &clie
 std::string ClientParser::pass(std::string prefix, std::string args, Client &client)
 {
 	(void) prefix;
+	if (args.size() == 0)
+	{
+		client.send("", ":ft_irc 461 * PASS :Not enough parameters");
+		return "";
+	}
 	return client.auth(args);
 }
 
