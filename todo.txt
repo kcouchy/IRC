@@ -5,6 +5,12 @@ TODO :
 - More parsing
 - PhoneBook throws a random exception instead of doing nothing on duplicated nicknames
 
+Message format :
+https://modern.ircdocs.horse/#message-format
+
+Numeric replies :
+https://modern.ircdocs.horse/#numeric-replies
+
 Tests :
 - JOIN
 - PART

@@ -150,10 +150,10 @@ unauthorized()
 	$TESTDIR/utils/run_test_multiuser.sh "$TEST" "$PASSWORD" "$COMMAND_1" "" "$COMMAND_2" "$EXPECTED"
 }
 
+echo ""
 echo "########################"
 echo "# TOPIC command tester #"
 echo "########################"
-echo ""
 
 nonexistent_channel
 not_on_channel

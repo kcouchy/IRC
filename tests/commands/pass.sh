@@ -58,10 +58,10 @@ too_many_params()
 	$TESTDIR/utils/run_test.sh "$TEST" "$PASSWORD" "$COMMAND" "$EXPECTED"
 }
 
+echo ""
 echo "#######################"
 echo "# PASS command tester #"
 echo "#######################"
-echo ""
 
 empty
 wrong

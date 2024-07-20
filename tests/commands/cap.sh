@@ -34,10 +34,10 @@ _end()
 	$TESTDIR/utils/run_test.sh "$TEST" "" "$COMMAND" "$EXPECTED"
 }
 
+echo ""
 echo "######################"
 echo "# CAP command tester #"
 echo "######################"
-echo ""
 
 ls302
 _end

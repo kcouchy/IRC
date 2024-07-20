@@ -3,12 +3,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                               ++             #
-#    nick.sh                                            :+:      :+:    :+:    #
+#    nick.sh                                                   +**+   +*  *    #
 #                                                              ##%#*###*+++    #
 #    By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+      #
 #                                                             # *   *. #*      #
 #    Created: 2024/07/15 23:08:17 by aboyreau          **+*+  * -_._-   #+     #
-#    Updated: 2024/07/17 11:39:27 by aboyreau         ###   ########.fr        #
+#    Updated: 2024/07/17 11:39:27 by kcouchma          +#-.-*  +         *     #
 #                                                      *-.. *   ++       #     #
 # **************************************************************************** #
 
@@ -61,10 +61,10 @@ duplicated()
 	$TESTDIR/utils/run_test_multiuser.sh "$TEST" "$PASSWORD" "$COMMAND_1" "" "$COMMAND_2" "$EXPECTED"
 }
 
+echo ""
 echo "#######################"
 echo "# NICK command tester #"
 echo "#######################"
-echo ""
 
 empty
 invalid

@@ -43,10 +43,10 @@ already_registered()
 	$TESTDIR/utils/run_test.sh "Multiple user commands : " "" "$COMMAND" "462"
 }
 
+echo ""
 echo "#######################"
 echo "# USER command tester #"
 echo "#######################"
-echo ""
 
 not_enough_params
 already_registered

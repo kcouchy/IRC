@@ -6,7 +6,7 @@
 #    By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+      #
 #                                                             # *   *. #*      #
 #    Created: 2024/07/16 23:18:58 by aboyreau          **+*+  * -_._-   #+     #
-#    Updated: 2024/07/18 17:36:06 by aboyreau          +#-.-*  +         *     #
+#    Updated: 2024/07/20 16:18:04 by aboyreau          +#-.-*  +         *     #
 #                                                      *-.. *   ++       #     #
 # **************************************************************************** #
 
@@ -63,6 +63,7 @@ EXPECTED_RESULT_1=$4
 COMMAND_2=$5
 EXPECTED_RESULT_2=$6
 
+echo
 echo -n "$NAME"
 
 $PREFIX ./ircserv 6667 "$PASSWORD" > srv_log 2>&1 &

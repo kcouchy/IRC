@@ -52,6 +52,7 @@ PASSWORD=$2
 COMMAND=$3
 EXPECTED_RESULT=$4
 
+echo
 echo -n "$NAME"
 
 $PREFIX ./ircserv 6667 "$PASSWORD" > srv_log 2>&1 &
