@@ -6,7 +6,7 @@
 #    By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+      #
 #                                                             # *   *. #*      #
 #    Created: 2024/07/16 23:18:58 by aboyreau          **+*+  * -_._-   #+     #
-#    Updated: 2024/07/20 16:18:04 by aboyreau          +#-.-*  +         *     #
+#    Updated: 2024/07/20 16:30:19 by aboyreau          +#-.-*  +         *     #
 #                                                      *-.. *   ++       #     #
 # **************************************************************************** #
 
@@ -34,6 +34,24 @@ server_crash()
 	cat srv_log | sed 's/.*/	\0/g' 
 	cleanup
 	exit 1
+}
+
+print_logs()
+{
+	echo
+	echo
+	echo "Server logs :"
+	echo
+	cat srv_log | sed 's/.*/	\0/g'
+	echo
+	echo "Client 1 logs :"
+	echo
+	cat tmp_1 | sed 's/.*/	\0/g'
+	echo
+	echo "Client 2 logs :"
+	echo
+	cat tmp_2 | sed 's/.*/	\0/g'
+	echo
 }
 
 if [ $# != 6 ]
@@ -95,16 +113,7 @@ fi
 
 if [ -n "$VERBOSE" ]
 then
-	echo
-	echo "log"
-	cat srv_log
-	echo
-	echo "client 1"
-	cat tmp_1
-	echo
-	echo "client 2"
-	cat tmp_2
-	echo
+	print_logs
 fi
 
 echo -n " client 1 : "

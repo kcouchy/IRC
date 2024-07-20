@@ -12,11 +12,13 @@ Numeric replies :
 https://modern.ircdocs.horse/#numeric-replies
 
 Tests :
-- JOIN
-- PART
+- JOIN (some tests are written, what about `JOIN 0`)
 - INVITE
 - KICK
 - TOPIC
 - MODE
 - PRIVMSG
 - QUIT
+
+- PART (do we implement this ? I think we need it for `JOIN 0`)
+- NAMES (de we implement this ? We definitely need it for JOIN)

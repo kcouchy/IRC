@@ -109,7 +109,37 @@ name_conflict()
 	$TESTDIR/utils/run_test.sh "$TEST" "" "$COMMAND" "$EXPECTED"
 }
 
-echo ""
+leave_everything()
+{
+	TEST="JOIN 0 should leave everything : "
+	COMMAND=`<<- EOF cat
+		NICK atu
+		USER atu 0 * :Arthur
+		JOIN #chan,#test,#tmp
+		JOIN 0
+		QUIT
+	EOF`
+	EXPECTED=`<<- EOF cat
+		:ft_irc 001 atu :Welcome here
+		:atu JOIN #chan
+		:ft_irc 332 atu #chan :
+		:ft_irc 353 atu = #chan :@atu
+		:ft_irc 366 atu #chan :end of /NAMES list
+		:atu JOIN #test
+		:ft_irc 332 atu #test :
+		:ft_irc 353 atu = #test :@atu
+		:ft_irc 366 atu #test :end of /NAMES list
+		:atu JOIN #tmp
+		:ft_irc 332 atu #tmp :
+		:ft_irc 353 atu = #tmp :@atu
+		:ft_irc 366 atu #tmp :end of /NAMES list
+		:atu PART #chan
+		:atu PART #test
+		:atu PART #tmp
+	EOF`
+	$TESTDIR/utils/run_test.sh "$TEST" "" "$COMMAND" "$EXPECTED"
+}
+
 echo "#######################"
 echo "# JOIN command tester #"
 echo "#######################"
@@ -119,3 +149,6 @@ nonexistent_channel
 existing_channel
 multiple_join
 name_conflict
+leave_everything
+
+echo

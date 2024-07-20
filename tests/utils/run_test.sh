@@ -29,6 +29,20 @@ server_crash()
 	exit 1
 }
 
+print_logs()
+{
+	echo
+	echo
+	echo "Server logs :"
+	echo
+	cat srv_log | sed 's/.*/	\0/g'
+	echo
+	echo "Client logs :"
+	echo
+	cat tmp | sed 's/.*/	\0/g'
+	echo
+}
+
 if [ $# != 4 ]
 then
 	echo "./run_test <name> <password> <command> <expected result>"
@@ -63,7 +77,7 @@ then
 	sleep 1
 fi
 
-timeout 5 <<< $COMMAND nc localhost 6667 > tmp 2> /dev/null
+timeout 5 <<< $COMMAND nc localhost 6667 > tmp 2>&1
 
 EXIT_CODE=$?
 
@@ -75,6 +89,11 @@ then
 	LEAKS=$(cat leaks.log | grep 'LEAK SUMMARY' | wc -l)
 else
 	LEAKS=0
+fi
+
+if [ -n "$VERBOSE" ]
+then
+	print_logs
 fi
 
 tests/utils/print_res.sh "$(cat tmp)" "$EXPECTED_RESULT" $EXIT_CODE $LEAKS

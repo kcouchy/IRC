@@ -61,7 +61,6 @@ duplicated()
 	$TESTDIR/utils/run_test_multiuser.sh "$TEST" "$PASSWORD" "$COMMAND_1" "" "$COMMAND_2" "$EXPECTED"
 }
 
-echo ""
 echo "#######################"
 echo "# NICK command tester #"
 echo "#######################"
@@ -69,3 +68,5 @@ echo "#######################"
 empty
 invalid
 duplicated
+
+echo

@@ -150,7 +150,6 @@ unauthorized()
 	$TESTDIR/utils/run_test_multiuser.sh "$TEST" "$PASSWORD" "$COMMAND_1" "" "$COMMAND_2" "$EXPECTED"
 }
 
-echo ""
 echo "########################"
 echo "# TOPIC command tester #"
 echo "########################"
@@ -162,3 +161,5 @@ change_topic
 get_topic
 removal
 unauthorized
+
+echo
