@@ -12,6 +12,23 @@
 #                                                      *-.. *   ++       #     #
 # **************************************************************************** #
 
+no_params()
+{
+	TEST="Join wihout parameters : "
+	COMMAND=`<<- EOF cat
+		NICK atu
+		USER atu 0 * :Arthur
+		JOIN
+		QUIT
+	EOF`
+	EXPECTED=`<<- EOF cat
+		:ft_irc 001 atu :Welcome here
+		:ft_irc 461 atu JOIN :Not enough parameters
+	EOF
+	`
+	$TESTDIR/utils/run_test.sh "$TEST" "" "$COMMAND" "$EXPECTED"
+}
+
 unauthenticated()
 {
 	TEST="Unauthenticated channel join : "

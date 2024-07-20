@@ -14,12 +14,13 @@
 
 empty()
 {
-	TEST="Empty password : "
+	TEST="No password on server : "
 	COMMAND=`<<- EOF cat
-		PASS test
+		NICK atu
+		USER atu 0 * :Arthur
 		QUIT
 	EOF`
-	EXPECTED="462"
+	EXPECTED=":ft_irc 001 atu :Welcome here"
 	$TESTDIR/utils/run_test.sh "$TEST" "" "$COMMAND" "$EXPECTED"
 }
 
@@ -31,7 +32,7 @@ wrong()
 		PASS wrong
 		QUIT
 	EOF`
-	EXPECTED="464 :ERR_PASSWDMISMATCH"
+	EXPECTED=":ft_irc 464 * :Password mismatch"
 	$TESTDIR/utils/run_test.sh "$TEST" "$PASSWORD" "$COMMAND" "$EXPECTED"
 }
 
@@ -42,7 +43,7 @@ not_enough_params()
 		PASS
 		QUIT
 	EOF`
-	EXPECTED="461"
+	EXPECTED=":ft_irc 461 * PASS :Not enough parameters"
 	$TESTDIR/utils/run_test.sh "$TEST" "" "$COMMAND" "$EXPECTED"
 }
 
@@ -54,7 +55,7 @@ too_many_params()
 		PASS a b c d
 		QUIT
 	EOF`
-	EXPECTED="464"
+	EXPECTED=":ft_irc 464 * :Password mismatch"
 	$TESTDIR/utils/run_test.sh "$TEST" "$PASSWORD" "$COMMAND" "$EXPECTED"
 }
 
