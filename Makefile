@@ -6,7 +6,7 @@
 #    By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/21 21:38:16 by kiri              #+#    #+#              #
-#    Updated: 2024/07/17 14:59:19 by aboyreau          +#-.-*  +         *     #
+#    Updated: 2024/07/29 22:06:34 by aboyreau          +#-.-*  +         *     #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,4 +41,4 @@ clean:
 fclean: clean
 	rm -f $(NAME)
 
-re: fclean all
+re: fclean .WAIT all

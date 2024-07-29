@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/29 21:28:49 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/29 21:45:05 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ void	Channel::invite(std::string inviter_name, std::string invitee_name)
 {
 	for (std::list<Pair<std::string, bool> >::iterator itr; itr != m_listenList.end(); itr++)
 	{
-		if (invitee_name == (*itr).getKey())
+		if (invitee_name == (*itr).getKey()) // TODO segfault here ?
 			throw std::logic_error(":" + m_name + " " + ERR_USERONCHANNEL + " " +
 					inviter_name + " " +
 					invitee_name + " " +

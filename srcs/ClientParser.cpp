@@ -6,7 +6,7 @@
 /*   By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+     */
 /*                                                            # *   *. #*     */
 /*   Created: 2024/07/17 11:59:26 by aboyreau          **+*+  * -_._-   #+    */
-/*   Updated: 2024/07/29 21:39:42 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/29 21:46:37 by aboyreau          +#-.-*  +         *    */
 /*                                                     *-.. *   ++       #    */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void ClientParser::parse_command(std::string prefix, std::string command, std::s
 	handlers.push_back(function("PASS", &ClientParser::pass));			// tested, OK
 	handlers.push_back(function("NICK", &ClientParser::nick));			// tested, KO
 	handlers.push_back(function("USER", &ClientParser::user));			// tested, KO
+	handlers.push_back(function("QUIT", &ClientParser::quit));			// untested, KO
 
 	handlers.push_back(function("JOIN", &ClientParser::join));			// untested, KO
 	handlers.push_back(function("PART", &ClientParser::part));			// untested, KO
@@ -66,13 +67,12 @@ void ClientParser::parse_command(std::string prefix, std::string command, std::s
 	handlers.push_back(function("MODE", &ClientParser::mode));			// untested, KO
 
 	handlers.push_back(function("PRIVMSG", &ClientParser::privmsg));	// untested, KO
-	handlers.push_back(function("QUIT", &ClientParser::quit));			// untested, KO
 
 	std::vector<function>::iterator it = std::find(handlers.begin(), handlers.end(), command);
 	if (it != handlers.end())
 	{
 		std::string error;
-		if (!client.is_registered() && it - handlers.begin() > 3)
+		if (!client.is_registered() && it - handlers.begin() > 4)
 		{
 			client.send("", ":ft_irc " + ERR_PASSWDMISMATCH + " * :Please register");
 			return ;
