@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Messageable.h                                      :+:      :+:    :+:   */
+/*   Messageable.h                                             +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:12:41 by atu               #+#    #+#             */
-/*   Updated: 2024/07/18 16:13:49 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/29 17:14:59 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,36 +14,38 @@
 
 #include <string>
 
-#define	RPL_AWAY "30 :RPL_AWAY"
-#define	RPL_CHANNELMODEIS "324 :RPL_CHANNELMODEIS"
-#define RPL_NOTOPIC "331 :RPL_NOTOPIC"
-#define RPL_TOPIC "332 :RPL_TOPIC"
-#define RPL_INVITING "341 :RPL_INVITING"
-#define ERR_UNKNOWNERROR "400 :ERR_UNKNOWNERROR"
-#define	ERR_NOSUCHNICK "401 :ERR_NOSUCHNICK"
-#define	ERR_NOSUCHSERVER "402 :ERR_NOSUCHSERVER"
-#define ERR_NOSUCHCHANNEL "403 :ERR_NOSUCHCHANNEL"
-#define	ERR_CANNOTSENDTOCHAN "404 :ERR_CANNOTSENDTOCHAN"
-#define	ERR_TOOMANYTARGETS "407 :ERR_TOOMANYTARGETS"
-#define	ERR_NORECIPIENT "411 :ERR_NORECIPIENT"
-#define	ERR_NOTEXTTOSEND "412 :ERR_NOTEXTTOSEND"
-#define	ERR_NOTOPLEVEL "413 :ERR_NOTOPLEVEL"
-#define	ERR_WILDTOPLEVEL "414 :ERR_WILDTOPLEVEL"
-#define ERR_NONICKNAMEGIVEN "431 :ERR_NONICKNAMEGIVEN"
-#define ERR_ERRONEUSNICKNAME "432 :ERR_ERRONEUSNICKNAME"
-#define ERR_NICKNAMEINUSE "433 :ERR_NICKNAMEINUSE"
-#define ERR_NOTONCHANNEL "442 :ERR_NOTONCHANNEL"
-#define ERR_USERONCHANNEL "443 :ERR_USERONCHANNEL"
-#define ERR_USERNOTINCHANNEL "441 :ERR_USERNOTINCHANNEL"
-#define ERR_NEEDMOREPARAMS "461 :ERR_NEEDMOREPARAMS"
-#define ERR_ALREADYREGISTERED "462 :ERR_ALREADYREGISTERED"
-#define ERR_PASSWDMISMATCH "464 :ERR_PASSWDMISMATCH"
-#define ERR_CHANOPRIVSNEEDED "482 :ERR_CHANOPRIVSNEEDED"
-#define ERR_INVALIDKEY "525: ERR_INVALIDKEY"
-#define ERR_INVALIDMODEPARAM "696: ERR_INVALIDMODEPARAM"
-#define ERR_CHANNELISFULL "471: ERR_CHANNELISFULL"
-#define ERR_INVITEONLYCHAN "473: ERR_INVITEONLYCHAN"
-#define ERR_BADCHANNELKEY "475: ERR_BADCHANNELKEY"
+#define	RPL_AWAY std::string("301")
+#define	RPL_CHANNELMODEIS std::string("324")
+#define RPL_NOTOPIC std::string("331")
+#define RPL_TOPIC std::string("332")
+#define RPL_INVITING std::string("341")
+#define RPL_NAMEREPLY std::string("353")
+#define RPL_ENDOFNAMES std::string("366")
+#define ERR_UNKNOWNERROR std::string("400")
+#define	ERR_NOSUCHNICK std::string("401")
+#define	ERR_NOSUCHSERVER std::string("402")
+#define ERR_NOSUCHCHANNEL std::string("403")
+#define	ERR_CANNOTSENDTOCHAN std::string("404")
+#define	ERR_TOOMANYTARGETS std::string("407")
+#define	ERR_NORECIPIENT std::string("411")
+#define	ERR_NOTEXTTOSEND std::string("412")
+#define	ERR_NOTOPLEVEL std::string("413")
+#define	ERR_WILDTOPLEVEL std::string("414")
+#define ERR_NONICKNAMEGIVEN std::string("431")
+#define ERR_ERRONEUSNICKNAME std::string("432")
+#define ERR_NICKNAMEINUSE std::string("433")
+#define ERR_NOTONCHANNEL std::string("442")
+#define ERR_USERONCHANNEL std::string("443")
+#define ERR_USERNOTINCHANNEL std::string("441")
+#define ERR_NEEDMOREPARAMS std::string("461")
+#define ERR_ALREADYREGISTERED std::string("462")
+#define ERR_PASSWDMISMATCH std::string("464")
+#define ERR_CHANOPRIVSNEEDED std::string("482")
+#define ERR_INVALIDKEY std::string("525")
+#define ERR_INVALIDMODEPARAM std::string("696")
+#define ERR_CHANNELISFULL std::string("471")
+#define ERR_INVITEONLYCHAN std::string("473")
+#define ERR_BADCHANNELKEY std::string("475")
 
 #define AUTHORISED_SET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_[]{}\\|"
 

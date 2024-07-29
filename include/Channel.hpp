@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Channel.hpp                                        :+:      :+:    :+:   */
+/*   Channel.hpp                                               +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:57:02 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/18 16:35:39 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/29 17:52:57 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ class Channel : public Messageable
 		std::string	join(std::string client_name, std::string key);
 		std::string	quit(std::string client_name);
 
-		std::string	invite(std::string inviter_name, std::string invitee_name);
+		void		invite(std::string inviter_name, std::string invitee_name);
 		// void		mode(std::string client_name, std::string flag);
 
 		void		send(std::string sender_name, std::string message);
@@ -38,6 +38,7 @@ class Channel : public Messageable
 		void		setInvite(bool inviteOnly);
 		std::string	kick(Client* toKick, std::string kicker);
 		std::string	mode(std::string client_name, bool plusminus, char modechar, std::string mode_arg);
+		std::string getListenList(std::string client_name);
 
 		class EmptyChannel : public std::exception
 		{

@@ -6,13 +6,14 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 23:17:50 by aboyreau               #+#    #+#             */
-/*   Updated: 2024/07/17 14:06:07 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/29 18:33:42 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include <exception>
+#include <list>
 #include <vector>
 #include <string>
 
@@ -39,7 +40,7 @@ class Client : public Messageable
 		int							m_fd;
 		std::string					m_buffer;
 		std::string					m_password;
-		std::vector<std::string>	m_channelList;
+		std::list<std::string>		m_channelList;
 		bool						m_authenticated;
 		bool 						m_registrationComplete;
 
@@ -57,7 +58,7 @@ class Client : public Messageable
 		std::string	changeUser(std::string, std::string params);
 
 		// Channel-related stuff
-		std::string	addChannel(std::string, std::string channels);
+		std::string	joinChannel(std::string channel, std::string key);
 		std::string	removeChannel(std::string, std::string channelName);
 		std::string	inviteToChannel(std::string, std::string params);
 		std::string	topicChannel(std::string, std::string params);

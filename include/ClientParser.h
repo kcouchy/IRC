@@ -6,7 +6,7 @@
 /*   By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+     */
 /*                                                            # *   *. #*     */
 /*   Created: 2024/07/17 11:59:19 by aboyreau          **+*+  * -_._-   #+    */
-/*   Updated: 2024/07/18 17:55:05 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/29 14:02:19 by aboyreau          +#-.-*  +         *    */
 /*                                                     *-.. *   ++       #    */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ class ClientParser
 		std::string part(std::string prefix, std::string arsg, Client &client);
 		std::string invite(std::string prefix, std::string arsg, Client &client);
 		std::string kick(std::string prefix, std::string arsg, Client &client);
-		// std::string topic(std::string prefix, std::string arsg, Client &client);
-		// std::string mode(std::string prefix, std::string arsg, Client &client);
+		std::string topic(std::string prefix, std::string arsg, Client &client);
+		std::string mode(std::string prefix, std::string arsg, Client &client);
 
 		std::string privmsg(std::string prefix, std::string arsg, Client &client);
 

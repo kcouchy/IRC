@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Utils.h                                            :+:      :+:    :+:   */
+/*   Utils.h                                                   +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 14:19:12 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/18 16:45:17 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/29 18:50:01 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,10 @@ bool contains(L &list, std::string search)
 	return (true);
 }
 
-template <typename L> //MUST RUN CONTAINS FIRST
+/* 
+ * MUST RUN CONTAINS FIRST
+ */
+template <typename L> 
 typename L::iterator find_return(L &list, std::string search)
 {
 	return (std::find(list.begin(), list.end(), search));

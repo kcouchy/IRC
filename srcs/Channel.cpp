@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/18 18:07:42 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/29 19:02:18 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 #include "PhoneBook.hpp"
 #include "Utils.h"
 #include <climits>
+#include <stdexcept>
+#include <vector>
 
 Channel::Channel(std::string channelName) :
 	Messageable(channelName),
@@ -48,17 +50,47 @@ Channel::~Channel(void)
 std::string Channel::join(std::string client_name, std::string key)
 {
 	if (m_clientLimit != 0 && m_listenList.size() >= (size_t)m_clientLimit)
-		return (ERR_CHANNELISFULL);
+		throw std::logic_error(":ft_irc " + ERR_CHANNELISFULL + " " + client_name + " :Cannot join channel (+l)");
 	if (m_inviteOnly == true && contains(m_inviteList, client_name) == false)
-		return (ERR_INVITEONLYCHAN);
+		throw std::logic_error(":ft_irc " + ERR_INVITEONLYCHAN + " " + client_name + " :Cannot join channel (+i)");
 	if (m_channelKey.second == true && key != m_channelKey.first)
-		return (ERR_BADCHANNELKEY);
+		throw std::logic_error(":ft_irc " + ERR_BADCHANNELKEY + " " + client_name + " :Cannot join channel (+k)");
 	Pair<std::string, bool> to_add(client_name, false);
 	if(m_listenList.size() == 0)
 		to_add.value = true;
 	m_listenList.push_back(to_add);
 	find_erase(m_inviteList, client_name);
-	return ("");
+	send(client_name, ":" + client_name + " JOIN " + m_name);
+	return (":" + m_name + " " +
+			RPL_TOPIC + " " +
+			client_name + " " +
+			m_name + " :" +
+			m_topic + "\n" +
+			":" + m_name + " " +
+			RPL_NAMEREPLY + " " +
+			getListenList(client_name) + "\n" +
+			":" + m_name + " " +
+			RPL_ENDOFNAMES + " " +
+			client_name + " " +
+			m_name +
+			" :End of /NAMES list");
+}
+
+std::string Channel::getListenList(std::string client_name)
+{
+	std::string namelist;
+
+	namelist = client_name +
+		(m_inviteOnly ? " * " : " = ") +
+		m_name + " :";
+	std::list<Pair<std::string, bool> >::iterator it = m_listenList.begin();
+	for (; it != m_listenList.end(); it++)
+	{
+		namelist += ((*it).value ? "@" : "") + 
+			(*it).getKey() + " ";
+	}
+	namelist = namelist.substr(0, namelist.size() - 1);
+	return (namelist);
 }
 
 std::string Channel::quit(std::string client_name)
@@ -69,30 +101,39 @@ std::string Channel::quit(std::string client_name)
 	for (iter = m_listenList.begin(); iter != m_listenList.end(); iter++)
 		if ((*iter).value == true)
 			return ("");
-
-	this->setOperator(m_listenList.front().getKey(), true);
 	if (m_listenList.size() == 0)
 		throw EmptyChannel();
+	this->setOperator(m_listenList.front().getKey(), true);
 	return ("");
 }
 
-std::string	Channel::invite(std::string inviter_name, std::string invitee_name)
+void	Channel::invite(std::string inviter_name, std::string invitee_name)
 {
 	for (std::list<Pair<std::string, bool> >::iterator itr; itr != m_listenList.end(); itr++)
 	{
 		if (invitee_name == (*itr).getKey())
-			return (ERR_USERONCHANNEL);
+			throw std::logic_error(":" + m_name + " " + ERR_USERONCHANNEL + " " +
+					inviter_name + " " +
+					invitee_name + " " +
+					m_name + " " +
+					":is already on that channel");
 		if (m_inviteOnly == false && inviter_name == (*itr).getKey())
-				return ("");
+				return ;
 		else if (m_inviteOnly == true && inviter_name == (*itr).getKey() && (*itr).value == 0)
-			return (ERR_CHANOPRIVSNEEDED);
+			throw std::logic_error(":" + m_name + " " + ERR_CHANOPRIVSNEEDED + " " +
+					inviter_name + " " +
+					m_name + " " +
+					":You're not channel operator");
 		else if (m_inviteOnly == true && inviter_name == (*itr).getKey() && (*itr).value == 1)
 		{
 			m_inviteList.push_back(invitee_name);
-			return ("");
+			return ;
 		}
 	}
-	return (ERR_NOTONCHANNEL);
+	throw std::logic_error(":" + m_name + " " + ERR_NOTONCHANNEL + " " +
+		inviter_name + " " +
+		m_name + " " +
+		":You're not on that channel");
 }
 
 void Channel::send(std::string sender_name, std::string message)
@@ -163,6 +204,7 @@ std::string	Channel::kick(Client* toKick, std::string kicker)
 		return (ERR_NOTONCHANNEL);
 	else if ((*kicker_isOP).value == false)
 		return (ERR_CHANOPRIVSNEEDED);
+	// m_listenList.erase(find_return(m_listenList, toKick->getName()));
 	send("", ":" + kicker + " KICK " + m_name + " " + toKick->getName());
 	return ("");
 }

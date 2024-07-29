@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/20 18:53:29 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/29 19:03:44 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,17 @@
 #include <cstdio>
 #include <cstring>
 #include <iostream>
+#include <stdexcept>
 #include <string>
 #include <sys/socket.h>
 #include <unistd.h>
-#include <vector>
+#include <list>
 #include "utils.h"
 
 Client::Client(int client_fd, std::string password) :
 	m_fd(client_fd),
 	m_password(password),
+	m_channelList(),
 	m_registrationComplete(false)
 {
 	m_authenticated = m_password.size() == 0; // Authenticated by default if password is empty
@@ -34,7 +36,7 @@ Client::Client(int client_fd, std::string password) :
 Client::~Client(void)
 {
 	std::cout << "Oh no I'm dying" << this->getfd() << std::endl;
-	std::vector<std::string>::iterator it;
+	std::list<std::string>::iterator it;
 	for (it = m_channelList.begin(); it != m_channelList.end();)
 	{
 		Channel *channel = PhoneBook::get().getChannel(*it);
@@ -61,15 +63,17 @@ int Client::getfd()const
 void Client::send(std::string, std::string msg)
 {
 	std::cerr << this->m_name << " <- " << msg << std::endl;
-	::send(m_fd, msg.c_str(), msg.size(), 0);
-	// TODO secure send using check return value
+	if (*(msg.end() - 1) != '\n')
+		msg += "\n";
+	int check = ::send(m_fd, msg.c_str(), msg.size(), 0);
+	if (check < 0)
+		throw KillMePlease();
 	return ;
 }
 
 // Authentication
 std::string Client::capabilites(std::string, std::string params)
 {
-	std::cout << "`" << params << "`" << std::endl;
 	if (params == "LS" || params == "LS 302")
 	{
 		send("", "CAP * LS :\n");
@@ -83,13 +87,14 @@ std::string Client::capabilites(std::string, std::string params)
 
 std::string Client::auth(std::string password)
 {
+	std::string name = " " + (m_name.size() == 0 ? "*" : m_name);
 	if (m_authenticated)
-		send("", ERR_ALREADYREGISTERED);
+		send("", ":ft_irc " + ERR_ALREADYREGISTERED + name + " :You may not reregister");
 	if (password == m_password)
 		this->m_authenticated = true;
 	else
 	{
-		send("", ":ft_irc 464 * :Password mismatch");
+		send("", ":ft_irc " + ERR_PASSWDMISMATCH + "* :Password mismatch");
 		throw KillMePlease(); // required by irssi, specified as a MAY by the IRC protocol
 	}
 	return ("");
@@ -97,90 +102,85 @@ std::string Client::auth(std::string password)
 
 std::string Client::changeNick(std::string, std::string params)
 {
-	std::cout << "Hi" << std::endl;
+	std::string name = " " + (m_name.size() == 0 ? "*" : m_name);
 	if (m_authenticated == false)
-		send("", ":ft_irc 464 " + m_name + ":Password mismatch");
-	if (params == "")
-		send("", ERR_NONICKNAMEGIVEN);
-	std::string authorized_set = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_[]{}\\|";
-	if (params.find_first_not_of(authorized_set) != std::string::npos)
-		send("", ERR_ERRONEUSNICKNAME);
+	{
+		send("", ":ft_irc " + ERR_PASSWDMISMATCH + name + " :Password mismatch");
+		return ("");
+	}
 	if (PhoneBook::get().getRecipient(params) != NULL)
-		send("", ERR_NICKNAMEINUSE);
+	{
+		send("", ":ft_irc " + ERR_NICKNAMEINUSE + name + " :Nickname is already in use");
+		return ("");
+	}
 	this->m_name = params;
 	return ("");
 }
 
-std::string Client::changeUser(std::string, std::string param)
+std::string Client::changeUser(std::string, std::string)
 {
-	(void) param;
+	std::string name = " " + (m_name.size() == 0 ? "*" : m_name);
 	if (m_authenticated == false)
 	{
-		send("", ":ft_irc 464 " + m_name + " :Password mismatch");
+		send("", ":ft_irc " + ERR_PASSWDMISMATCH + name + " :Password mismatch");
 		return ("");
 	}
 	if (m_name.length() == 0)
-		return (ERR_NONICKNAMEGIVEN);
+		return (":ft_irc " + ERR_NONICKNAMEGIVEN + name + " :No nickname given");
 	if (m_registrationComplete == true)
-		return (ERR_ALREADYREGISTERED);
+		return (":ft_irc " + ERR_ALREADYREGISTERED + name + " :You may not reregister");
 	try
 	{
 		PhoneBook::get().addRecipient(this);
 	}
 	catch (std::exception &e)
 	{
-		return (ERR_NICKNAMEINUSE);
+		return (":ft_irc " + ERR_NICKNAMEINUSE + name + " :Nickname is already in use");
 	}
-	this->send("", ":ft_irc 001 " + this->getName() + " :Welcome here\n");
+	this->send("", ":ft_irc 001 " + this->getName() + " :Welcome here");
 	this->m_registrationComplete = true;
 	return ("");
 }
 
-// Channel
-//TODO While a client is joined to a channel, they receive all relevant 
-// information about that channel including the JOIN, PART, KICK, and MODE messages
-//  affecting the channel. AND THE REST
-std::string	Client::addChannel(std::string, std::string params)
+std::string	Client::joinChannel(std::string channel, std::string key)
 {
-	// TODO handle multi-channel join (split params on ',' and join each splitted channel)
-	// TODO will need a pair of channel/password(key) pairs for the join function
 	std::string topic;
-	std::vector<std::string>::iterator iter;
-	
+	std::list<std::string>::iterator iter;
+
 	for (iter = m_channelList.begin(); iter != m_channelList.end(); iter++)
-		if (params == *iter)
+		if (channel == *iter)
 			return "";
-	Channel *channel;
-	Messageable *c = PhoneBook::get().getRecipient(params);
+	Channel *chan;
+	Messageable *c = PhoneBook::get().getRecipient(channel);
 	if (c == NULL)
 	{
-		channel = new Channel(params);
+		chan = new Channel(channel);
 	}
 	else
 	{
-		channel = dynamic_cast<Channel *>(c);
-		std::cout << c->getName() << std::endl;
-		if (channel == NULL)
+		chan = dynamic_cast<Channel *>(c);
+		if (chan == NULL)
 		{
-			send("", ERR_NOSUCHCHANNEL);// TODO format error code to the client
-			// ::send(this->m_fd, ERR_NOSUCHCHANNEL, 3, 0); wtf
+			send("", ":ft_irc " + ERR_NOSUCHCHANNEL + " " + m_name + " :No such channel");
 			return ("");
 		}
 	}
-	std::string join_return = channel->join(this->getName(), ""); //TODO - feed key here
-	if (join_return != "")
+	try
 	{
-		// TODO CHECK THIS
-		send("", join_return);// TODO format error code to the client
-		return ("");
+		std::string join_return = chan->join(this->getName(), key);
+		send("", join_return);
+		m_channelList.push_back(channel);
 	}
-	m_channelList.push_back(params);
+	catch (const std::logic_error& e)
+	{
+		send("", e.what());
+	}
 	return ("");
 }
 
 std::string	Client::removeChannel(std::string, std::string channelName)
 {
-	std::vector<std::string>::iterator iter;
+	std::list<std::string>::iterator iter;
 	Channel *channel = NULL;
 
 	for (iter = m_channelList.begin(); iter != m_channelList.end(); iter++)
@@ -204,27 +204,34 @@ std::string	Client::removeChannel(std::string, std::string channelName)
 	return ("");
 }
 
-std::string	Client::inviteToChannel(std::string, std::string params)
+std::string	Client::inviteToChannel(std::string invitee, std::string channel)
 {
-	std::vector<std::string> args = strsplit(params, ' ');
-	if (args.size() < 2)
-		return (ERR_NEEDMOREPARAMS);
-	//TODO MAYBE also reject if >2 args
 	std::string invite_return;
 	Channel* temp_channel;
-	temp_channel = PhoneBook::get().getChannel(args[1]);
+	temp_channel = PhoneBook::get().getChannel(channel);
 	if (temp_channel == NULL)
-		return (ERR_NOSUCHCHANNEL);
-	invite_return = temp_channel->invite(m_name, args[0]);
-	if (invite_return != "")
-		send ("", invite_return);
+	{
+		send("", ":ft_irc " + ERR_NOSUCHCHANNEL + " " + m_name + " " + channel + " :No such channel");
+		return "";
+	}
+	try 
+	{
+		temp_channel->invite(m_name, invitee);
+	}
+	catch (const std::logic_error &e)
+	{
+		send ("", e.what());
+		return "";
+	}
 	Messageable* temp_client;
-	temp_client = PhoneBook::get().getRecipient(args[0]);
+	temp_client = PhoneBook::get().getRecipient(invitee);
 	if (temp_client == NULL)
 		return "";
-	send("", RPL_INVITING);
-	std::string msg = m_name + ": has invited you to " + args[1];
-	temp_client->send("", msg);
+	send("", ":" + m_name + " " + RPL_INVITING +
+		m_name + " " +
+		invitee + " " +
+		channel);
+	temp_client->send("", ":" + m_name + "INVITE " + invitee + " " + channel);
 	return "";
 }
 
@@ -319,33 +326,28 @@ std::string	Client::topicChannel(std::string, std::string params)
 	return "";
 }
 
-std::string	Client::kickChannel(std::string channel_name, std::string client_name, std::string kick_msg)
+std::string	Client::kickChannel(std::string channel, std::string kickee, std::string reason)
 {
 	Channel* temp_channel;
-	temp_channel = PhoneBook::get().getChannel(channel_name);
+	temp_channel = PhoneBook::get().getChannel(channel);
 	if (temp_channel == NULL)
 	{
-		send("", ":" + temp_channel->getName() + " " + ERR_NOSUCHCHANNEL);
+		send("", ":" + channel + " " + ERR_NOSUCHCHANNEL);
 		return ("");
 	}
-	Client* temp_client;
-	temp_client = PhoneBook::get().getClient(client_name);
-	if (temp_client == NULL)
+	Client* toKick;
+	toKick = PhoneBook::get().getClient(kickee);
+	if (toKick == NULL)
 	{
 		send("", ":" + temp_channel->getName() + " " + ERR_NOSUCHNICK);
 		return ("");
 	}
-	std::string kick_return = temp_channel->kick(temp_client, m_name);
+	std::string kick_return = temp_channel->kick(toKick, m_name);
 	if (kick_return != "")
 		send("", ":" + temp_channel->getName() + " " + kick_return);
-	else //send kick_msg to kicked client?
-	{
-		if (kick_msg == "")
-			temp_client->send("", "KICK " + channel_name + " " + client_name + "\n");
-		else
-			temp_client->send("", "KICK " + channel_name + " " + client_name + " :" + kick_msg + "\n");
-	}
-	temp_client->removeChannel("", channel_name);
+	else //send reason to kicked client?
+		toKick->send("", "KICK " + channel + " " + kickee + " :" + reason + "\n");
+	toKick->removeChannel("", channel);
 	return ("");
 }
 

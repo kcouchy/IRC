@@ -1,9 +1,8 @@
 TODO :
 
-- Mode handler in the channel
-- Error message formatting
+- Mode parsing
 - More parsing
-- PhoneBook throws a random exception instead of doing nothing on duplicated nicknames
+- Error message formatting
 
 Message format :
 https://modern.ircdocs.horse/#message-format

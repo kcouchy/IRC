@@ -6,7 +6,7 @@
 /*   By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+     */
 /*                                                            # *   *. #*     */
 /*   Created: 2024/07/17 11:59:26 by aboyreau          **+*+  * -_._-   #+    */
-/*   Updated: 2024/07/20 18:29:26 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/29 18:54:43 by aboyreau          +#-.-*  +         *    */
 /*                                                     *-.. *   ++       #    */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "utils.h"
 #include <algorithm>
 #include <iostream>
+#include <stdexcept>
 
 ClientParser::ClientParser() {}
 ClientParser::~ClientParser() {}
@@ -61,8 +62,8 @@ void ClientParser::parse_command(std::string prefix, std::string command, std::s
 	handlers.push_back(function("PART", &ClientParser::part));			// untested, KO
 	handlers.push_back(function("INVITE", &ClientParser::invite));		// untested, KO
 	handlers.push_back(function("KICK", &ClientParser::kick));			// untested, KO
-	// handlers.push_back(function("TOPIC", &ClientParser::topic));		// untested, KO
-	// handlers.push_back(function("MODE", &ClientParser::mode));			// untested, KO
+	handlers.push_back(function("TOPIC", &ClientParser::topic));		// untested, KO
+	handlers.push_back(function("MODE", &ClientParser::mode));			// untested, KO
 
 	handlers.push_back(function("PRIVMSG", &ClientParser::privmsg));	// untested, KO
 	handlers.push_back(function("QUIT", &ClientParser::quit));			// untested, KO
@@ -71,13 +72,13 @@ void ClientParser::parse_command(std::string prefix, std::string command, std::s
 	if (it != handlers.end())
 	{
 		std::string error;
+		// TODO check if client is authenticated to allow anything else than CAP, PASS, NICK, USER
 		error = (this->*(*it).value)(prefix, args, client); // Calls this->function() based on function pointer to function but still on this instance
 		if (error != "")
 		{
 			client.send("", ":ft_irc " + error);
 		}
 	}
-	
 }
 
 std::string ClientParser::parse_postfix(std::string args)
@@ -99,12 +100,13 @@ std::string ClientParser::cap(std::string prefix, std::string args, Client &clie
 	return client.capabilites(prefix, args);
 }
 
-std::string ClientParser::pass(std::string prefix, std::string args, Client &client)
+std::string ClientParser::pass(std::string, std::string args, Client &client)
 {
-	(void) prefix;
+	std::string name = client.getName();
+	name = " " + (name.size() == 0 ? "*" : name);
 	if (args.size() == 0)
 	{
-		client.send("", ":ft_irc 461 * PASS :Not enough parameters");
+		client.send("", ":ft_irc " + ERR_NEEDMOREPARAMS + name + " PASS :Not enough parameters");
 		return "";
 	}
 	return client.auth(args);
@@ -112,19 +114,62 @@ std::string ClientParser::pass(std::string prefix, std::string args, Client &cli
 
 std::string ClientParser::nick(std::string prefix, std::string args, Client &client)
 {
+	std::string name = client.getName();
+	name = " " + (name.size() == 0 ? "*" : name);
+	if (args == "")
+		client.send("", ":ft_irc " + ERR_NONICKNAMEGIVEN + name + " :No nickname given");
+	if (args.find_first_not_of(AUTHORISED_SET) != std::string::npos)
+		client.send("", ":ft_irc " + ERR_ERRONEUSNICKNAME + name + " :Erroneous nickname");
 	return client.changeNick(prefix, args);
 }
 
 std::string ClientParser::user(std::string prefix, std::string args, Client &client)
 {
+	std::string name = client.getName();
+	name = " " + (name.size() == 0 ? "*" : name);
+	if (args.size() == 0)
+	{
+		client.send("", ":ft_irc " + ERR_NEEDMOREPARAMS + name + " USER :Not enough parameters");
+		return "";
+	}
 	return client.changeUser(prefix, args);
 }
 
-std::string ClientParser::join(std::string prefix, std::string args, Client &client)
+// TODO JOIN 0
+std::string ClientParser::join(std::string, std::string args, Client &client)
 {
-	return client.addChannel(prefix, args);
+	size_t index = 0;
+	std::string channels, keys;
+
+	if (args.size() == 0)
+	{
+		client.send("", ":ft_irc " + ERR_NEEDMOREPARAMS + client.getName() + " JOIN :Not enough parameters");
+		return "";
+	}
+	std::vector<std::string> arguments = strsplit(args, ' ');
+	if (arguments.size() >= 1)
+		channels = arguments.at(0);
+	if (arguments.size() >= 2)
+		keys = arguments.at(1);
+	std::vector<std::string> channel_list = strsplit(channels, ',');
+	std::vector<std::string> key_list = strsplit(keys, ',');
+	while (index < channel_list.size() || index < key_list.size())
+	{
+		std::string channel, key;
+		try
+		{
+			channel = channel_list.at(index);
+			key = key_list.at(index);
+		}
+		catch (const std::out_of_range &e)
+		{}
+		client.joinChannel(channel, key);
+		index++;
+	}
+	return "";
 }
 
+// TODO PART
 std::string ClientParser::part(std::string prefix, std::string args, Client &client)
 {
 	std::vector<std::string> channels;
@@ -142,15 +187,16 @@ std::string ClientParser::part(std::string prefix, std::string args, Client &cli
 	// return client.removeChannel(prefix, args);
 }
 
-std::string ClientParser::invite(std::string prefix, std::string args, Client &client)
+std::string ClientParser::invite(std::string, std::string params, Client &client)
 {
-	return client.inviteToChannel(prefix, args);
+	std::vector<std::string> args = strsplit(params, ' ');
+	if (args.size() < 2)
+		return (ERR_NEEDMOREPARAMS);
+	return client.inviteToChannel(args[0], args[1]);
 }
 
-std::string ClientParser::kick(std::string prefix, std::string args, Client &client)
+std::string ClientParser::kick(std::string, std::string args, Client &client)
 {
-	(void) prefix;
-	(void) args;
 	std::string channel;
 	std::string message;
 	std::vector<std::string> kicked_users;
@@ -167,14 +213,29 @@ std::string ClientParser::kick(std::string prefix, std::string args, Client &cli
 	kicked_users = strsplit(temp[1], ',');
 	if (kicked_users.size() == 0)
 		return (ERR_NEEDMOREPARAMS);
-	std::vector<std::string>::iterator it;
-	for (it = kicked_users.begin(); it != kicked_users.end(); it++)
-		client.kickChannel(channel, *it, message);
+	std::vector<std::string>::iterator username;
+	for (username = kicked_users.begin(); username != kicked_users.end(); username++)
+		client.kickChannel(channel, *username, message);
 	return "";
 }
 
-// std::string ClientParser::mode(std::string prefix, std::string args, Client &client) {return "";}
-// std::string ClientParser::topic(std::string prefix, std::string args, Client &client) {return "";}
+std::string ClientParser::mode(std::string prefix, std::string args, Client &client)
+{
+	(void) prefix;
+	(void) args;
+	(void) client;
+	throw std::logic_error("Unimplemented");
+	return "";
+}
+
+std::string ClientParser::topic(std::string prefix, std::string args, Client &client)
+{
+	(void) prefix;
+	(void) args;
+	(void) client;
+	throw std::logic_error("Unimplemented");
+	return "";
+}
 
 std::string ClientParser::privmsg(std::string prefix, std::string args, Client &client)
 {
