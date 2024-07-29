@@ -5,3 +5,4 @@ objs/
 ircserv
 compile_commands.json
 .cache
+vgcore.*

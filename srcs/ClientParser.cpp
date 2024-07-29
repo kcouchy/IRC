@@ -6,7 +6,7 @@
 /*   By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+     */
 /*                                                            # *   *. #*     */
 /*   Created: 2024/07/17 11:59:26 by aboyreau          **+*+  * -_._-   #+    */
-/*   Updated: 2024/07/29 18:54:43 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/29 21:39:42 by aboyreau          +#-.-*  +         *    */
 /*                                                     *-.. *   ++       #    */
 /* ************************************************************************** */
 
@@ -72,12 +72,14 @@ void ClientParser::parse_command(std::string prefix, std::string command, std::s
 	if (it != handlers.end())
 	{
 		std::string error;
-		// TODO check if client is authenticated to allow anything else than CAP, PASS, NICK, USER
+		if (!client.is_registered() && it - handlers.begin() > 3)
+		{
+			client.send("", ":ft_irc " + ERR_PASSWDMISMATCH + " * :Please register");
+			return ;
+		}
 		error = (this->*(*it).value)(prefix, args, client); // Calls this->function() based on function pointer to function but still on this instance
 		if (error != "")
-		{
 			client.send("", ":ft_irc " + error);
-		}
 	}
 }
 
@@ -224,7 +226,7 @@ std::string ClientParser::mode(std::string prefix, std::string args, Client &cli
 	(void) prefix;
 	(void) args;
 	(void) client;
-	throw std::logic_error("Unimplemented");
+	// throw std::logic_error("Unimplemented");
 	return "";
 }
 

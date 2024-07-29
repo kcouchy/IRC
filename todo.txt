@@ -11,10 +11,15 @@ Numeric replies :
 https://modern.ircdocs.horse/#numeric-replies
 
 Tests :
-- JOIN (some tests are written, what about `JOIN 0`)
+- CAP (done)
 - INVITE (some tests are written)
-- KICK
-- TOPIC
+- JOIN (some tests are written, what about `JOIN 0`)
+- KICK (some tests are written)
+- NICK (some tests are written)
+- PASS (tests are written)
+- TOPIC (some tests are written)
+- USER (some tests are written)
+
 - MODE
 - PRIVMSG
 - QUIT

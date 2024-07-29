@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/29 19:02:18 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/29 21:28:49 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,12 +140,15 @@ void Channel::send(std::string sender_name, std::string message)
 {
 	std::list<Pair<std::string, bool> >::iterator iter;
 	Messageable *target;
+
+	if (m_listenList.size() == 0)
+		return ;
 	for (iter = m_listenList.begin(); iter != m_listenList.end(); iter++)
 	{
 		target = PhoneBook::get().getRecipient((*iter).getKey());
 		if (target == NULL)
-			find_erase(m_listenList, target->getName());
-		if (target->getName() != sender_name)
+			find_erase(m_listenList, (*iter).getKey());
+		else if (target->getName() != sender_name)
 			(*target).send("", message);
 	}
 }

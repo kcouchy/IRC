@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/29 19:03:44 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/29 21:38:35 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,11 @@ void Client::send(std::string, std::string msg)
 	if (check < 0)
 		throw KillMePlease();
 	return ;
+}
+
+bool Client::is_registered()
+{
+	return this->m_registrationComplete;
 }
 
 // Authentication
