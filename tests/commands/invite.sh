@@ -88,7 +88,7 @@ user_already_on_channel()
 	COMMAND_1=`<<- EOF cat
 		NICK atu
 		USER atu 0 * :Arthur
-		#join chan
+		JOIN #chan
 	EOF`
 	COMMAND_2=`<<- EOF cat
 		NICK other
@@ -99,7 +99,11 @@ user_already_on_channel()
 	EOF`
 	EXPECTED=`<<- EOF cat
 		:ft_irc 001 other :Welcome here
-		:ft_irc 443 other atu #chan :is already on channel
+		:other JOIN #chan
+		:ft_irc 332 other #chan :
+		:ft_irc 353 other = #chan :@atu other
+		:ft_irc 366 other #chan :End of /NAMES list
+		:ft_irc 443 other atu #chan :is already on that channel
 	EOF`
 	$TESTDIR/utils/run_test_multiuser.sh "$TEST" "" "$COMMAND_1" "" "$COMMAND_2" "$EXPECTED"
 }
@@ -127,7 +131,7 @@ valid_invitation()
 		:other JOIN #chan
 		:ft_irc 332 other #chan :
 		:ft_irc 353 other = #chan :@other
-		:ft_irc 366 other #chan :end of /NAMES list
+		:ft_irc 366 other #chan :End of /NAMES list
 		:ft_irc 341 other atu #chan
 	EOF`
 	$TESTDIR/utils/run_test_multiuser.sh "$TEST" "" "$COMMAND_1" "$EXPECTED_1" "$COMMAND_2" "$EXPECTED_2"
@@ -141,6 +145,7 @@ no_params
 nonexistent_channel
 notjoined_channel
 user_already_on_channel
+valid_invitation
 
 echo
 

@@ -19,6 +19,7 @@ cleanup()
 {
 	rm tmp_1 -f
 	rm tmp_2 -f
+	rm tmp_3 -f
 	rm srv_log -f
 	rm leaks.log -f
 }

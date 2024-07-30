@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/30 18:25:13 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/30 19:48:27 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,7 +223,9 @@ std::string	Client::inviteToChannel(std::string invitee, std::string channel)
 	temp_channel = PhoneBook::get().getChannel(channel);
 	if (temp_channel == NULL)
 	{
-		send("", ":ft_irc " + ERR_NOSUCHCHANNEL + " " + m_name + " " + channel + " :No such channel");
+		send("", ":ft_irc " + ERR_NOSUCHCHANNEL + " " +
+				m_name + " " +
+				channel + " :No such channel");
 		return "";
 	}
 	try 
@@ -239,11 +241,11 @@ std::string	Client::inviteToChannel(std::string invitee, std::string channel)
 	temp_client = PhoneBook::get().getRecipient(invitee);
 	if (temp_client == NULL)
 		return "";
-	send("", ":" + m_name + " " + RPL_INVITING +
+	send("", ":ft_irc " + RPL_INVITING + " " +
 		m_name + " " +
 		invitee + " " +
 		channel);
-	temp_client->send("", ":" + m_name + "INVITE " + invitee + " " + channel);
+	temp_client->send("", ":" + m_name + " INVITE " + invitee + " " + channel);
 	return "";
 }
 
