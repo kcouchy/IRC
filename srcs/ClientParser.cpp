@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ClientParser.cpp                                   :+:      :+:    :+:   */
+/*   ClientParser.cpp                                          +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:59:26 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/30 18:31:07 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/30 20:09:30 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void ClientParser::parse_command(std::string prefix, std::string command, std::s
 		std::string error;
 		if (!client.is_registered() && it - handlers.begin() > 4)
 		{
-			client.send("", ":ft_irc " + ERR_PASSWDMISMATCH + " * :Please register");
+			client.send("", ":ft_irc " + ERR_NOTREGISTERED + " * :You have not registered");
 			return ;
 		}
 		error = (this->*(*it).value)(prefix, args, client);

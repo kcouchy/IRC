@@ -56,7 +56,7 @@ nonexistent_channel()
 		:atu JOIN #chan
 		:ft_irc 332 atu #chan :
 		:ft_irc 353 atu = #chan :@atu
-		:ft_irc 366 atu #chan :end of /NAMES list
+		:ft_irc 366 atu #chan :End of /NAMES list
 	EOF`
 	$TESTDIR/utils/run_test.sh "$TEST" "" "$COMMAND" "$EXPECTED"
 }
@@ -80,7 +80,7 @@ existing_channel()
 		:atu JOIN #chan
 		:ft_irc 332 atu #chan :
 		:ft_irc 353 atu = #chan :@op atu
-		:ft_irc 366 atu #chan :end of /NAMES list
+		:ft_irc 366 atu #chan :End of /NAMES list
 	EOF`
 	$TESTDIR/utils/run_test_multiuser.sh "$TEST" "" "$COMMAND_1" "" "$COMMAND_2" "$EXPECTED"
 }
@@ -99,15 +99,15 @@ multiple_join()
 		:atu JOIN #chan
 		:ft_irc 332 atu #chan :
 		:ft_irc 353 atu = #chan :@atu
-		:ft_irc 366 atu #chan :end of /NAMES list
+		:ft_irc 366 atu #chan :End of /NAMES list
 		:atu JOIN #test
 		:ft_irc 332 atu #test :
 		:ft_irc 353 atu = #test :@atu
-		:ft_irc 366 atu #test :end of /NAMES list
+		:ft_irc 366 atu #test :End of /NAMES list
 		:atu JOIN #tmp
 		:ft_irc 332 atu #tmp :
 		:ft_irc 353 atu = #tmp :@atu
-		:ft_irc 366 atu #tmp :end of /NAMES list
+		:ft_irc 366 atu #tmp :End of /NAMES list
 	EOF`
 	$TESTDIR/utils/run_test.sh "$TEST" "" "$COMMAND" "$EXPECTED"
 }
@@ -143,15 +143,15 @@ leave_everything()
 		:atu JOIN #chan
 		:ft_irc 332 atu #chan :
 		:ft_irc 353 atu = #chan :@atu
-		:ft_irc 366 atu #chan :end of /NAMES list
+		:ft_irc 366 atu #chan :End of /NAMES list
 		:atu JOIN #test
 		:ft_irc 332 atu #test :
 		:ft_irc 353 atu = #test :@atu
-		:ft_irc 366 atu #test :end of /NAMES list
+		:ft_irc 366 atu #test :End of /NAMES list
 		:atu JOIN #tmp
 		:ft_irc 332 atu #tmp :
 		:ft_irc 353 atu = #tmp :@atu
-		:ft_irc 366 atu #tmp :end of /NAMES list
+		:ft_irc 366 atu #tmp :End of /NAMES list
 		:atu PART #chan
 		:atu PART #test
 		:atu PART #tmp

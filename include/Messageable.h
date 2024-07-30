@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Messageable.h                                      :+:      :+:    :+:   */
+/*   Messageable.h                                             +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:12:41 by atu               #+#    #+#             */
-/*   Updated: 2024/07/30 14:38:32 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/30 20:08:56 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@
 #define ERR_NOTONCHANNEL std::string("442")
 #define ERR_USERONCHANNEL std::string("443")
 #define ERR_USERNOTINCHANNEL std::string("441")
+#define ERR_NOTREGISTERED std::string("451")
 #define ERR_NEEDMOREPARAMS std::string("461")
 #define ERR_ALREADYREGISTERED std::string("462")
 #define ERR_PASSWDMISMATCH std::string("464")

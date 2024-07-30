@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/30 19:48:27 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/30 20:11:47 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,9 @@ std::string	Client::joinChannel(std::string channel, std::string key)
 		chan = dynamic_cast<Channel *>(c);
 		if (chan == NULL)
 		{
-			send("", ":ft_irc " + ERR_NOSUCHCHANNEL + " " + m_name + " :No such channel");
+			send("", ":ft_irc " + ERR_NOSUCHCHANNEL + " " +
+					m_name + " " +
+					channel + " :No such channel");
 			return ("");
 		}
 	}
