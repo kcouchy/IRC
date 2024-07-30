@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/29 21:38:35 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/30 11:55:59 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ std::string Client::auth(std::string password)
 		this->m_authenticated = true;
 	else
 	{
-		send("", ":ft_irc " + ERR_PASSWDMISMATCH + "* :Password mismatch");
+		send("", ":ft_irc " + ERR_PASSWDMISMATCH + name + " :Password mismatch");
 		throw KillMePlease(); // required by irssi, specified as a MAY by the IRC protocol
 	}
 	return ("");
@@ -290,44 +290,44 @@ const char *Client::KillMePlease::what() const throw()
 	return ("Please delete me");
 }
 
-std::string	Client::topicChannel(std::string, std::string params)
+std::string	Client::topicChannel(std::string channel)
 {
-	std::vector<std::string> args = strsplit(params, ' ');
-	if (args.size() < 1)
-	{
-		send("", ERR_NEEDMOREPARAMS);
-		return ("");
-	}
 	Channel* temp_channel;
-	temp_channel = PhoneBook::get().getChannel(args[0]);
+	temp_channel = PhoneBook::get().getChannel(channel);
 	if (temp_channel == NULL)
 	{
-		send("", ERR_NOSUCHCHANNEL);
+		send("", ":ft_irc " + ERR_NOSUCHCHANNEL + " " +
+				m_name + " " + 
+				channel + " :No such channel");
 		return ("");
 	}
-	if (args.size() == 1)
-	{
-		std::string temp_topic = temp_channel->getTopic();
-		if (temp_topic == "")
-			send("", ":" + temp_channel->getName() + " " + RPL_NOTOPIC);
-		else
-			send("", ":" + temp_channel->getName() + " " + RPL_TOPIC + " :"  + temp_topic + "\n");
-	}
+	std::string temp_topic = temp_channel->getTopic();
+	if (temp_topic == "")
+		send("", ":" + temp_channel->getName() + " " + RPL_NOTOPIC + " " +
+			m_name + " " +
+			channel + " :No topic is set");
 	else
+		send("", ":" + temp_channel->getName() + " " + RPL_TOPIC + " " +
+			m_name + " " +
+			channel + " " +
+			" :"  + temp_topic);
+	return "";
+}
+
+std::string	Client::topicChannel(std::string channel, std::string topic)
+{
+	Channel* temp_channel;
+	temp_channel = PhoneBook::get().getChannel(channel);
+	if (temp_channel == NULL)
 	{
-		if (args[1][0] != ':')
-		{
-			send("", ":" + temp_channel->getName() + " " + ERR_UNKNOWNERROR);
-			return ("");
-		}
-		std::string new_topic = args[1].substr(1, args[1].size() - 1);
-		std::vector<std::string>::iterator iter = args.begin() + 2;
-		for (; iter != args.end(); iter++)
-			new_topic += " " + *iter;
-		std::string topic_return = temp_channel->setTopic(new_topic, m_name);
-		if (topic_return != "")
-			send("", ":" + temp_channel->getName() + " " + topic_return);
+		send("", ":ft_irc " + ERR_NOSUCHCHANNEL + " " +
+				m_name + " " + 
+				channel + " :No such channel");
+		return ("");
 	}
+	std::string topic_return = temp_channel->setTopic(topic, m_name);
+	if (topic_return != "")
+		send("", topic_return);
 	return "";
 }
 
@@ -337,21 +337,29 @@ std::string	Client::kickChannel(std::string channel, std::string kickee, std::st
 	temp_channel = PhoneBook::get().getChannel(channel);
 	if (temp_channel == NULL)
 	{
-		send("", ":" + channel + " " + ERR_NOSUCHCHANNEL);
+		send("", ":ft_irc " + ERR_NOSUCHCHANNEL + " " +
+			m_name + " " +
+			channel + " :No such channel");
 		return ("");
 	}
 	Client* toKick;
 	toKick = PhoneBook::get().getClient(kickee);
 	if (toKick == NULL)
 	{
-		send("", ":" + temp_channel->getName() + " " + ERR_NOSUCHNICK);
+		send("", ":ft_irc " +
+			ERR_NOSUCHNICK + " " +
+			m_name + " " +
+			kickee + " :No such nick");
 		return ("");
 	}
 	std::string kick_return = temp_channel->kick(toKick, m_name);
 	if (kick_return != "")
-		send("", ":" + temp_channel->getName() + " " + kick_return);
-	else //send reason to kicked client?
-		toKick->send("", "KICK " + channel + " " + kickee + " :" + reason + "\n");
+	{
+		send("", ":ft_irc " + kick_return); // TODO from :ft_irc or from :channelName ?
+		return "";
+	}
+	else
+		toKick->send("", "KICK " + channel + " " + kickee + " :" + reason);
 	toKick->removeChannel("", channel);
 	return ("");
 }

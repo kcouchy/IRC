@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 23:17:50 by aboyreau               #+#    #+#             */
-/*   Updated: 2024/07/29 21:38:11 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/30 11:18:52 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ class Client : public Messageable
 		std::string	joinChannel(std::string channel, std::string key);
 		std::string	removeChannel(std::string, std::string channelName);
 		std::string	inviteToChannel(std::string, std::string params);
+		std::string	topicChannel(std::string);
 		std::string	topicChannel(std::string, std::string params);
 		std::string	kickChannel(std::string channel_name, std::string client_name, std::string kick_msg);
 		std::string	modeChannel(std::string client_name, bool plusminus, char modechar, std::string mode_arg);

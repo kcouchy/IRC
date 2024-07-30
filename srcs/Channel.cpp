@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/29 21:45:05 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/30 11:55:31 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,9 +109,9 @@ std::string Channel::quit(std::string client_name)
 
 void	Channel::invite(std::string inviter_name, std::string invitee_name)
 {
-	for (std::list<Pair<std::string, bool> >::iterator itr; itr != m_listenList.end(); itr++)
+	for (std::list<Pair<std::string, bool> >::iterator itr = m_listenList.begin(); itr != m_listenList.end(); itr++)
 	{
-		if (invitee_name == (*itr).getKey()) // TODO segfault here ?
+		if (invitee_name == (*itr).getKey())
 			throw std::logic_error(":" + m_name + " " + ERR_USERONCHANNEL + " " +
 					inviter_name + " " +
 					invitee_name + " " +
@@ -164,12 +164,16 @@ std::string Channel::setTopic(std::string topic, std::string client_name)
 	{
 		std::list<Pair<std::string, bool> >::iterator user = find_return(m_listenList, client_name);
 		if (user == m_listenList.end())
-			return(ERR_NOTONCHANNEL);
+			return (":ft_irc " + ERR_NOTONCHANNEL + " " +
+				client_name + " " +
+				m_name + " :You're not on that channel");
 		else if ((*user).value == false)
-			return(ERR_CHANOPRIVSNEEDED);
+			return (":ft_irc " + ERR_CHANOPRIVSNEEDED + " " +
+				client_name + " " +
+				m_name + " :You're not channel operator");
 	}
 	m_topic = topic;
-	send("", ":" + m_name + " PRIVMSG " + m_name + " :channel topic has been changed to: " + topic);
+	send("", ":" + client_name + " PRIVMSG " + m_name + " :channel topic has been changed to: " + topic);
 	return ("");
 }
 
@@ -200,14 +204,20 @@ void	Channel::setInvite(bool inviteOnly)
 
 std::string	Channel::kick(Client* toKick, std::string kicker)
 {
-	if (contains(m_listenList, toKick->getName()))
-		return (ERR_USERNOTINCHANNEL);
+	if (contains(m_listenList, toKick->getName()) == false)
+		return (ERR_USERNOTINCHANNEL + " " +
+			kicker + " " +
+			toKick->getName() + " " +
+			m_name + " :They aren't on that channel");
 	std::list<Pair<std::string, bool> >::iterator kicker_isOP = find_return(m_listenList, kicker);
 	if (kicker_isOP == m_listenList.end())
-		return (ERR_NOTONCHANNEL);
+		return (ERR_NOTONCHANNEL + " " +
+				kicker + " " +
+				m_name + " :You're not on that channel");
 	else if ((*kicker_isOP).value == false)
-		return (ERR_CHANOPRIVSNEEDED);
-	// m_listenList.erase(find_return(m_listenList, toKick->getName()));
+		return (ERR_CHANOPRIVSNEEDED + " " +
+				kicker + " " +
+				m_name + " :You're not channel operator");
 	send("", ":" + kicker + " KICK " + m_name + " " + toKick->getName());
 	return ("");
 }

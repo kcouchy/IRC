@@ -6,7 +6,7 @@
 /*   By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+     */
 /*                                                            # *   *. #*     */
 /*   Created: 2024/07/17 11:59:26 by aboyreau          **+*+  * -_._-   #+    */
-/*   Updated: 2024/07/29 23:23:54 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/30 11:53:08 by aboyreau          +#-.-*  +         *    */
 /*                                                     *-.. *   ++       #    */
 /* ************************************************************************** */
 
@@ -210,11 +210,15 @@ std::string ClientParser::kick(std::string, std::string args, Client &client)
 		message = "You have been kicked";
 	temp = strsplit(args, ' ');
 	if (temp.size() < 2)
-		return (ERR_NEEDMOREPARAMS);
+		client.send("", ":ft_irc " + ERR_NEEDMOREPARAMS + " " +
+				client.getName() + " " + 
+				"KICK :Not enough parameters");
 	channel = temp[0];
 	kicked_users = strsplit(temp[1], ',');
 	if (kicked_users.size() == 0)
-		return (ERR_NEEDMOREPARAMS);
+		client.send("", ":ft_irc " + ERR_NEEDMOREPARAMS + " " +
+				client.getName() + " " + 
+				"KICK :Not enough parameters");
 	std::vector<std::string>::iterator username;
 	for (username = kicked_users.begin(); username != kicked_users.end(); username++)
 		client.kickChannel(channel, *username, message);
@@ -230,12 +234,32 @@ std::string ClientParser::mode(std::string prefix, std::string args, Client &cli
 	return "";
 }
 
-std::string ClientParser::topic(std::string prefix, std::string args, Client &client)
+std::string ClientParser::topic(std::string, std::string params, Client &client)
 {
-	(void) prefix;
-	(void) args;
-	(void) client;
-	throw std::logic_error("Unimplemented");
+	bool changeTopic = false;
+	std::string topic = parse_postfix(params);
+	std::string channel_name;
+	if (topic.size() != 0)
+	{
+		changeTopic = true;
+		topic = topic.substr(1, topic.size() - 1);
+		channel_name = params.erase(params.find(":") - 1, params.size() - 1);
+	}
+	else
+	{
+		channel_name = params;
+	}
+	if (channel_name.size() == 0)
+	{
+		client.send("", ":ft_irc " + ERR_NEEDMOREPARAMS + " " +
+			client.getName() +
+			" TOPIC :Not enough parameters");
+		return ("");
+	}
+	if (!changeTopic)
+		client.topicChannel(channel_name);
+	else
+		client.topicChannel(channel_name, topic);
 	return "";
 }
 
