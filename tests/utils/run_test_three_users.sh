@@ -3,12 +3,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                               ++             #
-#    run_test_multiuser.sh                                     +**+   +*  *    #
+#    run_test_three_users.sh                                   +**+   +*  *    #
 #                                                              ##%#*###*+++    #
 #    By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+      #
 #                                                             # *   *. #*      #
-#    Created: 2024/07/16 23:18:58 by aboyreau          **+*+  * -_._-   #+     #
-#    Updated: 2024/07/30 17:32:18 by aboyreau          +#-.-*  +         *     #
+#    Created: 2024/07/30 17:34:34 by aboyreau          **+*+  * -_._-   #+     #
+#    Updated: 2024/07/30 17:34:35 by aboyreau          +#-.-*  +         *     #
 #                                                      *-.. *   ++       #     #
 # **************************************************************************** #
 
@@ -52,9 +52,13 @@ print_logs()
 	echo
 	cat tmp_2 | sed 's/.*/	\0/g'
 	echo
+	echo "Client 3 logs :"
+	echo
+	cat tmp_3 | sed 's/.*/	\0/g'
+	echo
 }
 
-if [ $# != 6 ]
+if [ $# != 8 ]
 then
 	echo "./run_test <name> <password> <command_user_1> <expected_result_1> <command_user_2> <expected_result_2>"
 	echo "This command runs a basic test involving 2 users:"
@@ -80,6 +84,8 @@ COMMAND_1=$3
 EXPECTED_RESULT_1=$4
 COMMAND_2=$5
 EXPECTED_RESULT_2=$6
+COMMAND_3=$7
+EXPECTED_RESULT_3=$8
 
 echo
 echo -n "$NAME"
@@ -95,11 +101,14 @@ fi
 <<< "$COMMAND_1" nc localhost 6667 > tmp_1 2>&1 &
 USR1_PID=$!
 
-timeout 5 <<< "$COMMAND_2" nc localhost 6667 > tmp_2 2>&1
+<<< "$COMMAND_2" nc localhost 6667 > tmp_2 2>&1 &
+USR2_PID=$!
 
-EXIT_CODE_2=$?
+timeout 5 <<< "$COMMAND_3" nc localhost 6667 > tmp_3 2>&1
+EXIT_CODE_3=$?
 
 EXIT_CODE_1=$(wait $USR1_PID)
+EXIT_CODE_2=$(wait $USR2_PID)
 
 kill -s INT $SRV_PID 2> /dev/null || server_crash || exit 1
 
@@ -120,5 +129,7 @@ echo -n " client 1 : "
 tests/utils/print_res.sh "$(cat tmp_1)" "$EXPECTED_RESULT_1" $EXIT_CODE_1 $LEAKS
 echo -n ", client 2 : "
 tests/utils/print_res.sh "$(cat tmp_2)" "$EXPECTED_RESULT_2" $EXIT_CODE_2 $LEAKS
+echo -n ", client 3 : "
+tests/utils/print_res.sh "$(cat tmp_3)" "$EXPECTED_RESULT_3" $EXIT_CODE_3 $LEAKS
 
 cleanup

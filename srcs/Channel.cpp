@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Channel.cpp                                        :+:      :+:    :+:   */
+/*   Channel.cpp                                               +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/30 15:49:27 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/30 17:50:51 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,16 +60,16 @@ std::string Channel::join(std::string client_name, std::string key)
 		to_add.value = true;
 	m_listenList.push_back(to_add);
 	find_erase(m_inviteList, client_name);
-	send(client_name, ":" + client_name + " JOIN " + m_name);
-	return (":" + m_name + " " +
+	send("", ":" + client_name + " JOIN " + m_name);
+	return (":ft_irc " +
 			RPL_TOPIC + " " +
 			client_name + " " +
 			m_name + " :" +
 			m_topic + "\n" +
-			":" + m_name + " " +
+			":ft_irc " +
 			RPL_NAMEREPLY + " " +
 			getListenList(client_name) + "\n" +
-			":" + m_name + " " +
+			":ft_irc " +
 			RPL_ENDOFNAMES + " " +
 			client_name + " " +
 			m_name +
@@ -112,7 +112,7 @@ void	Channel::invite(std::string inviter_name, std::string invitee_name)
 	for (std::list<Pair<std::string, bool> >::iterator itr = m_listenList.begin(); itr != m_listenList.end(); itr++)
 	{
 		if (invitee_name == (*itr).getKey())
-			throw std::logic_error(":" + m_name + " " + ERR_USERONCHANNEL + " " +
+			throw std::logic_error(":ft_irc " + ERR_USERONCHANNEL + " " +
 					inviter_name + " " +
 					invitee_name + " " +
 					m_name + " " +
@@ -120,7 +120,7 @@ void	Channel::invite(std::string inviter_name, std::string invitee_name)
 		if (m_inviteOnly == false && inviter_name == (*itr).getKey())
 				return ;
 		else if (m_inviteOnly == true && inviter_name == (*itr).getKey() && (*itr).value == 0)
-			throw std::logic_error(":" + m_name + " " + ERR_CHANOPRIVSNEEDED + " " +
+			throw std::logic_error(":ft_irc " + ERR_CHANOPRIVSNEEDED + " " +
 					inviter_name + " " +
 					m_name + " " +
 					":You're not channel operator");
@@ -130,7 +130,7 @@ void	Channel::invite(std::string inviter_name, std::string invitee_name)
 			return ;
 		}
 	}
-	throw std::logic_error(":" + m_name + " " + ERR_NOTONCHANNEL + " " +
+	throw std::logic_error(":ft_irc " + ERR_NOTONCHANNEL + " " +
 		inviter_name + " " +
 		m_name + " " +
 		":You're not on that channel");

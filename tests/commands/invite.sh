@@ -29,7 +29,7 @@ no_params()
 		:atu JOIN #chan
 		:ft_irc 332 atu #chan :
 		:ft_irc 353 atu = #chan :@atu
-		:ft_irc 366 atu #chan :end of /NAMES list
+		:ft_irc 366 atu #chan :End of /NAMES list
 		:ft_irc 461 atu INVITE :Not enough parameters
 		:ft_irc 461 atu INVITE :Not enough parameters
 		:ft_irc 461 atu INVITE :Not enough parameters
@@ -63,19 +63,23 @@ notjoined_channel()
 	COMMAND_1=`<<- EOF cat
 		NICK atu
 		USER atu 0 * :Arthur
-		#join chan
+		JOIN #chan
 	EOF`
 	COMMAND_2=`<<- EOF cat
 		NICK other
-		USER other 0 * :Arthur
-		INVITE atu #chan
+		USER other 0 * :Other
+	EOF`
+	COMMAND_3=`<<- EOF cat
+		NICK kiri
+		USER kiri 0 * :Kiri
+		INVITE other #chan
 		QUIT
 	EOF`
 	EXPECTED=`<<- EOF cat
-		:ft_irc 001 other :Welcome here
-		:ft_irc 442 other #chan :You're not on that channel
+		:ft_irc 001 kiri :Welcome here
+		:ft_irc 442 kiri #chan :You're not on that channel
 	EOF`
-	$TESTDIR/utils/run_test_multiuser.sh "$TEST" "" "$COMMAND_1" "" "$COMMAND_2" "$EXPECTED"
+	$TESTDIR/utils/run_test_three_users.sh "$TEST" "" "$COMMAND_1" "" "$COMMAND_2" "" "$COMMAND_3" "$EXPECTED"
 }
 
 user_already_on_channel()

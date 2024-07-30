@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ClientParser.cpp                                   :+:      :+:    :+:   */
+/*   ClientParser.cpp                                          +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:59:26 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/30 15:16:06 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/30 17:04:33 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,7 +193,12 @@ std::string ClientParser::invite(std::string, std::string params, Client &client
 {
 	std::vector<std::string> args = strsplit(params, ' ');
 	if (args.size() < 2)
-		return (ERR_NEEDMOREPARAMS);
+	{
+		client.send("", ":ft_irc " + ERR_NEEDMOREPARAMS + " " +
+			client.getName() +
+			" INVITE :Not enough parameters");
+		return "";
+	}
 	return client.inviteToChannel(args[0], args[1]);
 }
 
@@ -204,21 +209,29 @@ std::string ClientParser::kick(std::string, std::string args, Client &client)
 	std::vector<std::string> kicked_users;
 	std::vector<std::string> temp;
 
+	std::cout << "HI" << std::endl;
+
 	message = parse_postfix(args);
 	args = args.substr(0, args.size() - message.size());
 	if (message == "")
 		message = "You have been kicked";
 	temp = strsplit(args, ' ');
 	if (temp.size() < 2)
+	{
 		client.send("", ":ft_irc " + ERR_NEEDMOREPARAMS + " " +
-				client.getName() + " " + 
-				"KICK :Not enough parameters");
+			client.getName() + " " + 
+			"KICK :Not enough parameters");
+		return "";
+	}
 	channel = temp[0];
 	kicked_users = strsplit(temp[1], ',');
 	if (kicked_users.size() == 0)
+	{
 		client.send("", ":ft_irc " + ERR_NEEDMOREPARAMS + " " +
-				client.getName() + " " + 
-				"KICK :Not enough parameters");
+			client.getName() + " " + 
+			"KICK :Not enough parameters");
+		return "";
+	}
 	std::vector<std::string>::iterator username;
 	for (username = kicked_users.begin(); username != kicked_users.end(); username++)
 		client.kickChannel(channel, *username, message);
