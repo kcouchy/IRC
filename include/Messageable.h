@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Messageable.h                                             +**+   +*  *   */
+/*   Messageable.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:12:41 by atu               #+#    #+#             */
-/*   Updated: 2024/07/29 17:14:59 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/30 14:38:32 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,10 @@
 #define ERR_CHANNELISFULL std::string("471")
 #define ERR_INVITEONLYCHAN std::string("473")
 #define ERR_BADCHANNELKEY std::string("475")
+
+#define TYPE_B std::string("o")
+#define TYPE_C std::string("k")
+#define TYPE_D std::string("itl")
 
 #define AUTHORISED_SET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_[]{}\\|"
 

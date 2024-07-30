@@ -1,13 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                              ++            */
-/*   ClientParser.cpp                                          +**+   +*  *   */
-/*                                                             ##%#*###*+++   */
-/*   By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+     */
-/*                                                            # *   *. #*     */
-/*   Created: 2024/07/17 11:59:26 by aboyreau          **+*+  * -_._-   #+    */
-/*   Updated: 2024/07/30 11:53:08 by aboyreau          +#-.-*  +         *    */
-/*                                                     *-.. *   ++       #    */
+/*                                                        :::      ::::::::   */
+/*   ClientParser.cpp                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 11:59:26 by aboyreau          #+#    #+#             */
+/*   Updated: 2024/07/30 15:16:06 by kcouchma         ###   ########.fr       */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "ClientParser.h"
@@ -225,12 +225,54 @@ std::string ClientParser::kick(std::string, std::string args, Client &client)
 	return "";
 }
 
-std::string ClientParser::mode(std::string prefix, std::string args, Client &client)
+std::string ClientParser::mode(std::string, std::string args, Client &client)
 {
-	(void) prefix;
-	(void) args;
-	(void) client;
-	// throw std::logic_error("Unimplemented");
+	std::vector<std::string> split_args = strsplit(args, ' ');
+	bool plusminus = false;
+
+	if (split_args.size() == 0)
+		client.send("", ":ft_irc " + ERR_NEEDMOREPARAMS + " " +
+			client.getName() + " " + 
+			"MODE :Not enough parameters");
+	if (split_args.size() == 1)
+	{
+		client.getMode(split_args[0]);
+	}
+
+	std::string modes = split_args[1];
+	std::string::iterator mode_it = modes.begin();
+	std::vector<std::string>::iterator arg_it = split_args.end();
+	if (split_args.size() > 2)
+		arg_it = split_args.begin() + 2;
+	for (; mode_it != modes.end() ; mode_it++)
+	{
+		if (*mode_it == '-' || *mode_it == '+')
+		{
+			plusminus = (*mode_it == '-' ? false : true);
+			continue ;
+		}
+		if (TYPE_B.find(*mode_it) != std::string::npos && arg_it != split_args.end())
+		{
+			client.modeChannel(split_args[0], plusminus, *mode_it, *arg_it);
+			arg_it++;
+		}
+		if (TYPE_C.find(*mode_it) != std::string::npos)
+		{
+			if (plusminus == true && arg_it != split_args.end())
+			{
+				client.modeChannel(split_args[0], plusminus, *mode_it, *arg_it);
+				arg_it++;
+			}
+			else if (plusminus == false)
+			{
+				client.modeChannel(split_args[0], plusminus, *mode_it, "");
+			}
+		}
+		if (TYPE_D.find(*mode_it) != std::string::npos)
+		{
+			client.modeChannel(split_args[0], plusminus, *mode_it, "");
+		}
+	}
 	return "";
 }
 

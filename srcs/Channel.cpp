@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Channel.cpp                                               +**+   +*  *   */
+/*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/30 11:55:31 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/30 15:49:27 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,10 +196,25 @@ void Channel::setOperator(std::string client_name, bool new_value)
 			(*iter).value = new_value;
 }
 
+bool	Channel::getInvite(void)const
+{
+	return (m_inviteOnly);
+}
+
 void	Channel::setInvite(bool inviteOnly)
 {
 	m_inviteOnly = inviteOnly;
 	return ;
+}
+
+int		Channel::getClientLimit(void)const
+{
+	return (m_clientLimit);
+}
+
+bool	Channel::getPasswordProtected(void)const
+{
+	return (m_channelKey.second);
 }
 
 std::string	Channel::kick(Client* toKick, std::string kicker)
@@ -225,36 +240,31 @@ std::string	Channel::kick(Client* toKick, std::string kicker)
 std::string	Channel::mode(std::string client_name, bool plusminus, char modechar, std::string mode_arg)
 {
 	if (contains(m_listenList, client_name) == false)
-		return (ERR_NOTONCHANNEL);//not in doc but is logical to add
+		return (ERR_NOTONCHANNEL + " " +
+			client_name + " " +
+			m_name + " :You're not on that channel");
 	if (find_return(m_listenList, client_name)->value == false)
-		return (ERR_CHANOPRIVSNEEDED);
+		return (ERR_CHANOPRIVSNEEDED + " " +
+			client_name + " " +
+			m_name + " :You're not channel operator");
 
 // · i: Set/remove Invite-only channel
 	if (modechar == 'i')
-	{
-		if (plusminus == true)
-			m_inviteOnly = true;
-		else if (plusminus == false)
-			m_inviteOnly = false;
-	}
+		m_inviteOnly = plusminus;
 
 // · t: Set/remove the restrictions of the TOPIC command to channel operators
 	if (modechar == 't')
-	{
-		if (plusminus == true)
-			m_topicProtected = true;
-		else if (plusminus == false)
-			m_topicProtected = false;
-	}
+		m_topicProtected = plusminus;
 
 // · k: Set/remove the channel key (replicate allowed character list from nickname set)
 	if (modechar == 'k')
 	{
-		//TO PARSING LEVEL- ERR_INVALIDMODEPARAM (696)
 		if (plusminus == true)
 		{
 			if (mode_arg.find_first_not_of(AUTHORISED_SET) != mode_arg.npos)
-				return (ERR_INVALIDKEY);
+				return (ERR_INVALIDKEY + " " +
+					client_name + " " +
+					m_name + " :Key is not well-formed");
 			m_channelKey.second = true;
 			m_channelKey.first = mode_arg;
 		}
@@ -269,11 +279,11 @@ std::string	Channel::mode(std::string client_name, bool plusminus, char modechar
 	if (modechar == 'o')
 	{
 		if (contains(m_listenList, mode_arg) == false)
-			return (ERR_USERNOTINCHANNEL);
-		if (plusminus == true)
-			find_return(m_listenList, mode_arg)->value = true;
-		else if (plusminus == false)
-			find_return(m_listenList, mode_arg)->value = false;
+			return (ERR_USERNOTINCHANNEL + " " +
+				client_name + " " +
+				mode_arg + " " +
+				m_name + " :They aren't on that channel");
+		find_return(m_listenList, mode_arg)->value = plusminus;
 	}
 
 // · l: Set/remove the user limit to channel
@@ -282,15 +292,25 @@ std::string	Channel::mode(std::string client_name, bool plusminus, char modechar
 		if (plusminus == true)
 		{
 			if (mode_arg.find_first_not_of("1234567890") != mode_arg.npos)
-				return (ERR_INVALIDMODEPARAM);
+				return (ERR_INVALIDMODEPARAM + " " +
+					client_name + " " +
+					m_name + " l " + mode_arg +
+					" :invalid Client Limit");
 			double	new_limit = std::atof(mode_arg.c_str());
 			if (new_limit > INT_MAX || new_limit < 1)
-				return (ERR_INVALIDMODEPARAM);
+				return (ERR_INVALIDMODEPARAM + " " +
+					client_name + " " +
+					m_name + " l " + mode_arg +
+					" :invalid Client Limit");
 			m_clientLimit = (int)new_limit;
 		}
 		else if (plusminus == false)
 			m_clientLimit = 0;
 	}
+	send("", ":" + m_name + " MODE " +
+		(plusminus ? "+" : "-") +
+		modechar + " " +
+		mode_arg);
 	return ("");
 }
 

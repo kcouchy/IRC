@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.cpp                                                +**+   +*  *   */
+/*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/30 11:55:59 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/30 15:18:32 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -364,19 +364,34 @@ std::string	Client::kickChannel(std::string channel, std::string kickee, std::st
 	return ("");
 }
 
+void	Client::getMode(std::string channel_name)
+{
+	Channel *temp_channel = PhoneBook::get().getChannel(channel_name);
+	if (temp_channel == NULL)
+		send("", ":ft_irc " + ERR_NOSUCHCHANNEL + " " +
+			m_name + " " +
+			channel_name + " :No such channel");
+	std::string modes = "+";
+	modes += temp_channel->getPasswordProtected() ? "k" : "";
+	modes += temp_channel->getInvite() ? "i" : "";
+	modes += temp_channel->getTopicProtected() ? "t" : "";
+	modes += temp_channel->getClientLimit() > 0 ? "l" : "";
+	if (modes.length() == 1)
+		modes = "";
+	send("", ":" + channel_name + " " + RPL_CHANNELMODEIS + " " +
+		m_name + " " + 
+		channel_name + " " + modes);
+}
+
 std::string	Client::modeChannel(std::string channel_name, bool plusminus, char modechar, std::string mode_arg)
 {
 	Channel *temp_channel = PhoneBook::get().getChannel(channel_name);
 	if (temp_channel == NULL)
-		return (ERR_NOSUCHCHANNEL);
-	if (modechar == '\0')
-	{
-		//TODO wtf?
-		// send(<client> <channel> <modestring> <mode arguments>...);
-		return (RPL_CHANNELMODEIS);//TODO formatting return messages
-	}
+		send("", ":ft_irc " + ERR_NOSUCHCHANNEL + " " +
+			m_name + " " +
+			channel_name + " :No such channel");
 	std::string mode_return = temp_channel->mode(m_name, plusminus, modechar, mode_arg);
 	if (mode_return != "")
-		return (mode_return);//TODO formatting return messages
+		send("", ":ft_irc " + mode_return);
 	return ("");
 }

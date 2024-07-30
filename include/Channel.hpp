@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Channel.hpp                                               +**+   +*  *   */
+/*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:57:02 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/29 17:52:57 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/30 15:06:32 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,10 @@ class Channel : public Messageable
 		bool		getTopicProtected(void)const;
 		void		setTopicProtected(bool isProtected);
 		void		setOperator(std::string client_name, bool new_value);
+		bool		getInvite(void)const;
 		void		setInvite(bool inviteOnly);
+		int			getClientLimit(void)const;
+		bool		getPasswordProtected(void)const;
 		std::string	kick(Client* toKick, std::string kicker);
 		std::string	mode(std::string client_name, bool plusminus, char modechar, std::string mode_arg);
 		std::string getListenList(std::string client_name);
