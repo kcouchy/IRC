@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/30 15:18:32 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/30 18:25:13 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,14 @@ std::string	Client::joinChannel(std::string channel, std::string key)
 	return ("");
 }
 
-std::string	Client::removeChannel(std::string, std::string channelName)
+void	Client::removeAllChannels(void)
+{
+	std::list<std::string>::iterator it = m_channelList.begin();
+	for (; it != m_channelList.end(); it++)
+		removeChannel("", *it);
+}
+
+void	Client::removeChannel(std::string, std::string channelName)
 {
 	std::list<std::string>::iterator iter;
 	Channel *channel = NULL;
@@ -206,7 +213,7 @@ std::string	Client::removeChannel(std::string, std::string channelName)
 			iter = m_channelList.erase(iter);
 		}
 	}
-	return ("");
+	return ;
 }
 
 std::string	Client::inviteToChannel(std::string invitee, std::string channel)

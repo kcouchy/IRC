@@ -27,7 +27,7 @@ class Client : public Messageable
 
 		int		getfd() const;
 		void	send(std::string, std::string msg);
-		void	parse(std::string);
+		// void	parse(std::string); //TODO
 		bool	is_registered();
 
 		class KillMePlease : public std::exception
@@ -49,7 +49,7 @@ class Client : public Messageable
 
 		// Handlers
 		// Find and run a handler according to the command passed as parameter.
-		void	exec(std::string prefix, std::string command, std::string args);
+		// void	exec(std::string prefix, std::string command, std::string args); //TODO
 
 	public:
 		// Authentication
@@ -60,7 +60,8 @@ class Client : public Messageable
 
 		// Channel-related stuff
 		std::string	joinChannel(std::string channel, std::string key);
-		std::string	removeChannel(std::string, std::string channelName);
+		void		removeChannel(std::string, std::string channelName);
+		void		removeAllChannels(void);
 		std::string	inviteToChannel(std::string, std::string params);
 		std::string	topicChannel(std::string);
 		std::string	topicChannel(std::string, std::string params);

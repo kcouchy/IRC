@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    Makefile                                                  +**+   +*  *    #
+#    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/21 21:38:16 by kiri              #+#    #+#              #
-#    Updated: 2024/07/29 22:06:34 by aboyreau          +#-.-*  +         *     #
+#    Updated: 2024/07/30 18:21:57 by kcouchma         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,6 @@ SRC =	main		\
 		utils		\
 		Channel		\
 		PhoneBook	\
-		InputErrors	\
 		Messageable
 
 SRCS = $(addprefix srcs/, $(addsuffix .cpp,$(SRC)))
@@ -41,4 +40,4 @@ clean:
 fclean: clean
 	rm -f $(NAME)
 
-re: fclean .WAIT all
+re: fclean all

@@ -1,13 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                              ++            */
-/*   ClientParser.h                                            +**+   +*  *   */
-/*                                                             ##%#*###*+++   */
-/*   By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+     */
-/*                                                            # *   *. #*     */
-/*   Created: 2024/07/17 11:59:19 by aboyreau          **+*+  * -_._-   #+    */
-/*   Updated: 2024/07/29 14:02:19 by aboyreau          +#-.-*  +         *    */
-/*                                                     *-.. *   ++       #    */
+/*                                                        :::      ::::::::   */
+/*   ClientParser.h                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 11:59:19 by aboyreau          #+#    #+#             */
+/*   Updated: 2024/07/30 18:27:12 by kcouchma         ###   ########.fr       */
+/*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
@@ -25,7 +25,7 @@ class ClientParser
 	public:
 		ClientParser();
 		~ClientParser();
-		void raw_parse(std::string command);
+		// void raw_parse(std::string command);
 
 		// raw-command parser
 		void parse(std::string cmd, Client &client);
@@ -44,7 +44,7 @@ class ClientParser
 		std::string user(std::string prefix, std::string args, Client &client);
 
 		std::string join(std::string prefix, std::string arsg, Client &client);
-		std::string part(std::string prefix, std::string arsg, Client &client);
+		// std::string part(std::string prefix, std::string arsg, Client &client);
 		std::string invite(std::string prefix, std::string arsg, Client &client);
 		std::string kick(std::string prefix, std::string arsg, Client &client);
 		std::string topic(std::string prefix, std::string arsg, Client &client);

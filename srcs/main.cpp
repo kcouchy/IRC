@@ -1,21 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                                  +**+   +*  *   */
+/*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 13:18:55 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/18 18:19:46 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/30 18:24:11 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PhoneBook.hpp"
 #include "Server.hpp"
-#include "InputErrors.hpp"
 #include <csignal>
 #include <iostream>
 #include <sstream>
+#include <cstring>
 
 //TODO DUMBARSE use std::find to remove unnecessary loops
 
@@ -25,13 +25,13 @@ long	check_inputs(int argc, char **argv)
 	long		port_i;
 
 	if (argc != 3)
-		throw InvalidInputException();
+		throw std::logic_error("Wrong number of input arguments\n Try: ./ircserv <port_number> <password>");
 	port_s = argv[1];
 	if (port_s.find_first_not_of("0123456789") != std::string::npos)
-		throw InvalidPortException();
+		throw std::logic_error("Invalid port number\n Try: 0 - 65535");
 	std::istringstream(port_s) >> port_i;
-	if (port_i < PORT_MIN || port_i > PORT_MAX)
-		throw InvalidPortException();
+	if (port_i < 0 || port_i > 65535)
+		throw std::logic_error("Invalid port number\n Try: 0 - 65535");
 	return (port_i);
 }
 
@@ -66,7 +66,7 @@ int	main(int argc, char **argv)
 	}
 	catch (std::exception &e)
 	{
-		std::cout << "wtf ?" << std::endl;
+		std::cout << "wtf ?" << std::endl;//TODO
 		std::cerr << e.what() << std::endl;
 		return (1);
 	}

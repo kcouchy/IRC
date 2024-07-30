@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ClientParser.cpp                                          +**+   +*  *   */
+/*   ClientParser.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:59:26 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/30 17:04:33 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/30 18:31:07 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void ClientParser::parse_command(std::string prefix, std::string command, std::s
 	handlers.push_back(function("QUIT", &ClientParser::quit));			// untested, KO
 
 	handlers.push_back(function("JOIN", &ClientParser::join));			// partially tested, KO
-	handlers.push_back(function("PART", &ClientParser::part));			// partially tested, KO
+	// handlers.push_back(function("PART", &ClientParser::part));			// partially tested, KO
 	handlers.push_back(function("INVITE", &ClientParser::invite));		// partially tested, KO
 	handlers.push_back(function("KICK", &ClientParser::kick));			// partially tested, KO
 	handlers.push_back(function("TOPIC", &ClientParser::topic));		// partially tested, KO
@@ -77,7 +77,7 @@ void ClientParser::parse_command(std::string prefix, std::string command, std::s
 			client.send("", ":ft_irc " + ERR_PASSWDMISMATCH + " * :Please register");
 			return ;
 		}
-		error = (this->*(*it).value)(prefix, args, client); // Calls this->function() based on function pointer to function but still on this instance
+		error = (this->*(*it).value)(prefix, args, client);
 		if (error != "")
 			client.send("", ":ft_irc " + error);
 	}
@@ -98,7 +98,7 @@ std::string ClientParser::parse_postfix(std::string args)
 std::string ClientParser::cap(std::string prefix, std::string args, Client &client)
 {
 	if (args.size() == 0)
-		return (ERR_NEEDMOREPARAMS);
+		return (ERR_NEEDMOREPARAMS); //TODO?
 	return client.capabilites(prefix, args);
 }
 
@@ -108,7 +108,8 @@ std::string ClientParser::pass(std::string, std::string args, Client &client)
 	name = " " + (name.size() == 0 ? "*" : name);
 	if (args.size() == 0)
 	{
-		client.send("", ":ft_irc " + ERR_NEEDMOREPARAMS + name + " PASS :Not enough parameters");
+		client.send("", ":ft_irc " + ERR_NEEDMOREPARAMS +
+			name + " PASS :Not enough parameters");
 		return "";
 	}
 	return client.auth(args);
@@ -119,9 +120,11 @@ std::string ClientParser::nick(std::string prefix, std::string args, Client &cli
 	std::string name = client.getName();
 	name = " " + (name.size() == 0 ? "*" : name);
 	if (args == "")
-		client.send("", ":ft_irc " + ERR_NONICKNAMEGIVEN + name + " :No nickname given");
+		client.send("", ":ft_irc " + ERR_NONICKNAMEGIVEN +
+			name + " :No nickname given");
 	if (args.find_first_not_of(AUTHORISED_SET) != std::string::npos)
-		client.send("", ":ft_irc " + ERR_ERRONEUSNICKNAME + name + " :Erroneous nickname");
+		client.send("", ":ft_irc " + ERR_ERRONEUSNICKNAME +
+			name + " :Erroneous nickname");
 	return client.changeNick(prefix, args);
 }
 
@@ -131,13 +134,13 @@ std::string ClientParser::user(std::string prefix, std::string args, Client &cli
 	name = " " + (name.size() == 0 ? "*" : name);
 	if (args.size() == 0)
 	{
-		client.send("", ":ft_irc " + ERR_NEEDMOREPARAMS + name + " USER :Not enough parameters");
+		client.send("", ":ft_irc " + ERR_NEEDMOREPARAMS +
+			name + " USER :Not enough parameters");
 		return "";
 	}
 	return client.changeUser(prefix, args);
 }
 
-// TODO JOIN 0
 std::string ClientParser::join(std::string, std::string args, Client &client)
 {
 	size_t index = 0;
@@ -145,14 +148,22 @@ std::string ClientParser::join(std::string, std::string args, Client &client)
 
 	if (args.size() == 0)
 	{
-		client.send("", ":ft_irc " + ERR_NEEDMOREPARAMS + client.getName() + " JOIN :Not enough parameters");
+		client.send("", ":ft_irc " + ERR_NEEDMOREPARAMS +
+			client.getName() + " JOIN :Not enough parameters");
 		return "";
 	}
-	std::vector<std::string> arguments = strsplit(args, ' ');
-	if (arguments.size() >= 1)
-		channels = arguments.at(0);
-	if (arguments.size() >= 2)
-		keys = arguments.at(1);
+	std::vector<std::string> split_args = strsplit(args, ' ');
+	if (split_args.size() >= 1)
+	{
+		if (split_args[0] == "0")
+		{
+			client.removeAllChannels();
+			return "";
+		}
+		channels = split_args.at(0);
+	}
+	if (split_args.size() >= 2)
+		keys = split_args.at(1);
 	std::vector<std::string> channel_list = strsplit(channels, ',');
 	std::vector<std::string> key_list = strsplit(keys, ',');
 	while (index < channel_list.size() || index < key_list.size())
@@ -172,22 +183,22 @@ std::string ClientParser::join(std::string, std::string args, Client &client)
 }
 
 // TODO PART
-std::string ClientParser::part(std::string prefix, std::string args, Client &client)
-{
-	std::vector<std::string> channels;
-	std::string reason = parse_postfix(args);
-	if (reason != "")
-	{
-		args.erase(args.find_last_of(":"), reason.size());
-		args = args.substr(0, args.size() - 1);
-		reason = reason.substr(1, reason.size());
-	}
-	channels = strsplit(args, ',');
-	(void) client;
-	(void) prefix;
-	return ERR_NEEDMOREPARAMS;
-	// return client.removeChannel(prefix, args);
-}
+// std::string ClientParser::part(std::string prefix, std::string args, Client &client)
+// {
+// 	std::vector<std::string> channels;
+// 	std::string reason = parse_postfix(args);
+// 	if (reason != "")
+// 	{
+// 		args.erase(args.find_last_of(":"), reason.size());
+// 		args = args.substr(0, args.size() - 1);
+// 		reason = reason.substr(1, reason.size());
+// 	}
+// 	channels = strsplit(args, ',');
+// 	(void) client;
+// 	(void) prefix;
+// 	return ERR_NEEDMOREPARAMS;
+// 	// return client.removeChannel(prefix, args);
+// }
 
 std::string ClientParser::invite(std::string, std::string params, Client &client)
 {
