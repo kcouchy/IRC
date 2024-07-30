@@ -6,7 +6,7 @@
 /*   By: aboyreau <bnzlvosnb@mozmail.com>                     +**+ -- ##+     */
 /*                                                            # *   *. #*     */
 /*   Created: 2024/07/17 11:59:26 by aboyreau          **+*+  * -_._-   #+    */
-/*   Updated: 2024/07/29 21:46:37 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/29 23:23:54 by aboyreau          +#-.-*  +         *    */
 /*                                                     *-.. *   ++       #    */
 /* ************************************************************************** */
 
@@ -59,11 +59,11 @@ void ClientParser::parse_command(std::string prefix, std::string command, std::s
 	handlers.push_back(function("USER", &ClientParser::user));			// tested, KO
 	handlers.push_back(function("QUIT", &ClientParser::quit));			// untested, KO
 
-	handlers.push_back(function("JOIN", &ClientParser::join));			// untested, KO
-	handlers.push_back(function("PART", &ClientParser::part));			// untested, KO
-	handlers.push_back(function("INVITE", &ClientParser::invite));		// untested, KO
-	handlers.push_back(function("KICK", &ClientParser::kick));			// untested, KO
-	handlers.push_back(function("TOPIC", &ClientParser::topic));		// untested, KO
+	handlers.push_back(function("JOIN", &ClientParser::join));			// partially tested, KO
+	handlers.push_back(function("PART", &ClientParser::part));			// partially tested, KO
+	handlers.push_back(function("INVITE", &ClientParser::invite));		// partially tested, KO
+	handlers.push_back(function("KICK", &ClientParser::kick));			// partially tested, KO
+	handlers.push_back(function("TOPIC", &ClientParser::topic));		// partially tested, KO
 	handlers.push_back(function("MODE", &ClientParser::mode));			// untested, KO
 
 	handlers.push_back(function("PRIVMSG", &ClientParser::privmsg));	// untested, KO
