@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.cpp                                                +**+   +*  *   */
+/*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/31 18:31:08 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/31 19:07:43 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -254,6 +254,21 @@ std::string	Client::inviteToChannel(std::string invitee, std::string channel)
 }
 
 // Message-related stuff
+std::string	Client::getBuffer()const
+{
+	return (m_buffer);
+}
+
+void		Client::addBuffer(std::string buffer)
+{
+	m_buffer += buffer;
+}
+
+void		Client::clearBuffer(void)
+{
+	m_buffer.clear();
+}
+
 std::string Client::sendMessage(std::string, std::string params)
 {
 	std::string msg;

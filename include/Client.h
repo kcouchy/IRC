@@ -65,6 +65,9 @@ class Client : public Messageable
 		std::string	modeChannel(std::string client_name, bool plusminus, char modechar, std::string mode_arg);
 
 		// Message-related stuff
+		std::string	getBuffer(void)const;
+		void		addBuffer(std::string buffer);
+		void		clearBuffer(void);
 		std::string	sendMessage(std::string, std::string channels);
 
 		// I'm outta here

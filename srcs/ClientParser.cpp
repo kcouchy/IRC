@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ClientParser.cpp                                          +**+   +*  *   */
+/*   ClientParser.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:59:26 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/31 18:41:55 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/31 19:41:58 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,18 @@ void ClientParser::parse(std::string msg, Client &client)
 	size_t i = 0;
 	std::string prefix = "", command = "", args = "";
 
-	// msg = client.getBuffer() + msg;
-	// client.clearBuffer();
+	msg = client.getBuffer() + msg;
+	client.clearBuffer();
 	std::cout << "msg : " << msg << std::endl;
+	bool	end_nl = msg.find_last_of("\n") == msg.size() - 1;
+
 	std::vector<std::string> actions = strsplit(msg, '\n');
 	for (std::vector<std::string>::iterator it = actions.begin(); it != actions.end(); it++)
 	{
-		if ((*it).at((*it).size() - 1) != '\n')
+		if (end_nl == false && (*it).at((*it).size() - 1) != '\r')
 		{
-			// client.setBuffer(*it);
+			std::cout << "-----" << (*it) << "-------" << std::endl;
+			client.addBuffer(*it);
 			return ;
 		}
 		(*it).erase((*it).find_last_not_of("\r\n") + 1);
