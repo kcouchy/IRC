@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.cpp                                         :+:      :+:    :+:   */
+/*   Client.cpp                                                +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/31 16:19:02 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/31 18:31:08 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,8 +167,8 @@ std::string	Client::joinChannel(std::string channel, std::string key)
 		if (chan == NULL)
 		{
 			send("", ":ft_irc " + ERR_NOSUCHCHANNEL + " " +
-					m_name + " " +
-					channel + " :No such channel");
+				m_name + " " +
+				channel + " :No such channel");
 			return ("");
 		}
 	}
@@ -266,16 +266,16 @@ std::string Client::sendMessage(std::string, std::string params)
 		std::string recipient = *it;
 		if (recipient.size() == 0)
 		{
-			send("", ERR_NORECIPIENT); //TODO formatting
+			send("", ":ft_irc " + ERR_NORECIPIENT + " " + m_name + " :No recipient given (<PRIVMSG>)");
 			continue ;
 		}
 		Messageable *m = PhoneBook::get().getRecipient(recipient);
 		if (m == NULL)
 		{
 			if (recipient.at(0) == '#')
-				send("", ERR_CANNOTSENDTOCHAN); //TODO formatting
+				send("", ":ft_irc " + ERR_CANNOTSENDTOCHAN + " " + m_name + " " + recipient + " " + ":Cannot send to channel");
 			else
-				send("", ERR_NOSUCHNICK); //TODO formatting
+				send("", ":ft_irc " + ERR_NOSUCHNICK + " " + m_name + " :There was no such nickname");
 			continue ;
 		}
 	
@@ -285,7 +285,7 @@ std::string Client::sendMessage(std::string, std::string params)
 			msg += *it2 + ' ';
 		msg = msg.substr(0, msg.size() - 1);
 		msg += "\n";
-		m->send("", msg);
+		m->send(m_name, msg);
 	}
 	return ("");
 }
@@ -400,9 +400,12 @@ std::string	Client::modeChannel(std::string channel_name, bool plusminus, char m
 {
 	Channel *temp_channel = PhoneBook::get().getChannel(channel_name);
 	if (temp_channel == NULL)
+	{
 		send("", ":ft_irc " + ERR_NOSUCHCHANNEL + " " +
 			m_name + " " +
 			channel_name + " :No such channel");
+		return "";
+	}
 	std::string mode_return = temp_channel->mode(m_name, plusminus, modechar, mode_arg);
 	if (mode_return != "")
 		send("", ":ft_irc " + mode_return);

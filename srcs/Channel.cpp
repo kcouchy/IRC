@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Channel.cpp                                        :+:      :+:    :+:   */
+/*   Channel.cpp                                               +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/31 15:26:26 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/31 18:24:33 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 #include "PhoneBook.hpp"
 #include "Utils.h"
 #include <climits>
+#include <iostream>
+#include <ostream>
 #include <stdexcept>
 #include <vector>
 

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ClientParser.cpp                                   :+:      :+:    :+:   */
+/*   ClientParser.cpp                                          +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:59:26 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/31 15:24:10 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/31 18:41:55 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,17 @@ void ClientParser::parse(std::string msg, Client &client)
 	size_t i = 0;
 	std::string prefix = "", command = "", args = "";
 
+	// msg = client.getBuffer() + msg;
+	// client.clearBuffer();
 	std::cout << "msg : " << msg << std::endl;
 	std::vector<std::string> actions = strsplit(msg, '\n');
 	for (std::vector<std::string>::iterator it = actions.begin(); it != actions.end(); it++)
 	{
+		if ((*it).at((*it).size() - 1) != '\n')
+		{
+			// client.setBuffer(*it);
+			return ;
+		}
 		(*it).erase((*it).find_last_not_of("\r\n") + 1);
 		if ((*it).length() == 0)
 			continue ;
@@ -97,7 +104,7 @@ std::string ClientParser::parse_postfix(std::string args)
 std::string ClientParser::cap(std::string prefix, std::string args, Client &client)
 {
 	if (args.size() == 0)
-		return (ERR_NEEDMOREPARAMS); //TODO?
+		client.send("", ":ft_irc " + ERR_NEEDMOREPARAMS + " " + client.getName() + " :Not enough parameters");
 	return client.capabilites(prefix, args);
 }
 
@@ -242,6 +249,7 @@ std::string ClientParser::mode(std::string, std::string args, Client &client)
 	if (split_args.size() == 1)
 	{
 		client.getMode(split_args[0]);
+		return "";
 	}
 
 	std::string modes = split_args[1];
