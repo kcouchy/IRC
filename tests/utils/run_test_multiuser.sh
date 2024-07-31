@@ -84,6 +84,9 @@ EXPECTED_RESULT_2=$6
 echo
 echo -n "$NAME"
 
+pkill -f ircserv
+sleep 1
+
 $PREFIX ./ircserv 6667 "$PASSWORD" > srv_log 2>&1 &
 SRV_PID=$!
 

@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:59:26 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/31 19:41:58 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/31 23:44:49 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,8 @@ std::string ClientParser::nick(std::string prefix, std::string args, Client &cli
 			name + " :No nickname given");
 	if (args.find_first_not_of(AUTHORISED_SET) != std::string::npos)
 		client.send("", ":ft_irc " + ERR_ERRONEUSNICKNAME +
-			name + " :Erroneous nickname");
+			name + " " +
+			args + " :Erroneus nickname");
 	return client.changeNick(prefix, args);
 }
 

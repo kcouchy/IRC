@@ -23,7 +23,7 @@ server_crash()
 	echo 
 	echo "Server log :"
 	echo 
-	cat srv_log | sed 's/.*/	\0/g' 
+	cat srv_log | sed 's/.*/	\0/g'
 	rm srv_log -f
 	rm tmp -f
 	exit 1
@@ -68,6 +68,9 @@ EXPECTED_RESULT=$4
 
 echo
 echo -n "$NAME"
+
+pkill -f ircserv
+sleep 1
 
 $PREFIX ./ircserv 6667 "$PASSWORD" > srv_log 2>&1 &
 SRV_PID=$!

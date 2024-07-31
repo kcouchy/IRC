@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/31 20:07:16 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/31 23:46:44 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ std::string Client::changeNick(std::string, std::string params)
 	}
 	if (PhoneBook::get().getRecipient(params) != NULL)
 	{
-		send("", ":ft_irc " + ERR_NICKNAMEINUSE + name + " :Nickname is already in use");
+		send("", ":ft_irc " + ERR_NICKNAMEINUSE + name + " " + params + " :Nickname is already in use");
 		return ("");
 	}
 	this->m_name = params;
