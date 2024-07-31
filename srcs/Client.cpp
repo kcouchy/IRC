@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/31 12:24:02 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/31 16:19:02 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,16 +266,16 @@ std::string Client::sendMessage(std::string, std::string params)
 		std::string recipient = *it;
 		if (recipient.size() == 0)
 		{
-			send("", ERR_NORECIPIENT);
+			send("", ERR_NORECIPIENT); //TODO formatting
 			continue ;
 		}
 		Messageable *m = PhoneBook::get().getRecipient(recipient);
 		if (m == NULL)
 		{
 			if (recipient.at(0) == '#')
-				send("", ERR_CANNOTSENDTOCHAN);
+				send("", ERR_CANNOTSENDTOCHAN); //TODO formatting
 			else
-				send("", ERR_NOSUCHNICK);
+				send("", ERR_NOSUCHNICK); //TODO formatting
 			continue ;
 		}
 	
