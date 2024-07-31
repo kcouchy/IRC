@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.cpp                                         :+:      :+:    :+:   */
+/*   Client.cpp                                                +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/31 19:07:43 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/31 20:07:16 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -383,7 +383,7 @@ std::string	Client::kickChannel(std::string channel, std::string kickee, std::st
 	std::string kick_return = temp_channel->kick(toKick, m_name);
 	if (kick_return != "")
 	{
-		send("", ":ft_irc " + kick_return); // TODO from :ft_irc or from :channelName ?
+		send("", ":ft_irc " + kick_return);
 		return "";
 	}
 	else

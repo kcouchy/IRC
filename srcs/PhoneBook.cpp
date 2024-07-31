@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 13:59:21 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/18 18:20:20 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/31 20:05:39 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ PhoneBook& PhoneBook::get()
 void	PhoneBook::addRecipient(Messageable *newRecipient)
 {
 	if (getRecipient(newRecipient->getName()))
-		throw std::exception(); //TODO
+		throw std::exception();
 	m_messageableList.push_back(newRecipient);
 	return ;
 }
@@ -48,7 +48,7 @@ Messageable *PhoneBook::getRecipient(std::string name)
 	for (iter = m_messageableList.begin(); iter != m_messageableList.end(); iter++)
 		if ((*iter)->getName() == name)
 			return (*iter);
-	return (NULL); //TODO this should trigger a destinator not found message to the sender
+	return (NULL);
 }
 
 Channel *PhoneBook::getChannel(std::string channel_name)

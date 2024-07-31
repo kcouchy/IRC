@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   main.cpp                                                  +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 13:18:55 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/31 15:34:06 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/31 20:06:00 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 #include <iostream>
 #include <sstream>
 #include <cstring>
-
-//TODO BUFFER
 
 long	check_inputs(int argc, char **argv)
 {
@@ -66,7 +64,6 @@ int	main(int argc, char **argv)
 	}
 	catch (std::exception &e)
 	{
-		std::cout << "wtf ?" << std::endl;//TODO
 		std::cerr << e.what() << std::endl;
 		return (1);
 	}
