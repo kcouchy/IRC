@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Channel.cpp                                        :+:      :+:    :+:   */
+/*   Channel.cpp                                               +**+   +*  *   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/31 12:24:29 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/31 15:17:37 by aboyreau          +#-.-*  +         *    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,12 +96,12 @@ std::string Channel::getListenList(std::string client_name)
 
 void Channel::quit(std::string client_name)
 {
-	send("", ":" + client_name + " PART " + m_name);
 	find_erase(m_listenList, client_name);
 
 	if (m_listenList.size() == 0)
 		throw EmptyChannel();
 		
+	send("", ":" + client_name + " PART " + m_name);
 	std::list<Pair<std::string, bool> >::iterator iter;
 	for (iter = m_listenList.begin(); iter != m_listenList.end(); iter++)
 		if ((*iter).value == true)
