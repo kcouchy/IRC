@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:57:02 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/30 15:06:32 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/31 11:34:35 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,19 +24,18 @@ class Channel : public Messageable
 		~Channel(void);
 
 		std::string	join(std::string client_name, std::string key);
-		std::string	quit(std::string client_name);
+		void		quit(std::string client_name);
 
 		void		invite(std::string inviter_name, std::string invitee_name);
-		// void		mode(std::string client_name, std::string flag);
 
 		void		send(std::string sender_name, std::string message);
 		std::string	getTopic(void)const;
 		std::string	setTopic(std::string topic, std::string client_name);
 		bool		getTopicProtected(void)const;
-		void		setTopicProtected(bool isProtected);
-		void		setOperator(std::string client_name, bool new_value);
+		// void		setTopicProtected(bool isProtected);
+		// void		setOperator(std::string client_name, bool new_value);
 		bool		getInvite(void)const;
-		void		setInvite(bool inviteOnly);
+		// void		setInvite(bool inviteOnly);
 		int			getClientLimit(void)const;
 		bool		getPasswordProtected(void)const;
 		std::string	kick(Client* toKick, std::string kicker);

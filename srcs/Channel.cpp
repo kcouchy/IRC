@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Channel.cpp                                               +**+   +*  *   */
+/*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/30 17:50:51 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/31 12:24:29 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,14 @@ Channel::~Channel(void)
 std::string Channel::join(std::string client_name, std::string key)
 {
 	if (m_clientLimit != 0 && m_listenList.size() >= (size_t)m_clientLimit)
-		throw std::logic_error(":ft_irc " + ERR_CHANNELISFULL + " " + client_name + " :Cannot join channel (+l)");
+		throw std::logic_error(":ft_irc " + ERR_CHANNELISFULL + " " +
+				client_name + " :Cannot join channel (+l)");
 	if (m_inviteOnly == true && contains(m_inviteList, client_name) == false)
-		throw std::logic_error(":ft_irc " + ERR_INVITEONLYCHAN + " " + client_name + " :Cannot join channel (+i)");
+		throw std::logic_error(":ft_irc " + ERR_INVITEONLYCHAN + " " +
+				client_name + " :Cannot join channel (+i)");
 	if (m_channelKey.second == true && key != m_channelKey.first)
-		throw std::logic_error(":ft_irc " + ERR_BADCHANNELKEY + " " + client_name + " :Cannot join channel (+k)");
+		throw std::logic_error(":ft_irc " + ERR_BADCHANNELKEY + " " +
+				client_name + " :Cannot join channel (+k)");
 	Pair<std::string, bool> to_add(client_name, false);
 	if(m_listenList.size() == 0)
 		to_add.value = true;
@@ -85,26 +88,28 @@ std::string Channel::getListenList(std::string client_name)
 		m_name + " :";
 	std::list<Pair<std::string, bool> >::iterator it = m_listenList.begin();
 	for (; it != m_listenList.end(); it++)
-	{
 		namelist += ((*it).value ? "@" : "") + 
 			(*it).getKey() + " ";
-	}
 	namelist = namelist.substr(0, namelist.size() - 1);
 	return (namelist);
 }
 
-std::string Channel::quit(std::string client_name)
+void Channel::quit(std::string client_name)
 {
+	send("", ":" + client_name + " PART " + m_name);
 	find_erase(m_listenList, client_name);
 
+	if (m_listenList.size() == 0)
+		throw EmptyChannel();
+		
 	std::list<Pair<std::string, bool> >::iterator iter;
 	for (iter = m_listenList.begin(); iter != m_listenList.end(); iter++)
 		if ((*iter).value == true)
-			return ("");
-	if (m_listenList.size() == 0)
-		throw EmptyChannel();
-	this->setOperator(m_listenList.front().getKey(), true);
-	return ("");
+			return ;
+	m_listenList.begin()->value = true;
+	send("", ":ft_irc MODE " + m_name + " +o " + m_listenList.begin()->getKey());
+	// this->setOperator(m_listenList.front().getKey(), true);
+	return ;
 }
 
 void	Channel::invite(std::string inviter_name, std::string invitee_name)
@@ -182,29 +187,9 @@ bool	Channel::getTopicProtected(void)const
 	return (m_topicProtected);
 }
 
-void	Channel::setTopicProtected(bool isProtected)
-{
-	m_topicProtected = isProtected;
-}
-
-void Channel::setOperator(std::string client_name, bool new_value)
-{
-	std::list<Pair<std::string, bool> >::iterator iter;
-
-	for (iter = m_listenList.begin(); iter != m_listenList.end(); iter++)
-		if ((*iter).getKey() == client_name)
-			(*iter).value = new_value;
-}
-
 bool	Channel::getInvite(void)const
 {
 	return (m_inviteOnly);
-}
-
-void	Channel::setInvite(bool inviteOnly)
-{
-	m_inviteOnly = inviteOnly;
-	return ;
 }
 
 int		Channel::getClientLimit(void)const
@@ -307,7 +292,7 @@ std::string	Channel::mode(std::string client_name, bool plusminus, char modechar
 		else if (plusminus == false)
 			m_clientLimit = 0;
 	}
-	send("", ":" + m_name + " MODE " +
+	send("", ":" + client_name + " MODE " +
 		(plusminus ? "+" : "-") +
 		modechar + " " +
 		mode_arg);

@@ -27,7 +27,6 @@ class Client : public Messageable
 
 		int		getfd() const;
 		void	send(std::string, std::string msg);
-		// void	parse(std::string); //TODO
 		bool	is_registered();
 
 		class KillMePlease : public std::exception
@@ -46,10 +45,6 @@ class Client : public Messageable
 		bool 						m_registrationComplete;
 
 		Client(void);
-
-		// Handlers
-		// Find and run a handler according to the command passed as parameter.
-		// void	exec(std::string prefix, std::string command, std::string args); //TODO
 
 	public:
 		// Authentication

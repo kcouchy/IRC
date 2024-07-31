@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.cpp                                                +**+   +*  *   */
+/*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/30 20:11:47 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/31 12:24:02 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,17 +187,18 @@ std::string	Client::joinChannel(std::string channel, std::string key)
 
 void	Client::removeAllChannels(void)
 {
-	std::list<std::string>::iterator it = m_channelList.begin();
-	for (; it != m_channelList.end(); it++)
-		removeChannel("", *it);
+	while (m_channelList.size() > 0)
+	{
+		removeChannel("", m_channelList.front());
+	}
 }
 
 void	Client::removeChannel(std::string, std::string channelName)
 {
-	std::list<std::string>::iterator iter;
+	std::list<std::string>::iterator iter = m_channelList.begin();
 	Channel *channel = NULL;
 
-	for (iter = m_channelList.begin(); iter != m_channelList.end(); iter++)
+	while (iter != m_channelList.end())
 	{
 		if (channelName == *iter)
 		{
@@ -212,7 +213,8 @@ void	Client::removeChannel(std::string, std::string channelName)
 			{
 				delete channel;
 			}
-			iter = m_channelList.erase(iter);
+			m_channelList.erase(iter);
+			return ;
 		}
 	}
 	return ;

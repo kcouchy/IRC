@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 13:18:55 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/30 18:24:11 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/31 12:25:23 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 #include <iostream>
 #include <sstream>
 #include <cstring>
-
-//TODO DUMBARSE use std::find to remove unnecessary loops
 
 long	check_inputs(int argc, char **argv)
 {

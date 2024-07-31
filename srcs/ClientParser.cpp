@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ClientParser.cpp                                          +**+   +*  *   */
+/*   ClientParser.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:59:26 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/30 20:09:30 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/31 12:25:00 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,24 +181,6 @@ std::string ClientParser::join(std::string, std::string args, Client &client)
 	}
 	return "";
 }
-
-// TODO PART
-// std::string ClientParser::part(std::string prefix, std::string args, Client &client)
-// {
-// 	std::vector<std::string> channels;
-// 	std::string reason = parse_postfix(args);
-// 	if (reason != "")
-// 	{
-// 		args.erase(args.find_last_of(":"), reason.size());
-// 		args = args.substr(0, args.size() - 1);
-// 		reason = reason.substr(1, reason.size());
-// 	}
-// 	channels = strsplit(args, ',');
-// 	(void) client;
-// 	(void) prefix;
-// 	return ERR_NEEDMOREPARAMS;
-// 	// return client.removeChannel(prefix, args);
-// }
 
 std::string ClientParser::invite(std::string, std::string params, Client &client)
 {
