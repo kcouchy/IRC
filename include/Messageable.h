@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Messageable.h                                             +**+   +*  *   */
+/*   Messageable.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:12:41 by atu               #+#    #+#             */
-/*   Updated: 2024/07/30 20:08:56 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/31 15:22:25 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ class Messageable
 		
 		virtual void	send(std::string sender_name, std::string message) = 0;
 		std::string 	getName() const;
-		// void			setName(std::string);
 
 		class RecipientNotFound : public std::exception
 		{

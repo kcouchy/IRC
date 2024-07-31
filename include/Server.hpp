@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Server.hpp                                                +**+   +*  *   */
+/*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 11:37:22 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/09 00:17:45 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/31 15:22:57 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,7 @@ class Server
 		Server(int	port, std::string password);
 
 		~Server(void);
-		// operator=[]; to get client
-		
+
 		static bool m_run;
 
 		void	initialise(void);

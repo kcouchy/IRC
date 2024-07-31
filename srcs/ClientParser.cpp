@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:59:26 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/31 12:25:00 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/31 15:24:10 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void ClientParser::parse(std::string msg, Client &client)
 
 void ClientParser::parse_command(std::string prefix, std::string command, std::string args, Client &client)
 {
-	std::vector<function> handlers;
+	std::vector<function> handlers; //TODO - delete testing notes
 	handlers.push_back(function("CAP", &ClientParser::cap));			// tested, OK
 	handlers.push_back(function("PASS", &ClientParser::pass));			// tested, OK
 	handlers.push_back(function("NICK", &ClientParser::nick));			// tested, KO
@@ -60,7 +60,6 @@ void ClientParser::parse_command(std::string prefix, std::string command, std::s
 	handlers.push_back(function("QUIT", &ClientParser::quit));			// untested, KO
 
 	handlers.push_back(function("JOIN", &ClientParser::join));			// partially tested, KO
-	// handlers.push_back(function("PART", &ClientParser::part));			// partially tested, KO
 	handlers.push_back(function("INVITE", &ClientParser::invite));		// partially tested, KO
 	handlers.push_back(function("KICK", &ClientParser::kick));			// partially tested, KO
 	handlers.push_back(function("TOPIC", &ClientParser::topic));		// partially tested, KO

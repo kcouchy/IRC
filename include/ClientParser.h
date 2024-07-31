@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:59:19 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/30 18:27:12 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/07/31 15:22:15 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,7 @@ class ClientParser
 	public:
 		ClientParser();
 		~ClientParser();
-		// void raw_parse(std::string command);
 
-		// raw-command parser
 		void parse(std::string cmd, Client &client);
 
 	private:
@@ -44,7 +42,6 @@ class ClientParser
 		std::string user(std::string prefix, std::string args, Client &client);
 
 		std::string join(std::string prefix, std::string arsg, Client &client);
-		// std::string part(std::string prefix, std::string arsg, Client &client);
 		std::string invite(std::string prefix, std::string arsg, Client &client);
 		std::string kick(std::string prefix, std::string arsg, Client &client);
 		std::string topic(std::string prefix, std::string arsg, Client &client);

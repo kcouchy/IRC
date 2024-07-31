@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Channel.cpp                                               +**+   +*  *   */
+/*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/31 15:17:37 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/07/31 15:26:26 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,6 @@ void Channel::quit(std::string client_name)
 			return ;
 	m_listenList.begin()->value = true;
 	send("", ":ft_irc MODE " + m_name + " +o " + m_listenList.begin()->getKey());
-	// this->setOperator(m_listenList.front().getKey(), true);
 	return ;
 }
 
