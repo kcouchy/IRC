@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/08/01 19:35:37 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/08/01 20:05:19 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ Client::Client(int client_fd, std::string password) :
 	m_fd(client_fd),
 	m_password(password),
 	m_channelList(),
+	m_userSet(false),
 	m_registrationComplete(false)
 {
 	m_authenticated = m_password.size() == 0;
@@ -117,6 +118,7 @@ std::string Client::changeNick(std::string, std::string params)
 		return ("");
 	}
 	this->m_name = params;
+	clientRegistered();
 	return ("");
 }
 
@@ -130,34 +132,38 @@ std::string Client::changeUser(std::string, std::string params)
 		send("", ":ft_irc " + ERR_PASSWDMISMATCH + name + " :Password mismatch");
 		return ("");
 	}
-	if (m_name.length() == 0)
-	{
-		send("", ":ft_irc " + ERR_NONICKNAMEGIVEN + name + " :No nickname given");
-		return "";
-	}
+	m_userSet = true;
 	if (m_registrationComplete == true)
 	{
 		send("", ":ft_irc " + ERR_ALREADYREGISTERED + name + " :You may not reregister");
 		return "";
 	}
-	try
-	{
-		PhoneBook::get().addRecipient(this);
-	}
-	catch (std::exception &e)
-	{
-		send("", ":ft_irc " + ERR_NICKNAMEINUSE + name + " :Nickname is already in use");
-		return ("");
-	}
-	this->send("", ":ft_irc 001 " + this->getName() + " :Welcome to the ft_irc network, " + m_name);
-	this->send("", ":ft_irc 002 " + this->getName() + " :Your host is ft_irc, running version 1.0");
-	this->send("", ":ft_irc 003 " + this->getName() + " :This server was created today");
-	this->send("", ":ft_irc 004 " + this->getName() + " :ft_irc 1.0 USERMODES= CHANMODES=iklot");
-	this->send("", ":ft_irc 005 " + this->getName() + " :CHANMODES=iklot");
-	this->send("", ":ft_irc 005 " + this->getName() + " :NICKLEN=30");
-	this->send("", ":ft_irc 005 " + this->getName() + " :CHANLEN=30");
-	this->m_registrationComplete = true;
+	clientRegistered();
 	return ("");
+}
+
+void Client::clientRegistered(void)
+{
+	if (m_authenticated == true && m_name.size() != 0 && m_userSet == true)
+	{
+		try
+		{
+			PhoneBook::get().addRecipient(this);
+		}
+		catch (std::exception &e)
+		{
+			send("", ":ft_irc " + ERR_NICKNAMEINUSE + m_name + " :Nickname is already in use");
+			return ;
+		}
+		this->send("", ":ft_irc 001 " + this->getName() + " :Welcome to the ft_irc network, " + m_name);
+		this->send("", ":ft_irc 002 " + this->getName() + " :Your host is ft_irc, running version 1.0");
+		this->send("", ":ft_irc 003 " + this->getName() + " :This server was created today");
+		this->send("", ":ft_irc 004 " + this->getName() + " :ft_irc 1.0 USERMODES= CHANMODES=iklot");
+		this->send("", ":ft_irc 005 " + this->getName() + " :CHANMODES=iklot");
+		this->send("", ":ft_irc 005 " + this->getName() + " :NICKLEN=30");
+		this->send("", ":ft_irc 005 " + this->getName() + " :CHANLEN=30");
+		this->m_registrationComplete = true;
+	}
 }
 
 void	Client::setIdentifier(std::string identifier)
