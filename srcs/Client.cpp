@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/08/01 20:38:14 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/08/01 21:00:18 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -324,7 +324,16 @@ std::string Client::sendMessage(std::string, std::string params)
 				send("", ":ft_irc " + ERR_NOSUCHNICK + " " + m_name + " :There was no such nickname");
 			continue ;
 		}
-	
+		if (dynamic_cast<Channel*>(m) != NULL)
+		{
+			if (((Channel*)m)->isInListenList(m_name) == false)
+			{
+				send("", ":ft_irc " + ERR_NOTONCHANNEL + " " +
+					m_name + " " + recipient + " " +
+					":You're not on that channel");
+				return ("");
+			}
+		}
 		std::string msg = ":" + m_name + " PRIVMSG " + recipient + " ";
 		std::vector<std::string>::iterator it2 = ++args.begin();
 		for (; it2 != args.end(); it2++)

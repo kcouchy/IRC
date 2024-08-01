@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:57:02 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/08/01 19:12:59 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/08/01 20:52:56 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ class Channel : public Messageable
 		std::string	kick(Client* toKick, std::string kicker);
 		std::string	mode(std::string client_name, bool plusminus, char modechar, std::string mode_arg);
 		std::string getListenList(std::string client_name);
+		bool		isInListenList(std::string client_name);
 
 		class EmptyChannel : public std::exception
 		{

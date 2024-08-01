@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/08/01 20:27:23 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/08/01 20:54:26 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,11 @@ std::string Channel::getListenList(std::string client_name)
 			(*it).getKey() + " ";
 	namelist = namelist.substr(0, namelist.size() - 1);
 	return (namelist);
+}
+
+bool	Channel::isInListenList(std::string client_name)
+{
+	return (contains(m_listenList, client_name));
 }
 
 void Channel::quit(std::string client_name, bool display)
