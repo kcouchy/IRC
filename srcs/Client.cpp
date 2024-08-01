@@ -6,7 +6,7 @@
 /*   By: lribette <lribette@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/08/01 18:19:34 by lribette         ###   ########.fr       */
+/*   Updated: 2024/08/01 19:05:06 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -401,9 +401,12 @@ void	Client::getMode(std::string channel_name)
 {
 	Channel *temp_channel = PhoneBook::get().getChannel(channel_name);
 	if (temp_channel == NULL)
+	{
 		send("", ":ft_irc " + ERR_NOSUCHCHANNEL + " " +
 			m_name + " " +
 			channel_name + " :No such channel");
+		return ;
+	}
 	std::string modes = "+";
 	modes += temp_channel->getPasswordProtected() ? "k" : "";
 	modes += temp_channel->getInvite() ? "i" : "";
