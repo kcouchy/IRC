@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/25 23:17:50 by aboyreau               #+#    #+#             */
-/*   Updated: 2024/08/01 19:13:39 by aboyreau         ###   ########.fr       */
+/*   Created: 2024/06/25 23:17:50 by aboyreau          #+#    #+#             */
+/*   Updated: 2024/08/01 21:27:27 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ class Client : public Messageable
 		std::string	changeNick(std::string, std::string);
 		std::string	changeUser(std::string, std::string params);
 		void 		clientRegistered(void);
+
 
 		// Channel-related stuff
 		std::string	joinChannel(std::string channel, std::string key);
