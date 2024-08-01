@@ -6,7 +6,7 @@
 /*   By: lribette <lribette@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 13:59:21 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/08/01 18:19:53 by lribette         ###   ########.fr       */
+/*   Updated: 2024/08/01 18:35:31 by lribette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,17 @@ Channel *PhoneBook::getChannel(std::string channel_name)
 Client *PhoneBook::getClient(std::string client_name)
 {
 	return (dynamic_cast<Client*>(getRecipient(client_name)));
+}
+
+size_t	PhoneBook::getNumberOfClients()
+{
+	std::list<Messageable*>::iterator it;
+	size_t counter = 0;
+
+	for (it = m_messageableList.begin(); it != m_messageableList.end(); it++)
+	{
+		if (dynamic_cast<Client*>(*it) != NULL)
+			counter++;
+	}
+	return (counter);
 }
