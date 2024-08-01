@@ -6,7 +6,7 @@
 /*   By: lribette <lribette@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:59:26 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/08/01 18:09:49 by lribette         ###   ########.fr       */
+/*   Updated: 2024/08/01 18:37:10 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void ClientParser::parse_command(std::string prefix, std::string command, std::s
 	if (it != handlers.end())
 	{
 		std::string error;
-		if (!client.is_registered() && it - handlers.begin() > 4)
+		if (!client.is_registered() && it - handlers.begin() > 3)
 		{
 			client.send("", ":ft_irc " + ERR_NOTREGISTERED + " * :You have not registered");
 			return ;
