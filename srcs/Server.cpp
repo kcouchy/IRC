@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Server.cpp                                                +**+   +*  *   */
+/*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 11:42:07 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/18 18:26:51 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/08/01 14:15:55 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,7 @@ void	Server::run(void)
 
 	while (Server::m_run)
 	{
-		usleep(500000);
+		// usleep(500000);
 		pfs = this->get_pollfd_array();
 		pfs_size = m_clients.size(); // Must be stored here because if we accept a new client we're gonna invalid read in this array later
 		if (poll(pfs, m_clients.size() + 1, 0) == -1)

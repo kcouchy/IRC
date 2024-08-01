@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:59:26 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/08/01 12:04:32 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/08/01 14:16:31 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ void ClientParser::parse(std::string msg, Client &client)
 	{
 		if (end_nl == false && (*it).at((*it).size() - 1) != '\r')
 		{
-			std::cout << "-----" << (*it) << "-------" << std::endl;
 			client.addBuffer(*it);
 			return ;
 		}
@@ -244,7 +243,6 @@ std::string ClientParser::kick(std::string, std::string args, Client &client)
 std::string ClientParser::mode(std::string, std::string args, Client &client)
 {
 	std::vector<std::string> split_args = strsplit(args, ' ');
-	std::cout << "---" << split_args[0] << "---" << std::endl;
 	bool plusminus = false;
 
 	if (split_args[0] == "")

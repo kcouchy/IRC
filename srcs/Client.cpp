@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.cpp                                                +**+   +*  *   */
+/*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/31 23:46:44 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/08/01 14:26:44 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -274,7 +274,6 @@ std::string Client::sendMessage(std::string, std::string params)
 	std::string msg;
 	std::vector<std::string>::iterator it;
 	std::vector<std::string> args = strsplit(params, ' ');
-	std::cout << "Args 0 : " << *args.begin() << std::endl;
 	std::vector<std::string> recipients = strsplit((*args.begin()), ',');
 	for (it = recipients.begin(); it != recipients.end(); it++)
 	{
