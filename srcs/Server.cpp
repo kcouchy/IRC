@@ -6,7 +6,7 @@
 /*   By: lribette <lribette@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 11:42:07 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/08/01 18:26:18 by lribette         ###   ########.fr       */
+/*   Updated: 2024/08/01 19:43:57 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,8 +181,8 @@ void	Server::run(void)
 		if (poll(pfs, m_clients.size() + 1, -1) == -1)
 		{
 			delete[] pfs;
-			// perror("poll");
-			throw PollException();
+			perror("poll");
+			break ;
 		}
 		this->accept_client(pfs);
 		this->handle_clients_messages(pfs_size, pfs);

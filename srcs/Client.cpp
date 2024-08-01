@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/08/01 19:21:35 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/08/01 19:35:37 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,8 +120,9 @@ std::string Client::changeNick(std::string, std::string params)
 	return ("");
 }
 
-std::string Client::changeUser(std::string, std::string)
+std::string Client::changeUser(std::string, std::string params)
 {
+	std::vector<std::string> args = strsplit(params, ' ');
 	std::string name = " " + (m_name.size() == 0 ? "*" : m_name);
 
 	if (m_authenticated == false)
@@ -130,9 +131,15 @@ std::string Client::changeUser(std::string, std::string)
 		return ("");
 	}
 	if (m_name.length() == 0)
-		return (":ft_irc " + ERR_NONICKNAMEGIVEN + name + " :No nickname given");
+	{
+		send("", ":ft_irc " + ERR_NONICKNAMEGIVEN + name + " :No nickname given");
+		return "";
+	}
 	if (m_registrationComplete == true)
-		return (":ft_irc " + ERR_ALREADYREGISTERED + name + " :You may not reregister");
+	{
+		send("", ":ft_irc " + ERR_ALREADYREGISTERED + name + " :You may not reregister");
+		return "";
+	}
 	try
 	{
 		PhoneBook::get().addRecipient(this);
