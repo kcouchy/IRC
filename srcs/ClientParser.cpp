@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ClientParser.cpp                                          +**+   +*  *   */
+/*   ClientParser.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:59:26 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/31 23:44:49 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/08/01 12:04:32 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,12 +244,16 @@ std::string ClientParser::kick(std::string, std::string args, Client &client)
 std::string ClientParser::mode(std::string, std::string args, Client &client)
 {
 	std::vector<std::string> split_args = strsplit(args, ' ');
+	std::cout << "---" << split_args[0] << "---" << std::endl;
 	bool plusminus = false;
 
-	if (split_args.size() == 0)
+	if (split_args[0] == "")
+	{
 		client.send("", ":ft_irc " + ERR_NEEDMOREPARAMS + " " +
 			client.getName() + " " + 
 			"MODE :Not enough parameters");
+		return "";
+	}
 	if (split_args.size() == 1)
 	{
 		client.getMode(split_args[0]);

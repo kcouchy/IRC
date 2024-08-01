@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Channel.cpp                                               +**+   +*  *   */
+/*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/31 22:56:39 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/08/01 11:44:02 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,14 +164,14 @@ std::string Channel::getTopic(void)const
 
 std::string Channel::setTopic(std::string topic, std::string client_name)
 {
+	std::list<Pair<std::string, bool> >::iterator user = find_return(m_listenList, client_name);
+	if (user == m_listenList.end())
+		return (":ft_irc " + ERR_NOTONCHANNEL + " " +
+			client_name + " " +
+			m_name + " :You're not on that channel");
 	if (m_topicProtected == true)
 	{
-		std::list<Pair<std::string, bool> >::iterator user = find_return(m_listenList, client_name);
-		if (user == m_listenList.end())
-			return (":ft_irc " + ERR_NOTONCHANNEL + " " +
-				client_name + " " +
-				m_name + " :You're not on that channel");
-		else if ((*user).value == false)
+		if ((*user).value == false)
 			return (":ft_irc " + ERR_CHANOPRIVSNEEDED + " " +
 				client_name + " " +
 				m_name + " :You're not channel operator");

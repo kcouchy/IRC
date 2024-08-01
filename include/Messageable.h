@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:12:41 by atu               #+#    #+#             */
-/*   Updated: 2024/07/31 15:22:25 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/08/01 11:48:18 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@
 #define ERR_BADCHANNELKEY std::string("475")
 
 #define TYPE_B std::string("o")
-#define TYPE_C std::string("k")
-#define TYPE_D std::string("itl")
+#define TYPE_C std::string("kl")
+#define TYPE_D std::string("it")
 
 #define AUTHORISED_SET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_[]{}\\|"
 
