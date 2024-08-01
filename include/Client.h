@@ -55,7 +55,6 @@ class Client : public Messageable
 		std::string	changeNick(std::string, std::string);
 		std::string	changeUser(std::string, std::string params);
 		void 		clientRegistered(void);
-		void		setIdentifier(std::string identifier); //TODO - update all relevant messages to use this instead of m_name
 
 		// Channel-related stuff
 		std::string	joinChannel(std::string channel, std::string key);

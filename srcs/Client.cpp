@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/08/01 20:10:47 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/08/01 20:38:14 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,11 +177,6 @@ void Client::clientRegistered(void)
 		this->send("", ":ft_irc 005 " + this->getName() + " :CHANLEN=30");
 		this->m_registrationComplete = true;
 	}
-}
-
-void	Client::setIdentifier(std::string identifier)
-{
-	m_identifier = identifier;
 }
 
 std::string	Client::joinChannel(std::string channel, std::string key)
