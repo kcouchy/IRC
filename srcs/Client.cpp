@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/08/01 20:05:19 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/08/01 20:10:47 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,19 @@ std::string Client::changeUser(std::string, std::string params)
 	std::vector<std::string> args = strsplit(params, ' ');
 	std::string name = " " + (m_name.size() == 0 ? "*" : m_name);
 
+	try
+	{
+		this->m_identifier = args.at(0) + "!" + args.at(1) + "@" + args.at(3);
+	}
+	catch (const std::out_of_range &e)
+	{
+		if (args.size() >= 1)
+			this->m_identifier = args.at(0);
+		if (args.size() >= 2)
+			this->m_identifier += "@" + args.at(1);
+		if (args.size() >= 4)
+			this->m_identifier += "!" + args.at(3);
+	}
 	if (m_authenticated == false)
 	{
 		send("", ":ft_irc " + ERR_PASSWDMISMATCH + name + " :Password mismatch");
