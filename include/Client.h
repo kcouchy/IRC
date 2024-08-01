@@ -43,6 +43,7 @@ class Client : public Messageable
 		std::list<std::string>		m_channelList;
 		bool						m_authenticated;
 		bool 						m_registrationComplete;
+		std::string					m_identifier;
 
 		Client(void);
 
@@ -52,6 +53,7 @@ class Client : public Messageable
 		std::string	auth(std::string password);
 		std::string	changeNick(std::string, std::string);
 		std::string	changeUser(std::string, std::string params);
+		void		setIdentifier(std::string identifier);
 
 		// Channel-related stuff
 		std::string	joinChannel(std::string channel, std::string key);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lribette <lribette@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/08/01 19:14:53 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/08/01 19:21:35 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,6 +151,11 @@ std::string Client::changeUser(std::string, std::string)
 	this->send("", ":ft_irc 005 " + this->getName() + " :CHANLEN=30");
 	this->m_registrationComplete = true;
 	return ("");
+}
+
+void	Client::setIdentifier(std::string identifier)
+{
+	m_identifier = identifier;
 }
 
 std::string	Client::joinChannel(std::string channel, std::string key)
