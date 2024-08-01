@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/08/01 21:28:24 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/08/01 21:43:28 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,6 +264,15 @@ std::string	Client::inviteToChannel(std::string invitee, std::string channel)
 				channel + " :No such channel");
 		return "";
 	}
+	Client* temp_client;
+	temp_client = PhoneBook::get().getClient(invitee);
+	if (temp_client == NULL)
+	{
+		send("", ":ft_irc " + ERR_NOSUCHNICK + " " +
+			m_name + " " +
+			invitee + " :There was no such nickname");
+		return "";
+	}
 	try 
 	{
 		temp_channel->invite(m_name, invitee);
@@ -273,10 +282,6 @@ std::string	Client::inviteToChannel(std::string invitee, std::string channel)
 		send ("", e.what());
 		return "";
 	}
-	Messageable* temp_client;
-	temp_client = PhoneBook::get().getRecipient(invitee);
-	if (temp_client == NULL)
-		return "";
 	send("", ":ft_irc " + RPL_INVITING + " " +
 		m_name + " " +
 		invitee + " " +
@@ -321,7 +326,7 @@ std::string Client::sendMessage(std::string, std::string params)
 			if (recipient.at(0) == '#')
 				send("", ":ft_irc " + ERR_CANNOTSENDTOCHAN + " " + m_name + " " + recipient + " " + ":Cannot send to channel");
 			else
-				send("", ":ft_irc " + ERR_NOSUCHNICK + " " + m_name + " :There was no such nickname");
+				send("", ":ft_irc " + ERR_NOSUCHNICK + " " + m_name + " " + recipient + " :There was no such nickname");
 			continue ;
 		}
 		if (dynamic_cast<Channel*>(m) != NULL)
@@ -417,7 +422,7 @@ std::string	Client::kickChannel(std::string channel, std::string kickee, std::st
 		send("", ":ft_irc " +
 			ERR_NOSUCHNICK + " " +
 			m_name + " " +
-			kickee + " :No such nick");
+			kickee + " ::There was no such nickname");
 		return ("");
 	}
 	std::string kick_return = temp_channel->kick(toKick, m_name);
