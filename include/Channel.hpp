@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:57:02 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/08/01 20:52:56 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/08/01 22:16:41 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,20 +23,20 @@ class Channel : public Messageable
 		Channel(std::string channelName);
 		~Channel(void);
 
-		std::string	join(std::string client_name, std::string key);
-		void		quit(std::string client_name, bool display);
+		std::string	join(Client *client, std::string key);
+		void		quit(Client *client, bool display);
 
 		void		invite(std::string inviter_name, std::string invitee_name);
 
 		void		send(std::string sender_name, std::string message);
 		std::string	getTopic(void)const;
-		std::string	setTopic(std::string topic, std::string client_name);
+		std::string	setTopic(std::string topic, Client *client);
 		bool		getTopicProtected(void)const;
 		bool		getInvite(void)const;
 		int			getClientLimit(void)const;
 		bool		getPasswordProtected(void)const;
-		std::string	kick(Client* toKick, std::string kicker);
-		std::string	mode(std::string client_name, bool plusminus, char modechar, std::string mode_arg);
+		std::string	kick(Client* toKick, Client *client);
+		std::string	mode(Client *client, bool plusminus, char modechar, std::string mode_arg);
 		std::string getListenList(std::string client_name);
 		bool		isInListenList(std::string client_name);
 

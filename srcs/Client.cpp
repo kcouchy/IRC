@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/08/01 22:04:29 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/08/01 22:24:55 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ Client::~Client(void)
 			continue ;
 		try
 		{
-			channel->quit(this->getName(), true);
+			channel->quit(this, true);
 		}
 		catch(const Channel::EmptyChannel& e)
 		{
@@ -132,18 +132,11 @@ std::string Client::changeUser(std::string, std::string params)
 	std::vector<std::string> args = strsplit(params, ' ');
 	std::string name = " " + (m_name.size() == 0 ? "*" : m_name);
 
-	try
+	this->m_identifier = this->m_name;
+	if (args.size() >= 2)
 	{
-		this->m_identifier = args.at(0) + "!" + args.at(1) + "@" + args.at(3);
-	}
-	catch (const std::out_of_range &e)
-	{
-		if (args.size() >= 1)
-			this->m_identifier = args.at(0);
-		if (args.size() >= 2)
-			this->m_identifier += "@" + args.at(1);
-		if (args.size() >= 4)
-			this->m_identifier += "!" + args.at(3);
+		this->m_identifier += "!" + args.at(0);
+		this->m_identifier += "@" + args.at(2);
 	}
 	if (m_authenticated == false)
 	{
@@ -211,7 +204,7 @@ std::string	Client::joinChannel(std::string channel, std::string key)
 	}
 	try
 	{
-		std::string join_return = chan->join(this->getName(), key);
+		std::string join_return = chan->join(this, key);
 		send("", join_return);
 		m_channelList.push_back(channel);
 	}
@@ -244,7 +237,7 @@ void	Client::removeChannel(std::string, std::string channelName, bool display)
 				continue ;
 			try
 			{
-				channel->quit(this->getName(), display);
+				channel->quit(this, display);
 			}
 			catch(const Channel::EmptyChannel& e)
 			{
@@ -403,7 +396,7 @@ std::string	Client::topicChannel(std::string channel, std::string topic)
 			channel + " :No such channel");
 		return ("");
 	}
-	std::string topic_return = temp_channel->setTopic(topic, m_name);
+	std::string topic_return = temp_channel->setTopic(topic, this);
 	if (topic_return != "")
 		send("", topic_return);
 	return "";
@@ -430,7 +423,7 @@ std::string	Client::kickChannel(std::string channel, std::string kickee, std::st
 			kickee + " ::There was no such nickname");
 		return ("");
 	}
-	std::string kick_return = temp_channel->kick(toKick, m_name);
+	std::string kick_return = temp_channel->kick(toKick, this);
 	if (kick_return != "")
 	{
 		send("", ":ft_irc " + kick_return);
@@ -476,7 +469,7 @@ std::string	Client::modeChannel(std::string channel_name, bool plusminus, char m
 			channel_name + " :No such channel");
 		return "";
 	}
-	std::string mode_return = temp_channel->mode(m_name, plusminus, modechar, mode_arg);
+	std::string mode_return = temp_channel->mode(this, plusminus, modechar, mode_arg);
 	if (mode_return != "")
 		send("", ":ft_irc " + mode_return);
 	return ("");
