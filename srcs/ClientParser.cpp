@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClientParser.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lribette <lribette@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:59:26 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/08/01 18:37:10 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/08/01 21:23:50 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,7 +171,7 @@ std::string ClientParser::join(std::string, std::string args, Client &client)
 	std::vector<std::string> split_args = strsplit(args, ' ');
 	if (split_args.size() >= 1)
 	{
-		if (split_args[0] == "0")
+		if (split_args[0] == "#0")
 		{
 			client.removeAllChannels();
 			return "";
