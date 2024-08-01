@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lribette <lribette@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 11:42:07 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/08/01 16:47:30 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/08/01 18:26:18 by lribette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ struct pollfd	*Server::get_pollfd_array()
 	while (iter != m_clients.end())
 	{
 		pollfd_array[i].fd = iter->value->getfd();
-		pollfd_array[i].events = POLLIN | POLLOUT | POLLHUP;
+		pollfd_array[i].events = POLLIN | POLLHUP;
 		pollfd_array[i].revents = 0;
 		iter++;
 		i++;
@@ -174,13 +174,11 @@ void	Server::run(void)
 	size_t	pfs_size;
 	struct	pollfd *pfs;
 	std::list<Pair<int, Client *> >::iterator iter;
-
 	while (Server::m_run)
 	{
-		// usleep(500000);
 		pfs = this->get_pollfd_array();
 		pfs_size = m_clients.size(); // Must be stored here because if we accept a new client we're gonna invalid read in this array later
-		if (poll(pfs, m_clients.size() + 1, 0) == -1)
+		if (poll(pfs, m_clients.size() + 1, -1) == -1)
 		{
 			delete[] pfs;
 			// perror("poll");

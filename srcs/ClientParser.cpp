@@ -6,7 +6,7 @@
 /*   By: lribette <lribette@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:59:26 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/08/01 17:37:30 by lribette         ###   ########.fr       */
+/*   Updated: 2024/08/01 18:09:49 by lribette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,12 +129,18 @@ std::string ClientParser::nick(std::string prefix, std::string args, Client &cli
 	std::string name = client.getName();
 	name = " " + (name.size() == 0 ? "*" : name);
 	if (args == "")
+	{
 		client.send("", ":ft_irc " + ERR_NONICKNAMEGIVEN +
 			name + " :No nickname given");
-	if (args.find_first_not_of(AUTHORISED_SET) != std::string::npos)
+		return "";
+	}		
+	if (args.find_first_not_of(AUTHORISED_SET) != std::string::npos || args.size() > 30)
+	{
 		client.send("", ":ft_irc " + ERR_ERRONEUSNICKNAME +
 			name + " " +
 			args + " :Erroneus nickname");
+		return "";
+	}		
 	return client.changeNick(prefix, args);
 }
 

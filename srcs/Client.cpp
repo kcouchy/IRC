@@ -6,7 +6,7 @@
 /*   By: lribette <lribette@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/08/01 16:56:59 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/08/01 18:19:34 by lribette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <list>
+#include <sstream>
 #include "Utils.h"
 
 Client::Client(int client_fd, std::string password) :
@@ -122,6 +123,7 @@ std::string Client::changeNick(std::string, std::string params)
 std::string Client::changeUser(std::string, std::string)
 {
 	std::string name = " " + (m_name.size() == 0 ? "*" : m_name);
+
 	if (m_authenticated == false)
 	{
 		send("", ":ft_irc " + ERR_PASSWDMISMATCH + name + " :Password mismatch");
@@ -140,7 +142,13 @@ std::string Client::changeUser(std::string, std::string)
 		send("", ":ft_irc " + ERR_NICKNAMEINUSE + name + " :Nickname is already in use");
 		return ("");
 	}
-	this->send("", ":ft_irc 001 " + this->getName() + " :Welcome here");
+	this->send("", ":ft_irc 001 " + this->getName() + " :Welcome to the ft_irc network, " + m_name);
+	this->send("", ":ft_irc 002 " + this->getName() + " :Your host is ft_irc, running version 1.0");
+	this->send("", ":ft_irc 003 " + this->getName() + " :This server was created today");
+	this->send("", ":ft_irc 004 " + this->getName() + " :ft_irc 1.0 USERMODES= CHANMODES=iklot");
+	this->send("", ":ft_irc 005 " + this->getName() + " :CHANMODES=iklot");
+	this->send("", ":ft_irc 005 " + this->getName() + " :NICKLEN=30");
+	this->send("", ":ft_irc 005 " + this->getName() + " :CHANLEN=30");
 	this->m_registrationComplete = true;
 	return ("");
 }
