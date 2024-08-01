@@ -6,7 +6,7 @@
 /*   By: lribette <lribette@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:59:26 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/08/01 15:58:55 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/08/01 17:37:30 by lribette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void ClientParser::parse_command(std::string prefix, std::string command, std::s
 	handlers.push_back(function("KICK", &ClientParser::kick));			// partially tested, KO
 	handlers.push_back(function("TOPIC", &ClientParser::topic));		// partially tested, KO
 	handlers.push_back(function("MODE", &ClientParser::mode));			// untested, KO
+	handlers.push_back(function("PING", &ClientParser::ping));
 
 	handlers.push_back(function("PRIVMSG", &ClientParser::privmsg));	// untested, KO
 
@@ -321,6 +322,22 @@ std::string ClientParser::topic(std::string, std::string params, Client &client)
 		client.topicChannel(channel_name);
 	else
 		client.topicChannel(channel_name, topic);
+	return "";
+}
+
+std::string ClientParser::ping(std::string, std::string args, Client &client)
+{
+	try 
+	{
+		if (args.size() == 0)
+			client.send("", ":ft_irc 461 " + client.getName() + " PING :Not enough parameters");
+		else
+			client.send("", ":ft_irc PONG :ft_irc");
+	}
+	catch (const std::out_of_range &e)
+	{
+		std::cout << "PING PONG" << std::endl;
+	}
 	return "";
 }
 

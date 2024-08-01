@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:59:19 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/07/31 15:22:15 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/08/01 17:28:44 by lribette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ class ClientParser
 		std::string kick(std::string prefix, std::string arsg, Client &client);
 		std::string topic(std::string prefix, std::string arsg, Client &client);
 		std::string mode(std::string prefix, std::string arsg, Client &client);
+		std::string ping(std::string prefix, std::string arsg, Client &client);
 
 		std::string privmsg(std::string prefix, std::string arsg, Client &client);
 
