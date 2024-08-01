@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/08/01 21:54:34 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/08/01 22:04:29 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,11 @@ Client::~Client(void)
 		it = m_channelList.erase(it);
 	}
 	close(m_fd);
+}
+
+std::string Client::getIdentifier() const
+{
+	return this->m_identifier;
 }
 
 int Client::getfd()const
@@ -286,7 +291,7 @@ std::string	Client::inviteToChannel(std::string invitee, std::string channel)
 		m_name + " " +
 		invitee + " " +
 		channel);
-	temp_client->send("", ":" + m_name + " INVITE " + invitee + " " + channel);
+	temp_client->send("", ":" + m_identifier + " INVITE " + invitee + " " + channel);
 	return "";
 }
 
@@ -376,11 +381,11 @@ std::string	Client::topicChannel(std::string channel)
 	}
 	std::string temp_topic = temp_channel->getTopic();
 	if (temp_topic == "")
-		send("", ":" + temp_channel->getName() + " " + RPL_NOTOPIC + " " +
+		send("", ":ft_irc " + RPL_NOTOPIC + " " +
 			m_name + " " +
 			channel + " :No topic is set");
 	else
-		send("", ":" + temp_channel->getName() + " " + RPL_TOPIC + " " +
+		send("", ":ft_irc " + RPL_TOPIC + " " +
 			m_name + " " +
 			channel + " " +
 			" :"  + temp_topic);
@@ -454,7 +459,7 @@ void	Client::getMode(std::string channel_name)
 	modes += temp_channel->getClientLimit() > 0 ? "l" : "";
 	if (modes.length() == 1)
 		modes = "";
-	send("", ":" + channel_name + " " + RPL_CHANNELMODEIS + " " +
+	send("", ":ft_irc " + RPL_CHANNELMODEIS + " " +
 		m_name + " " + 
 		channel_name + " " + modes);
 }

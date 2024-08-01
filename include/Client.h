@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 23:17:50 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/08/01 21:27:27 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/08/01 22:03:03 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ class Client : public Messageable
 		int		getfd() const;
 		void	send(std::string, std::string msg);
 		bool	is_registered();
+		std::string getIdentifier() const;
 
 		class KillMePlease : public std::exception
 		{
