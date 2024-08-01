@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/08/01 19:12:19 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/08/01 20:27:23 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,31 +114,29 @@ void Channel::quit(std::string client_name, bool display)
 
 void	Channel::invite(std::string inviter_name, std::string invitee_name)
 {
-	for (std::list<Pair<std::string, bool> >::iterator itr = m_listenList.begin(); itr != m_listenList.end(); itr++)
+	if (contains(m_listenList, invitee_name) == true)
 	{
-		if (invitee_name == (*itr).getKey())
-			throw std::logic_error(":ft_irc " + ERR_USERONCHANNEL + " " +
-					inviter_name + " " +
-					invitee_name + " " +
-					m_name + " " +
-					":is already on that channel");
-		if (m_inviteOnly == false && inviter_name == (*itr).getKey())
-				return ;
-		else if (m_inviteOnly == true && inviter_name == (*itr).getKey() && (*itr).value == 0)
-			throw std::logic_error(":ft_irc " + ERR_CHANOPRIVSNEEDED + " " +
-					inviter_name + " " +
-					m_name + " " +
-					":You're not channel operator");
-		else if (m_inviteOnly == true && inviter_name == (*itr).getKey() && (*itr).value == 1)
-		{
-			m_inviteList.push_back(invitee_name);
-			return ;
-		}
+		throw std::logic_error(":ft_irc " + ERR_USERONCHANNEL + " " +
+			inviter_name + " " +
+			invitee_name + " " +
+			m_name + " " +
+			":is already on that channel");
 	}
-	throw std::logic_error(":ft_irc " + ERR_NOTONCHANNEL + " " +
-		inviter_name + " " +
-		m_name + " " +
-		":You're not on that channel");
+	if (contains(m_listenList, inviter_name) == false)
+	{
+		throw std::logic_error(":ft_irc " + ERR_NOTONCHANNEL + " " +
+			inviter_name + " " +
+			m_name + " " +
+			":You're not on that channel");
+	}
+	if (m_inviteOnly == true && find_return(m_listenList, inviter_name)->value == false)
+	{
+		throw std::logic_error(":ft_irc " + ERR_CHANOPRIVSNEEDED + " " +
+			inviter_name + " " +
+			m_name + " " +
+			":You're not channel operator");
+	}
+	m_inviteList.push_back(invitee_name);
 }
 
 void Channel::send(std::string sender_name, std::string message)
