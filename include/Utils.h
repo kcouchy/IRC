@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Utils.h                                                   +**+   +*  *   */
+/*   Utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lribette <lribette@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 14:19:12 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/07/29 18:50:01 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/08/01 15:21:23 by lribette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 
 #include <string>
 #include <algorithm>
+#include <vector>
+
+std::vector<std::string> strsplit(std::string str, char delim);
 
 template <typename L>
 bool find_erase(L &list, std::string search)

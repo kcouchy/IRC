@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lribette <lribette@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/08/01 14:26:44 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/08/01 15:49:49 by lribette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <list>
-#include "utils.h"
+#include "Utils.h"
 
 Client::Client(int client_fd, std::string password) :
 	m_fd(client_fd),
@@ -140,7 +140,8 @@ std::string Client::changeUser(std::string, std::string)
 	}
 	catch (std::exception &e)
 	{
-		return (":ft_irc " + ERR_NICKNAMEINUSE + name + " :Nickname is already in use");
+		send("", ":ft_irc " + ERR_NICKNAMEINUSE + name + " :Nickname is already in use");
+		return ("");
 	}
 	this->send("", ":ft_irc 001 " + this->getName() + " :Welcome here");
 	this->m_registrationComplete = true;
