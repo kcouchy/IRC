@@ -6,7 +6,7 @@
 /*   By: lribette <lribette@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/08/01 16:31:20 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/08/01 16:32:41 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void Client::send(std::string, std::string msg)
 	std::cerr << this->m_name << " <- " << msg << std::endl;
 	if (*(msg.end() - 1) != '\n')
 		msg += "\n";
-	int check = ::send(m_fd, msg.c_str(), msg.size(), 0);
+	::send(m_fd, msg.c_str(), msg.size(), 0);
 	// if (check < 0)
 	// 	throw KillMePlease();
 	return ;

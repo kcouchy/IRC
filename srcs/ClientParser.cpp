@@ -6,7 +6,7 @@
 /*   By: lribette <lribette@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:59:26 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/08/01 15:22:44 by lribette         ###   ########.fr       */
+/*   Updated: 2024/08/01 15:58:55 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void ClientParser::parse(std::string msg, Client &client)
 void ClientParser::parse_command(std::string prefix, std::string command, std::string args, Client &client)
 {
 	std::vector<function> handlers; //TODO - delete testing notes
-	handlers.push_back(function("CAP", &ClientParser::cap));			// tested, OK
+	// handlers.push_back(function("CAP", &ClientParser::cap));			// tested, OK
 	handlers.push_back(function("PASS", &ClientParser::pass));			// tested, OK
 	handlers.push_back(function("NICK", &ClientParser::nick));			// tested, KO
 	handlers.push_back(function("USER", &ClientParser::user));			// tested, KO
