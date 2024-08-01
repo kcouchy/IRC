@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/08/01 21:00:18 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/08/01 21:13:42 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -303,10 +303,10 @@ void		Client::clearBuffer(void)
 
 std::string Client::sendMessage(std::string, std::string params)
 {
-	std::string msg;
-	std::vector<std::string>::iterator it;
 	std::vector<std::string> args = strsplit(params, ' ');
-	std::vector<std::string> recipients = strsplit((*args.begin()), ',');
+	std::vector<std::string> recipients = strsplit((args.front()), ',');
+
+	std::vector<std::string>::iterator it;
 	for (it = recipients.begin(); it != recipients.end(); it++)
 	{
 		std::string recipient = *it;
