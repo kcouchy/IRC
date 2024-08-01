@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 11:42:07 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/08/01 14:15:55 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/08/01 16:47:30 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,7 @@ void	Server::run(void)
 		if (poll(pfs, m_clients.size() + 1, 0) == -1)
 		{
 			delete[] pfs;
-			perror("poll");
+			// perror("poll");
 			throw PollException();
 		}
 		this->accept_client(pfs);

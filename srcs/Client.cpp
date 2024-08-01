@@ -6,7 +6,7 @@
 /*   By: lribette <lribette@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/08/01 16:37:26 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/08/01 16:56:59 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ Client::Client(int client_fd, std::string password) :
 	m_channelList(),
 	m_registrationComplete(false)
 {
-	m_authenticated = m_password.size() == 0; // Authenticated by default if password is empty
+	m_authenticated = m_password.size() == 0;
 }
 
 Client::~Client(void)
@@ -66,8 +66,6 @@ void Client::send(std::string, std::string msg)
 	if (*(msg.end() - 1) != '\n')
 		msg += "\n";
 	::send(m_fd, msg.c_str(), msg.size(), 0);
-	// if (check < 0)
-	// 	throw KillMePlease();
 	return ;
 }
 
@@ -76,7 +74,6 @@ bool Client::is_registered()
 	return this->m_registrationComplete;
 }
 
-// Authentication
 std::string Client::capabilites(std::string, std::string params)
 {
 	if (params == "LS" || params == "LS 302")
@@ -100,7 +97,7 @@ std::string Client::auth(std::string password)
 	else
 	{
 		send("", ":ft_irc " + ERR_PASSWDMISMATCH + name + " :Password mismatch");
-		throw KillMePlease(); // required by irssi, specified as a MAY by the IRC protocol
+		throw KillMePlease();
 	}
 	return ("");
 }
@@ -349,8 +346,8 @@ std::string	Client::topicChannel(std::string channel, std::string topic)
 	if (temp_channel == NULL)
 	{
 		send("", ":ft_irc " + ERR_NOSUCHCHANNEL + " " +
-				m_name + " " + 
-				channel + " :No such channel");
+			m_name + " " + 
+			channel + " :No such channel");
 		return ("");
 	}
 	std::string topic_return = temp_channel->setTopic(topic, m_name);

@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/08/01 16:26:58 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/08/01 16:57:43 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,7 @@ std::string Channel::setTopic(std::string topic, std::string client_name)
 				m_name + " :You're not channel operator");
 	}
 	m_topic = topic;
-	send("", ":" + client_name + " PRIVMSG " + m_name + " :channel topic has been changed to: " + topic);
+	send("", ":" + client_name + " TOPIC " + m_name + " :" + topic);
 	return ("");
 }
 
