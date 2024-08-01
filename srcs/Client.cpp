@@ -6,7 +6,7 @@
 /*   By: lribette <lribette@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/08/01 19:05:06 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/08/01 19:14:53 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ Client::~Client(void)
 			continue ;
 		try
 		{
-			channel->quit(this->getName());
+			channel->quit(this->getName(), true);
 		}
 		catch(const Channel::EmptyChannel& e)
 		{
@@ -195,11 +195,11 @@ void	Client::removeAllChannels(void)
 {
 	while (m_channelList.size() > 0)
 	{
-		removeChannel("", m_channelList.front());
+		removeChannel("", m_channelList.front(), true);
 	}
 }
 
-void	Client::removeChannel(std::string, std::string channelName)
+void	Client::removeChannel(std::string, std::string channelName, bool display)
 {
 	std::list<std::string>::iterator iter = m_channelList.begin();
 	Channel *channel = NULL;
@@ -213,7 +213,7 @@ void	Client::removeChannel(std::string, std::string channelName)
 				continue ;
 			try
 			{
-				channel->quit(this->getName());
+				channel->quit(this->getName(), display);
 			}
 			catch(const Channel::EmptyChannel& e)
 			{
@@ -393,7 +393,7 @@ std::string	Client::kickChannel(std::string channel, std::string kickee, std::st
 	}
 	else
 		toKick->send("", "KICK " + channel + " " + kickee + " :" + reason);
-	toKick->removeChannel("", channel);
+	toKick->removeChannel("", channel, false);
 	return ("");
 }
 

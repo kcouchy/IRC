@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/08/01 17:18:12 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/08/01 19:12:19 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,14 +94,15 @@ std::string Channel::getListenList(std::string client_name)
 	return (namelist);
 }
 
-void Channel::quit(std::string client_name)
+void Channel::quit(std::string client_name, bool display)
 {
-	send("", ":" + client_name + " PART " + m_name);
+	if (display)
+		send("", ":" + client_name + " PART " + m_name);
 	find_erase(m_listenList, client_name);
 
 	if (m_listenList.size() == 0)
 		throw EmptyChannel();
-		
+
 	std::list<Pair<std::string, bool> >::iterator iter;
 	for (iter = m_listenList.begin(); iter != m_listenList.end(); iter++)
 		if ((*iter).value == true)
@@ -211,12 +212,12 @@ std::string	Channel::kick(Client* toKick, std::string kicker)
 	std::list<Pair<std::string, bool> >::iterator kicker_isOP = find_return(m_listenList, kicker);
 	if (kicker_isOP == m_listenList.end())
 		return (ERR_NOTONCHANNEL + " " +
-				kicker + " " +
-				m_name + " :You're not on that channel");
+			kicker + " " +
+			m_name + " :You're not on that channel");
 	else if ((*kicker_isOP).value == false)
 		return (ERR_CHANOPRIVSNEEDED + " " +
-				kicker + " " +
-				m_name + " :You're not channel operator");
+			kicker + " " +
+			m_name + " :You're not channel operator");
 	send("", ":" + kicker + " KICK " + m_name + " " + toKick->getName());
 	return ("");
 }

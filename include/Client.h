@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.h                                                  +**+   +*  *   */
+/*   Client.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 23:17:50 by aboyreau               #+#    #+#             */
-/*   Updated: 2024/07/30 11:18:52 by aboyreau          +#-.-*  +         *    */
+/*   Updated: 2024/08/01 19:13:39 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ class Client : public Messageable
 
 		// Channel-related stuff
 		std::string	joinChannel(std::string channel, std::string key);
-		void		removeChannel(std::string, std::string channelName);
+		void		removeChannel(std::string, std::string channelName, bool display);
 		void		removeAllChannels(void);
 		std::string	inviteToChannel(std::string, std::string params);
 		std::string	topicChannel(std::string);
