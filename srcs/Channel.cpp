@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:59 by kcouchma          #+#    #+#             */
-/*   Updated: 2024/08/01 16:57:43 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/08/01 17:18:12 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -292,6 +292,7 @@ std::string	Channel::mode(std::string client_name, bool plusminus, char modechar
 			m_clientLimit = 0;
 	}
 	send("", ":" + client_name + " MODE " +
+		m_name + " " +
 		(plusminus ? "+" : "-") +
 		modechar + " " +
 		mode_arg);
