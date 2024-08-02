@@ -6,7 +6,7 @@
 /*   By: lribette <lribette@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 12:06:06 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/08/01 15:22:53 by lribette         ###   ########.fr       */
+/*   Updated: 2024/08/02 09:21:58 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ std::vector<std::string> strsplit(std::string str, char delim)
 		}
 		splitted.push_back(str.substr(start, stop - start));
 		start = stop + 1;
+		while (str.at(0) == delim)
+			str = str.substr(1, str.size() - 1);
 		stop = str.find(delim, start);
 	}
 	return splitted;

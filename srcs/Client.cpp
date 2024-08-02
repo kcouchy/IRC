@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/08/02 09:35:58 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/08/02 09:44:50 by aboyreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ std::string Client::changeUser(std::string, std::string params)
 	std::string name = " " + (m_name.size() == 0 ? "*" : m_name);
 
 	this->m_identifier = this->m_name;
-	if (args.size() >= 2)
+	if (args.size() >= 3)
 	{
 		this->m_identifier += "!" + args.at(0);
 		this->m_identifier += "@" + args.at(2);
@@ -426,7 +426,7 @@ std::string	Client::kickChannel(std::string channel, std::string kickee, std::st
 		send("", ":ft_irc " +
 			ERR_NOSUCHNICK + " " +
 			m_name + " " +
-			kickee + " ::There was no such nickname");
+			kickee + " :There was no such nickname");
 		return ("");
 	}
 	std::string kick_return = temp_channel->kick(toKick, this);
@@ -436,7 +436,7 @@ std::string	Client::kickChannel(std::string channel, std::string kickee, std::st
 		return "";
 	}
 	else
-		toKick->send("", "KICK " + channel + " " + kickee + " :" + reason);
+		toKick->send("", " KICK " + channel + " " + kickee + " " + reason);
 	toKick->removeChannel("", channel, false);
 	return ("");
 }
