@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/08/02 09:44:50 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/08/02 10:00:34 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,11 @@ std::string Client::changeUser(std::string, std::string params)
 	std::string name = " " + (m_name.size() == 0 ? "*" : m_name);
 
 	this->m_identifier = this->m_name;
+	if (args.size() < 3 || (args.size() >= 3 && (args[0] == "" || args[2] == "")))
+	{
+		send("", ":ft_irc " + ERR_NEEDMOREPARAMS + name + " USER :Not enough parameters");
+		return ("");
+	}
 	if (args.size() >= 3)
 	{
 		this->m_identifier += "!" + args.at(0);
