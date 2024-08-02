@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:33:15 by aboyreau          #+#    #+#             */
-/*   Updated: 2024/08/01 22:24:55 by aboyreau         ###   ########.fr       */
+/*   Updated: 2024/08/02 09:35:58 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,6 +182,12 @@ std::string	Client::joinChannel(std::string channel, std::string key)
 	std::string topic;
 	std::list<std::string>::iterator iter;
 
+	if (channel.length() > 30)
+	{
+		send("", ":ft_irc " + ERR_BADCHANMASK +
+			+ " " + channel + " :Bad Channel Mask");
+		return ("");
+	}
 	for (iter = m_channelList.begin(); iter != m_channelList.end(); iter++)
 		if (channel == *iter)
 			return "";

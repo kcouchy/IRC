@@ -6,7 +6,7 @@
 /*   By: kcouchma <kcouchma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:12:41 by atu               #+#    #+#             */
-/*   Updated: 2024/08/01 11:48:18 by kcouchma         ###   ########.fr       */
+/*   Updated: 2024/08/02 09:33:56 by kcouchma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@
 #define ERR_NEEDMOREPARAMS std::string("461")
 #define ERR_ALREADYREGISTERED std::string("462")
 #define ERR_PASSWDMISMATCH std::string("464")
+#define ERR_BADCHANMASK std::string("476")
 #define ERR_CHANOPRIVSNEEDED std::string("482")
 #define ERR_INVALIDKEY std::string("525")
 #define ERR_INVALIDMODEPARAM std::string("696")
